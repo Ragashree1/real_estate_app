@@ -40,16 +40,16 @@ if (!isset($_SESSION['username'])) {
             if (isset($_SESSION['profile'])) {
                 $profile = $_SESSION['profile'];
                 if ($profile === 'agent') {
-                    echo '<li class="nav-item"><a class="nav-link" href="allListings.php" style="color: white;"><i class="fas fa-house"></i> All Properties</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> All Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="agent_manageListings.php" style="color: white;"><i class="fas fa-gear"></i> Manage Listings</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="agent_ratingsReviews.php" style="color: white;"><i class="fas fa-comments"></i> Ratings & Reviews</a></li>';
                 } elseif ($profile === 'buyer') {
-                    echo '<li class="nav-item"><a class="nav-link" href="allListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_soldListings.php"  style="color: white;"><i class="fas fa-gavel"></i> Sold Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_favourites.php" style="color: white;"><i class="fas fa-heart" ></i> Favourites</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="" style="color: white;"><i class="fas fa-calculator" ></i> Calculate Mortgage</a></li>';
                 } elseif ($profile === 'seller') {
-                    echo '<li class="nav-item"><a class="nav-link" href="allListings.php" style="color: white;"><i class="fas fa-house"></i> All Properties</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> All Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_listings.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
                 } elseif ($profile === 'admin') {
                     echo '<li class="nav-item"><a class="nav-link" href="admin_manageAccounts.php" style="color: white;"><i class="fas fa-user-cog"></i> Manage Account</a></li>';
