@@ -58,6 +58,7 @@ $listings = [
     [
         'title' => 'Beautiful Villa',
         'description' => 'Spacious villa with garden',
+        'image' => 'images/image1.png',
         'type' => 'Villa',
         'location' => 'City Center',
         'price' => 500000,
@@ -72,16 +73,32 @@ $listings = [
     [
         'title' => 'Luxury Apartment',
         'description' => 'Modern apartment with amenities',
+        'image' => 'images/image2.png',
         'type' => 'Apartment',
         'location' => 'Suburb',
         'price' => 300000,
         'area' => 1500,
-        'bhk' => 2,
+        'bhk' => 6,
         'listed_by' => 'agent001', // Listed by agent
         'sold_by' => 'seller001', // Sold by seller
         'status' => 'new',
         'num_views' => 50,
         'num_shortlist' => 5
+    ],
+    [
+        'title' => 'Condo 21st floor quiet',
+        'description' => 'Condo with swimming pool and park',
+        'image' => 'images/image3.png',
+        'type' => 'Condo',
+        'location' => '1 Rosewood woodlands street',
+        'price' => 450000,
+        'area' => 750,
+        'bhk' => 3,
+        'listed_by' => 'agent001', // Listed by agent
+        'sold_by' => 'seller001', // Sold by seller
+        'status' => 'new',
+        'num_views' => 200,
+        'num_shortlist' => 50
     ],
 ];
 
@@ -89,6 +106,7 @@ $listings = [
 foreach ($listings as $listing) {
     $title = $listing['title'];
     $description = $listing['description'];
+    $image = $listing['image'];
     $type = $listing['type'];
     $location = $listing['location'];
     $price = $listing['price'];
@@ -100,8 +118,8 @@ foreach ($listings as $listing) {
     $num_views = $listing['num_views'];
     $num_shortlist = $listing['num_shortlist'];
 
-    $sqlInsert = "INSERT INTO PropertyListing (title, description, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
-                  VALUES ('$title', '$description', '$type', '$location', $price, $area, $bhk, '$listed_by', '$sold_by', '$status', '$num_views', '$num_shortlist')";
+    $sqlInsert = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
+                  VALUES ('$title', '$description', '$image', '$type', '$location', $price, $area, $bhk, '$listed_by', '$sold_by', '$status', '$num_views', '$num_shortlist')";
 
     if ($conn->query($sqlInsert) === TRUE) {
         echo "Listing inserted successfully\n";
