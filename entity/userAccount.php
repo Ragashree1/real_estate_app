@@ -71,4 +71,24 @@ class UserAccount
 
         return $allUsers;
     }
+
+    public function searchUsers(string $username)
+    {
+        $allUsers = [];
+
+
+        // Perform a database query to fetch all listings
+        $query = "SELECT * FROM UserAccount WHERE username LIKE '%" . $username . "%'";
+
+        $result = $this->conn->query($query);
+
+        // Check if there are any listings
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $allUsers[] = $row;
+            }
+        }
+
+        return $allUsers;
+    }
 }

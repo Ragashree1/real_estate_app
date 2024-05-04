@@ -1,9 +1,17 @@
 <?php require_once "partials/header.php";
 
 require_once "../controller/viewUserAccountController.php";
+require_once "../controller/searchUserAccountController.php";
 
-$viewUserAccountController = new ViewUserAccountController();
-$allUsers = $viewUserAccountController->getUsers();
+
+
+if (isset($_GET['search'])) {
+    $searchUserAccountController = new SearchUserAccountController();
+    $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
+} else {
+    $viewUserAccountController = new ViewUserAccountController();
+    $allUsers = $viewUserAccountController->getUsers();
+}
 
 ?>
 
@@ -12,8 +20,8 @@ $allUsers = $viewUserAccountController->getUsers();
 <!-- DISPLAY Users -->
 <?php
 // Check if $allListing is empty
-if (empty($allUsers)) {
-    echo "No users found";
+if (!isset($allUsers)) {
+    echo "Users are not set";
 } else {
     // Open the row div
 ?>
@@ -21,12 +29,15 @@ if (empty($allUsers)) {
     <div style="margin: 10px; ">
         <div class="row between-xs mb-3">
             <div class="col-xs-6 col-md-8">
-                <div class="input-group rounded">
-                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                    <span class="input-group-text border-0" id="search-addon">
-                        <i class="fas fa-search"></i>
-                    </span>
-                </div>
+                <form action="admin_manageAccounts.php" method="get">
+                    <div class="input-group rounded">
+                        <input type="search" name="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                        <button type="submit" class="input-group-text border-0" id="search-addon">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+
             </div>
             <div class="col-xs-6 col-md-4 d-flex justify-content-end">
                 <button type="button" class="btn btn-light">Create</button>
@@ -70,6 +81,7 @@ if (empty($allUsers)) {
             }
             // Close the row div
             echo '</table></div>'; // Close .row
+
         }
         ?>
 
