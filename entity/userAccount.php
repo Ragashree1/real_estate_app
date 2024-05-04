@@ -29,7 +29,7 @@ class UserAccount
                 return false;
             }
         }
-        
+
         $username = $loginInfo['username'];
         $password = $loginInfo['password'];
         $profile = $loginInfo['profile'];
@@ -51,11 +51,24 @@ class UserAccount
         if (!password_verify($password, $hashedPassword)) {
             return false; // Passwords do not match
         }
-
         return true; // Login credentials are valid
     }
 
+    public function getUsers(): array
+    {
+        $allUsers = [];
+
+        // Perform a database query to fetch all listings
+        $query = "SELECT * FROM UserAccount";
+        $result = $this->conn->query($query);
+
+        // Check if there are any listings
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $allUsers[] = $row;
+            }
+        }
+
+        return $allUsers;
+    }
 }
-
-
-?>
