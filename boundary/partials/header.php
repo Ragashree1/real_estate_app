@@ -51,7 +51,7 @@ if (!isset($_SESSION['username'])) {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_soldListings.php"  style="color: white;"><i class="fas fa-gavel"></i> Sold Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_favourites.php" style="color: white;"><i class="fas fa-heart" ></i> Favourites</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalCalculator" style="color: white;"><i class="fas fa-calculator"></i> Calculate Mortgage</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#modalCalculator" style="color: white;"><i class="fas fa-calculator"></i> Calculate Mortgage</a></li>';
                 } elseif ($profile === 'seller') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> All Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_listings.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
