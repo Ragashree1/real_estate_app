@@ -6,6 +6,7 @@ require_once "../controller/deleteUserAccountController.php";
 require_once "../controller/suspendUserAccountController.php";
 
 $status = null;
+$message = null;
 
 if (isset($_GET['search'])) {
     $searchUserAccountController = new SearchUserAccountController();
@@ -19,23 +20,24 @@ if (isset($_GET['delete_user'])) {
     deleteUser($_GET['delete_user']);
 }
 
-
 if (isset($_GET['suspend_user'])) {
     suspendUser($_GET['suspend_user']);
 }
 
 function deleteUser($username)
 {
-    global $status;
+    global $status, $message;
     $deleteUserController = new DeleteUserAccountController();
     $status = $deleteUserController->deleteUser($username);
+    $message = $status? 'User deleted successfully' : 'Error deleting user';
 }
 
 function suspendUser($username)
 {
-    global $status;
+    global $status, $message;
     $suspendUser = new SuspendUserAccountController();
     $status = $suspendUser->suspendUser($username);
+    $message = $status? 'User suspended successfully' : 'Error suspending user';
 }
 
 ?>
@@ -50,12 +52,12 @@ if (!isset($allUsers)) {
 } else {
     // Open the row div
 
-    if (isset($status) && $status != null && $show == true) {
+    if (isset($status) && isset($message) && $status != null) {
 
         if ($status) {
 ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Success
+            <div class="alert alert-success alert-dismissible fade show m-2" role="alert">
+                <?php echo $message ?>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -65,8 +67,8 @@ if (!isset($allUsers)) {
 
         } else {
         ?>
-               <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                Error
+               <div class="alert alert-danger alert-dismissible fade show m-2" role="alert">
+               <?php echo $message ?>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -79,7 +81,7 @@ if (!isset($allUsers)) {
     <div style="margin: 10px; ">
         <div class="row between-xs mb-3">
             <div class="col-xs-6 col-md-8">
-                <form action="admin_manageAccounts.php" method="get">
+                <form action="#" method="get">
                     <div class="input-group rounded">
                         <input type="search" name="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                         <button type="submit" class="input-group-text border-0" id="search-addon">
