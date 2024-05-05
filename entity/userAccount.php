@@ -91,4 +91,17 @@ class UserAccount
 
         return $allUsers;
     }
+
+
+    public function deleteUser(string $username)
+    {
+ 
+        $query = "DELETE FROM UserAccount WHERE username = '$username'";
+
+
+        $result = $this->conn->query($query);
+
+        return $result;
+
+    }
 }
