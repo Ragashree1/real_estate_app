@@ -3,7 +3,7 @@ require_once "../entity/propertyListing.php";
 
 class ViewListingController
 {
-    private PropertyListing $propertyListing; 
+    private PropertyListing $propertyListing;
 
     public function __construct()
     {
@@ -23,6 +23,14 @@ class ViewListingController
 
         return $allListings;
     }
+
+    public function getAgentInfo(int $listing_id): array
+    {
+        $agentInfo = $this->propertyListing->getAgentInfo($listing_id);
+
+        return $agentInfo;
+    }
+
 }
 
 ?>

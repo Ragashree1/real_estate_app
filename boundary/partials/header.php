@@ -14,6 +14,7 @@ function checkLoggedin(): bool
 }
 
 $loggedIn = checkLoggedin();
+
 if($loggedIn)
 {
     $loggedInUsername = $_SESSION['username'];

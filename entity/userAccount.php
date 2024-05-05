@@ -54,7 +54,6 @@ class UserAccount
 
         return true; 
     }
-
 }
 
 

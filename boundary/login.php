@@ -29,9 +29,9 @@ function login()
 }
 
 // Define displayError function
-function loginError(): string
+function loginError()
 {
-    return "Invalid credentials, try again."; // You can customize this message as needed
+    echo "Invalid credentials, try again."; 
 }
 
 function loginSuccess()

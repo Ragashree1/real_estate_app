@@ -1,24 +1,62 @@
 <?php 
 require_once "partials/header.php"; 
 require_once "partials/hero.php"; 
-require_once "../controller/viewListingController.php";
+require_once "../controller/ViewListingController.php";
+require_once "../controller/SearchListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/listingstyle.css">';
 
-// display new listings
 $ViewListingController = new ViewListingController();
-$allListing = $ViewListingController->getNewListing();
+$allListing;
+
+// display new listings
+function displayNewListings()
+{
+    global $ViewListingController;
+    global $allListing;
+    $allListing = $ViewListingController->getNewListing();  
+}
+
+function searchListings()
+{
+    global $allListing;
+
+    $searchInfo = array();
+
+    // store each login field data in array
+    foreach ($_GET as $key => $value) {
+        $searchInfo[$key] = $value;
+    }
+
+    $searchListingController = new SearchListingController();
+    $allListing = $searchListingController->searchListings($searchInfo);
+}
+
+
+
+// search listings
+if(isset($_GET['searchForm']))
+{
+    searchListings();
+}
+else
+{
+    displayNewListings();
+}
+
+
 
 ?>
 
 <!-- search bar -->
 <div class="container-fluid mt-3">
-    <form class="form-inline" method="GET" action="search.php" style="background-color: grey; padding: 10px; border-radius: 5px; width: 90vw;">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" style="width: 25%;">
+    <form class="form-inline" method="GET" action=""
+            style="background-color: grey; padding: 10px; border-radius: 5px; width: 90vw;">
+        <input class="form-control mr-sm-2" type="search" placeholder="Title/type/location/status" aria-label="Search" name="search" style="width: 25%;">
         <input class="form-control mr-sm-2" type="number" placeholder="Min Price" name="min_price" style="width: 15%;">
         <input class="form-control mr-sm-2" type="number" placeholder="Max Price" name="max_price" style="width: 15%;">
         <input class="form-control mr-sm-2" type="number" placeholder="Min Area" name="min_area" style="width: 15%;">
         <input class="form-control mr-sm-2" type="number" placeholder="bedroom+hall+kitchen num" name="bhk" style="width: 20;">
-        <button class="btn btn-success my-2 my-sm-0" type="submit" style="width: 10%;">Search</button>
+        <button class="btn btn-success my-2 my-sm-0" type="submit" name="searchForm" value="search" style="width: 10%;">Search</button>
     </form>
 </div>
 <br>
@@ -29,6 +67,8 @@ $allListing = $ViewListingController->getNewListing();
 if (empty($allListing)) {
     echo "No property listings found";
 } else {
+    $counter = 0;
+
     // Open the row div
     echo '<div class="row">';
 
@@ -83,7 +123,7 @@ if (empty($allListing)) {
                         <?php if (isset($listing['date_listed'])) : ?>
                             <p class="listing-date">
                                 <i class="fa-solid fa-calendar"></i> 
-                                Posted on: <?= $listing['date_listed'] ?>
+                                Listed on: <?= $listing['date_listed'] ?>
                             </p>
                         <?php endif; ?>
                         <?php if (isset($listing['status']) && $listing['status'] === 'new') : ?>
@@ -101,6 +141,7 @@ if (empty($allListing)) {
             </div> 
         </div> 
         <?php
+        $counter++;
     }
 
     // Close the row div
