@@ -1,9 +1,14 @@
 <?php
 require_once "../controller/logoutController.php";
 
-$logoutController = new LogoutController();
-$logoutController->logout();
+function logout()
+{
+    $logoutController = new LogoutController();
+    $logoutController->logout();
 
-header("Location: login.php");
-exit;
+    header("Location: login.php");
+    exit;
+}
+
+logout();
 ?>
