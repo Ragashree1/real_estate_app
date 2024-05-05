@@ -130,7 +130,93 @@ class PropertyListing
 
         // Check if any rows are returned
         if ($result->num_rows > 0) {
-            // Fetch rows and add them to the search results array
+            while ($row = $result->fetch_assoc()) {
+                $searchResults[] = $row;
+            }
+        }
+
+        $this->conn->close();
+        return $searchResults;
+    }
+
+    // get all listings created by agent
+    public function getCreatedListing(string $agent_username): array
+    {
+        $allListings = [];
+
+        // Prepare the SQL query with a parameterized query to avoid SQL injection
+        $query = "SELECT * FROM PropertyListing WHERE listed_by = ? ORDER BY date_listed DESC";
+
+        // Prepare the statement
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("s", $agent_username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Check if there are any listings
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $allListings[] = $row;
+            }
+        }
+
+        $stmt->close();
+
+        return $allListings;
+    }
+
+
+    // search listings
+    function agentSearchListings(array $searchInfo): array
+    {
+        $searchResults = [];
+
+        // Build the SQL query based on search parameters
+        $sql = "SELECT * FROM PropertyListing WHERE 1=1"; 
+
+        // Add conditions based on search parameters
+        if (!empty($searchInfo['search'])) {
+            $searchTerm = $this->conn->real_escape_string($searchInfo['search']);
+            $sql .= " AND (title LIKE '%$searchTerm%' 
+                    OR type LIKE '%$searchTerm%' 
+                    OR location LIKE '%$searchTerm%' 
+                    OR status LIKE '%$searchTerm%'
+                    OR sold_by LIKE '%$searchTerm%')";
+        }
+
+        if (!empty($searchInfo['min_price'])) {
+            $minPrice = (float) $searchInfo['min_price'];
+            $sql .= " AND price >= $minPrice";
+        }
+
+        if (!empty($searchInfo['max_price'])) {
+            $maxPrice = (float) $searchInfo['max_price'];
+            $sql .= " AND price <= $maxPrice";
+        }
+
+        if (!empty($searchInfo['min_area'])) {
+            $minArea = (float) $searchInfo['min_area'];
+            $sql .= " AND area >= $minArea";
+        }
+
+        if (!empty($searchInfo['bhk'])) {
+            $bhk = (float) $searchInfo['bhk'];
+            $sql .= " AND bhk >= $bhk";
+        }
+
+        if (!empty($searchInfo['listed_by'])) {
+            $listed_by = (float) $searchInfo['listed_by'];
+            $sql .= " AND listed_by >= $listed_by";
+        }
+
+        // Order the results by create_date in descending order
+        $sql .= " ORDER BY date_listed DESC";
+
+        // Execute the query
+        $result = $this->conn->query($sql);
+
+        // Check if any rows are returned
+        if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $searchResults[] = $row;
             }
@@ -142,5 +228,161 @@ class PropertyListing
         return $searchResults;
     }
 
+    //fetch the agent information associated with the listing
+    function getSellerInfo($listing_id): array
+    {
+
+        $query = "SELECT ua.username, ua.fullname, ua.email, ua.contact 
+                  FROM UserAccount ua 
+                  JOIN PropertyListing pl ON ua.username = pl.sold_by 
+                  WHERE pl.listing_id = ?";
+
+        // Prepare the statement
+        $stmt = $this->conn->prepare($query);
+
+        // Bind parameters
+        $stmt->bind_param("i", $listing_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Fetch the agent information as an associative array
+        $sellerInfo = $result->fetch_assoc();
+
+        // Close the statement
+        $stmt->close();
+
+        return $sellerInfo;
+    }
+
+    function validateForm(array $createInfo): array
+    {
+        $errors = [];
+
+        // Validate title
+        if (!isset($createInfo['title']) || strlen($createInfo['title']) > 255) {
+            $errors['title'] = 'Title must be less than 255 characters';
+        }
+
+        // Validate description
+        if (!isset($createInfo['description']) || empty($createInfo['description'])) {
+            $errors['description'] = 'Description is required';
+        }
+
+        // Validate image
+        if (!isset($createInfo['image']) && strlen($createInfo['image']) > 255) {
+            $errors['image'] = 'Image URL must be less than 255 characters';
+        }
+
+        // Validate type 
+        if (isset($createInfo['type']) && strlen($createInfo['type']) > 255) {
+            $errors['type'] = 'Type must be less than 255 characters';
+        }
+
+        // Validate location 
+        if (isset($createInfo['location']) && strlen($createInfo['location']) > 255) {
+            $errors['location'] = 'Location must be less than 255 characters';
+        }
+
+        // Validate price 
+        if (isset($createInfo['price']) && !is_numeric($createInfo['price'])) {
+            $errors['price'] = 'Price must be a number';
+        }
+
+        // Validate area 
+        if (isset($createInfo['area']) && !is_numeric($createInfo['area'])) {
+            $errors['area'] = 'Area must be a number';
+        }
+
+        // Validate bhk 
+        if (isset($createInfo['bhk']) && !is_numeric($createInfo['bhk'])) {
+            $errors['bhk'] = 'BHK must be a number';
+        }
+        
+        // Validate status 
+        if (isset($createInfo['status']) && strlen($createInfo['status']) > 50) {
+            $errors['sold_by'] = 'Sold by must be less than 50 characters';
+        }
+        
+        // Validate sold_by 
+        if (isset($createInfo['sold_by']) && strlen($createInfo['sold_by']) > 100) {
+            $errors['sold_by'] = 'Sold by must be less than 100 characters';
+        }
+
+        // Check if seller username exists in the database
+        if (isset($createInfo['sold_by'])) 
+        {
+            $sellerUsername = $createInfo['sold_by'];
+            $sql = "SELECT * FROM UserAccount WHERE username = '$sellerUsername'";
+            $result = $this->conn->query($sql);
+            if ($result->num_rows == 0) {
+                $errors['sold_by'] = 'Seller username does not exist';
+                return $errors;
+            }
+        }
+
+        return $errors;
+    }
+
+
+    function agentCreateListings(array $createInfo): array
+    {
+        // Validate the listing information
+        $errors = $this->validateForm($createInfo);
+
+        // If there are validation errors, return them
+        if (!empty($errors)) {
+            return $errors;
+        }
+
+        // Extract data from the $createInfo array
+        $title = $createInfo['title'];
+        $description = $createInfo['description'];
+        $image = $createInfo['image'];
+        $type = $createInfo['type'];
+        $location = $createInfo['location'];
+        $price = $createInfo['price'];
+        $area = $createInfo['area'];
+        $bhk = $createInfo['bhk'];
+        $status = $createInfo['status'];
+        $listed_by = $createInfo['listed_by'];
+        $sold_by = $createInfo['sold_by'];
+
+        // Insert the listing into the database
+        $sql = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, status, sold_by) 
+                VALUES ('$title', '$description', '$image', '$type', '$location', '$price', '$area', '$bhk', '$listed_by', '$status', '$sold_by')";
+
+        // Execute the query
+        if ($this->conn->query($sql) === TRUE) {
+            // Listing successfully inserted
+            return [];
+        } else {
+            // If there's an error, return it
+            return ["error" => "Error inserting listing: " . $this->conn->error];
+        }
+    }
+
+    function agentDeleteListings(int $listing_id): bool
+    {
+        // Prepare the DELETE query
+        $query = "DELETE FROM PropertyListing WHERE listing_id = ?";
+        
+        // Prepare the statement
+        $stmt = $this->conn->prepare($query);
+        
+        if (!$stmt) {
+            // If preparation fails, return false
+            return false;
+        }
+        $stmt->bind_param("i", $listing_id);
+        $result = $stmt->execute();
+        
+        // Check if the deletion was successful
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
+
 ?>

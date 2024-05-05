@@ -31,7 +31,7 @@ function login()
 // Define displayError function
 function loginError()
 {
-    echo "Invalid credentials, try again."; 
+    return "Invalid credentials, try again."; 
 }
 
 function loginSuccess()
