@@ -104,4 +104,16 @@ class UserAccount
         return $result;
 
     }
+
+
+    public function suspendUser(string $username)
+    {
+
+        $query = "UPDATE UserAccount SET status = 'suspended' WHERE username = '$username'";
+
+        $result = $this->conn->query($query);
+
+        return $result;
+
+    }
 }

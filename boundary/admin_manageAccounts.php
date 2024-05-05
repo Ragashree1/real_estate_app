@@ -3,9 +3,9 @@
 require_once "../controller/viewUserAccountController.php";
 require_once "../controller/searchUserAccountController.php";
 require_once "../controller/deleteUserAccountController.php";
+require_once "../controller/suspendUserAccountController.php";
 
-
-
+$status = null;
 
 if (isset($_GET['search'])) {
     $searchUserAccountController = new SearchUserAccountController();
@@ -19,10 +19,23 @@ if (isset($_GET['delete_user'])) {
     deleteUser($_GET['delete_user']);
 }
 
+
+if (isset($_GET['suspend_user'])) {
+    suspendUser($_GET['suspend_user']);
+}
+
 function deleteUser($username)
 {
+    global $status;
     $deleteUserController = new DeleteUserAccountController();
-    $deleteUserController->deleteUser($username);
+    $status = $deleteUserController->deleteUser($username);
+}
+
+function suspendUser($username)
+{
+    global $status;
+    $suspendUser = new SuspendUserAccountController();
+    $status = $suspendUser->suspendUser($username);
 }
 
 ?>
@@ -36,7 +49,32 @@ if (!isset($allUsers)) {
     echo "Users are not set";
 } else {
     // Open the row div
+
+    if (isset($status) && $status != null && $show == true) {
+
+        if ($status) {
 ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Success
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+        <?php
+
+        } else {
+        ?>
+               <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Error
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+    <?php
+        }
+    }
+    ?>
 
     <div style="margin: 10px; ">
         <div class="row between-xs mb-3">
@@ -80,7 +118,7 @@ if (!isset($allUsers)) {
                     <td><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" style="cursor:pointer;">
                             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0zM15 6l3 3m-5 11h8" />
                         </svg>
-                        <a href="admin_manageAccounts.php?delete_user=<?php echo $user['username']; ?>" style="text-decoration: none; color: inherit;">
+                        <a href="admin_manageAccounts.php?suspend_user=<?php echo $user['username']; ?>" style="text-decoration: none; color: inherit;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" style="cursor:pointer;">
                                 <path fill="currentColor" d="M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12S5.925 1 12 1M2.5 12a9.5 9.5 0 0 0 9.5 9.5a9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5A9.5 9.5 0 0 0 2.5 12m15.75.75H5.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5" />
                             </svg>
