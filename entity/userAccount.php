@@ -95,14 +95,13 @@ class UserAccount
 
     public function deleteUser(string $username)
     {
- 
+
         $query = "DELETE FROM UserAccount WHERE username = '$username'";
 
 
         $result = $this->conn->query($query);
 
         return $result;
-
     }
 
 
@@ -114,6 +113,25 @@ class UserAccount
         $result = $this->conn->query($query);
 
         return $result;
+    }
 
+    public function createUser(array $userDetails)
+    {
+
+        $username = isset($userDetails["username"]) ?  $userDetails['username'] : null;
+        $passwordHash =  isset($userDetails["password"]) ? password_hash($userDetails['password'], PASSWORD_DEFAULT) : 'password123';
+        $dob =  isset($userDetails["dob"]) ? $userDetails['dob'] : null;
+        $fullname = isset($userDetails["fullname"]) ? $userDetails['fullname'] : null;
+        $email = isset($userDetails["email"]) ? $userDetails['email'] : null;
+        $contact = isset($userDetails["contact"]) ?  $userDetails['contact'] : null;
+        $profile =  isset($userDetails["profile"]) ? $userDetails['profile'] : null;
+        $status =  isset($userDetails["status"]) ? $userDetails['status'] : null;
+
+        $query = "INSERT INTO UserAccount (username, passwordHash, dob, fullname, email, contact, profile, status) 
+                VALUES ('$username', '$passwordHash', '$dob', '$fullname', '$email', '$contact', '$profile', '$status')";
+
+        $result = $this->conn->query($query);
+
+        return $result;
     }
 }
