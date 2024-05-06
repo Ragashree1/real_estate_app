@@ -100,6 +100,21 @@ $listings = [
         'num_views' => 200,
         'num_shortlist' => 50
     ],
+    [
+        'title' => 'Santorini Villa',
+        'description' => 'cool blue and white themed villa good for holiday travels',
+        'image' => 'images/image4.png',
+        'type' => 'Villa',
+        'location' => 'Southern Greench Argean Sea',
+        'price' => 900000,
+        'area' => 900,
+        'bhk' => 9,
+        'listed_by' => 'agent001', // Listed by agent
+        'sold_by' => 'seller001', // Sold by seller
+        'status' => 'new',
+        'num_views' => 600,
+        'num_shortlist' => 505
+    ],
 ];
 
 // Prepare and execute INSERT statements

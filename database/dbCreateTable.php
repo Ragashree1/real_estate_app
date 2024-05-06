@@ -24,9 +24,9 @@ $sqlUser = "CREATE TABLE IF NOT EXISTS UserAccount (
     contact VARCHAR(255),
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile VARCHAR(100), 
-    status VARCHAR(50) DEFAULT 'active',
-    FOREIGN KEY (profile) REFERENCES UserProfile(profile_name) 
-)";
+    status VARCHAR(50) DEFAULT 'active'
+    FOREIGN KEY (profile) REFERENCES UserProfile(profile_name) ON DELETE SET NULL
+    )";
 
 
 if ($conn->query($sqlUser) === TRUE) {
@@ -40,21 +40,26 @@ $sqlListing = "CREATE TABLE IF NOT EXISTS PropertyListing (
     listing_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    image VARCHAR(255) NOT NULL,
-    type VARCHAR(255),
-    location VARCHAR(255),
-    price DECIMAL(10),
-    area DECIMAL(10),
-    bhk INT,
+    image VARCHAR(255),
+    type VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    price DECIMAL(10) NOT NULL,
+    area DECIMAL(10) NOT NULL,
+    bhk INT NOT NULL,
     date_listed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     num_views INT DEFAULT 0,
     num_shortlist INT DEFAULT 0,
-    status VARCHAR(50) DEFAULT 'new',
+    status VARCHAR(50) DEFAULT 'new' NOT NULL,
     listed_by VARCHAR(100),
     sold_by VARCHAR(100),
-    FOREIGN KEY (listed_by) REFERENCES UserAccount(username),
-    FOREIGN KEY (sold_by) REFERENCES UserAccount(username)
+    FOREIGN KEY (listed_by) REFERENCES UserAccount(username) ON DELETE SET NULL,
+    FOREIGN KEY (sold_by) REFERENCES UserAccount(username) ON DELETE SET NULL
 )";
+
+$sqlForeignKey = "ALTER TABLE UserAccount
+    ADD CONSTRAINT FK_UserAccount_UserProfile 
+    FOREIGN KEY (profile) REFERENCES UserProfile(profile_name)";
+
 
 if ($conn->query($sqlListing) === TRUE) {
     echo "Table PropertyListing created successfully\n";

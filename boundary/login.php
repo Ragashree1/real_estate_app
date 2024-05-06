@@ -1,17 +1,13 @@
 <?php
 session_start();
-
 require_once "../controller/loginController.php";
 
-// Define displayError function
-function displayError()
-{
-    return "Invalid credentials, try again."; // You can customize this message as needed
-}
+$validated = null; 
 
-if (isset($_POST["login"])) 
+function login()
 {
-    $loginInfo = array();
+	global $validated;
+	$loginInfo = array();
 
     // store each login field data in array
     foreach ($_POST as $key => $value) {
@@ -22,14 +18,36 @@ if (isset($_POST["login"]))
     $loginController = new LoginController();
     $validated = $loginController->validateLogin($loginInfo);
 
-    if ($validated) {
-		// Store username in session
-        $_SESSION['username'] = $loginInfo['username'];
-        $_SESSION['profile'] = strtolower($loginInfo['profile']);
-
-		header("Location: dashboard.php"); // Redirect to dashboard page
-		exit();
+	if ($validated) {
+		$validated = true;
+		loginSuccess();
 	}
+	else 
+	{
+		$validated = false;
+	}
+}
+
+// Define displayError function
+function loginError()
+{
+    return "Invalid credentials, try again."; 
+}
+
+function loginSuccess()
+{
+	// Store username in session
+	$_SESSION['username'] = $_POST['username'];
+	$_SESSION['profile'] = strtolower($_POST['profile']);
+
+	header("Location: dashboard.php"); // Redirect to dashboard page
+	exit();
+}
+
+
+if (isset($_POST["login"])) 
+{
+	login();
 }
 ?>
 
@@ -58,7 +76,7 @@ if (isset($_POST["login"]))
 				<option>Buyer</option>
 				<option>Seller</option>
 			</select>
-			<?php if(isset($validated) && !$validated) { echo "<span style='color:red'>" . displayError() . "</span>"; } ?>
+			<?php if(isset($validated) && !$validated) { echo "<span style='color:red'>" . loginError() . "</span>"; } ?>
 			<input type="submit" value="login" name="login">
 		</form>
 	</div>
