@@ -25,7 +25,7 @@ $sqlUser = "CREATE TABLE IF NOT EXISTS UserAccount (
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile VARCHAR(100), 
     status VARCHAR(50) DEFAULT 'active',
-    FOREIGN KEY (profile) REFERENCES UserProfile(profile_name)
+    FOREIGN KEY (profile) REFERENCES UserProfile(profile_name) ON DELETE SET NULL
     )";
 
 
@@ -52,8 +52,8 @@ $sqlListing = "CREATE TABLE IF NOT EXISTS PropertyListing (
     status VARCHAR(50) DEFAULT 'new' NOT NULL,
     listed_by VARCHAR(100),
     sold_by VARCHAR(100),
-    FOREIGN KEY (listed_by) REFERENCES UserAccount(username),
-    FOREIGN KEY (sold_by) REFERENCES UserAccount(username) 
+    FOREIGN KEY (listed_by) REFERENCES UserAccount(username) ON DELETE SET NULL,
+    FOREIGN KEY (sold_by) REFERENCES UserAccount(username) ON DELETE SET NULL
 )";
 
 
