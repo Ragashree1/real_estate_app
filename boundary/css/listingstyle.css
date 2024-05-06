@@ -1,0 +1,86 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.listing {
+    width: calc(33.33% - 20px);
+    margin-bottom: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.listing-inner {
+    background: linear-gradient(to bottom, #ffffff, #f5f5f5);
+    padding: 20px;
+}
+
+.listing-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.listing-icon
+{
+    color: #FF9800; 
+    margin-right: 5px;
+}
+
+.listing-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.listing-meta {
+    margin-top: 10px;
+}
+
+.listing-tag {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.listing-location {
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #666;
+}
+
+.listing-price {
+    margin: 10px 0;
+    font-size: 22px;
+    font-weight: bold;
+    color: #FF5722;
+}
+
+.listing-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.listing-date,
+.listing-status {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.listing-image
+{
+    width: 100%; 
+    height: 300px; 
+    object-fit: cover; 
+    border-radius: 10px 10px 0 0;
+}
