@@ -10,9 +10,9 @@ class AgentUpdateListingController
         $this->propertyListing = new PropertyListing();
     }
 
-    public function agentUpdateListings(array $createInfo, int $listing_id): array
+    public function agentUpdateListings(array $updateInfo, int $listing_id): array
     {
-        $errors = $this->propertyListing->agentUpdateListings($createInfo, $listing_id);
+        $errors = $this->propertyListing->agentUpdateListings($updateInfo, $listing_id);
         
         return $errors;
     }

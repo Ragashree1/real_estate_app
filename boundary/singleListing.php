@@ -9,9 +9,6 @@ if (isset($_GET['listing_id'])) {
     // get selected listing
     $ViewListingController = new ViewListingController();
     $singleListing = $ViewListingController->getSingleListing($listing_id);
-
-    // get agent info who created the listing
-    $agentInfo = $ViewListingController->getAgentInfo($listing_id);
 }
 ?>
 
@@ -86,14 +83,14 @@ if (empty($singleListing)) {
         <div class="agent-details" style="display: flex; align-items: center;">
             <img src="images/agent.png" alt="Agent Image" class="agent-image" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc; margin-right: 20px;">
             <div class="agent-info">
-                <?php if (isset($agentInfo['username'])) : ?>
-                    <p class="agent-name" style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-user"></i> <?= $agentInfo['username'] ?></p>
+                <?php if (isset($singleListing['fullname'])) : ?>
+                    <p class="agent-name" style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-user"></i> <?= $singleListing['fullname'] ?></p>
                 <?php endif; ?>
-                <?php if (isset($agentInfo['email'])) : ?>
-                    <p class="agent-email" style="font-size: 18px; color: #666;"><i class="fas fa-envelope"></i> <?= $agentInfo['email'] ?></p>
+                <?php if (isset($singleListing['email'])) : ?>
+                    <p class="agent-email" style="font-size: 18px; color: #666;"><i class="fas fa-envelope"></i> <?= $singleListing['email'] ?></p>
                 <?php endif; ?>
-                <?php if (isset($agentInfo['contact'])) : ?>
-                    <p class="agent-phone" style="font-size: 18px; color: #666;"><i class="fas fa-phone"></i> <?= $agentInfo['contact'] ?></p>
+                <?php if (isset($singleListing['contact'])) : ?>
+                    <p class="agent-phone" style="font-size: 18px; color: #666;"><i class="fas fa-phone"></i> <?= $singleListing['contact'] ?></p>
                 <?php endif; ?>
             </div>
         </div>

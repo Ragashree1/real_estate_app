@@ -23,14 +23,6 @@ class ViewListingController
 
         return $allListings;
     }
-
-    public function getAgentInfo(int $listing_id): array
-    {
-        $agentInfo = $this->propertyListing->getAgentInfo($listing_id);
-
-        return $agentInfo;
-    }
-
 }
 
 ?>

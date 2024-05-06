@@ -16,7 +16,7 @@ function displayCreatedListings()
     global $agentViewListingController;
     global $allListing;
 
-    $allListing = $agentViewListingController->getCreatedListings($loggedInUsername);  
+    $allListing = $agentViewListingController->agentGetCreatedListings($loggedInUsername);  
 }
 
 function searchCreatedListings()

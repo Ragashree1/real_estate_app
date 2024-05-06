@@ -43,7 +43,10 @@ class PropertyListing
     public function getSingleListing(int $listing_id): array
     {
         // Perform a database query to fetch the listing data
-        $query = "SELECT * FROM PropertyListing WHERE listing_id = ?";
+        $query = "  SELECT PropertyListing.*, UserAccount.fullname, UserAccount.contact, UserAccount.email  
+                    FROM PropertyListing JOIN UserAccount 
+                        ON PropertyListing.listed_by = UserAccount.username 
+                    WHERE listing_id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $listing_id);
         $stmt->execute();
@@ -60,32 +63,6 @@ class PropertyListing
         } else {
             return [];
         }
-    }
-
-    //fetch the agent information associated with the listing
-    function getAgentInfo($listing_id): array
-    {
-
-        $query = "SELECT ua.username, ua.fullname, ua.email, ua.contact 
-                  FROM UserAccount ua 
-                  JOIN PropertyListing pl ON ua.username = pl.listed_by 
-                  WHERE pl.listing_id = ?";
-
-        // Prepare the statement
-        $stmt = $this->conn->prepare($query);
-
-        // Bind parameters
-        $stmt->bind_param("i", $listing_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        // Fetch the agent information as an associative array
-        $agentInfo = $result->fetch_assoc();
-
-        // Close the statement
-        $stmt->close();
-
-        return $agentInfo;
     }
 
     // search listings
@@ -141,6 +118,31 @@ class PropertyListing
 
         $this->conn->close();
         return $searchResults;
+    }
+
+    public function agentGetSingleListing(int $listing_id): array
+    {
+        // Perform a database query to fetch the listing data
+        $query = "SELECT PropertyListing.*, UserAccount.fullname, UserAccount.contact, UserAccount.email  
+                    FROM PropertyListing JOIN UserAccount 
+                        ON PropertyListing.sold_by = UserAccount.username 
+                    WHERE listing_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $listing_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // return empty array if not found
+        if ($result->num_rows == 1) {
+            // Increment the view count
+            $sql = "UPDATE PropertyListing SET num_views = num_views + 1 WHERE listing_id = $listing_id";
+            $this->conn->query($sql);
+
+            $listingData = $result->fetch_assoc();
+            return $listingData;
+        } else {
+            return [];
+        }
     }
 
     // get all listings created by agent
@@ -230,32 +232,6 @@ class PropertyListing
         $this->conn->close();
 
         return $searchResults;
-    }
-
-    //fetch the agent information associated with the listing
-    function getSellerInfo($listing_id): array
-    {
-
-        $query = "SELECT ua.username, ua.fullname, ua.email, ua.contact 
-                  FROM UserAccount ua 
-                  JOIN PropertyListing pl ON ua.username = pl.sold_by 
-                  WHERE pl.listing_id = ?";
-
-        // Prepare the statement
-        $stmt = $this->conn->prepare($query);
-
-        // Bind parameters
-        $stmt->bind_param("i", $listing_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        // Fetch the agent information as an associative array
-        $sellerInfo = $result->fetch_assoc();
-
-        // Close the statement
-        $stmt->close();
-
-        return $sellerInfo;
     }
 
     function validateForm(array $createInfo): array

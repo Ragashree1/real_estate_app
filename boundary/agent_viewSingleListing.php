@@ -8,10 +8,7 @@ if (isset($_GET['listing_id'])) {
 
     // get selected listing
     $agentViewListingController = new AgentViewListingController();
-    $singleListing = $agentViewListingController->getSingleListing($listing_id);
-
-    // get agent info who created the listing
-    $sellerInfo = $agentViewListingController->getSellerInfo($listing_id);
+    $singleListing = $agentViewListingController->agentGetSingleListing($listing_id);
 }
 ?>
 
@@ -86,14 +83,14 @@ if (empty($singleListing)) {
         <div class="seller-details" style="display: flex; align-items: center;">
             <img src="images/seller.png" alt="seller Image" class="seller-image" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc; margin-right: 20px;">
             <div class="seller-info">
-                <?php if (isset($sellerInfo['username'])) : ?>
-                    <p class="seller-name" style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-user"></i> <?= $sellerInfo['username'] ?></p>
+                <?php if (isset($singleListing['fullname'])) : ?>
+                    <p class="seller-name" style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-user"></i> <?= $singleListing['fullname'] ?></p>
                 <?php endif; ?>
-                <?php if (isset($sellerInfo['email'])) : ?>
-                    <p class="seller-email" style="font-size: 18px; color: #666;"><i class="fas fa-envelope"></i> <?= $sellerInfo['email'] ?></p>
+                <?php if (isset($singleListing['email'])) : ?>
+                    <p class="seller-email" style="font-size: 18px; color: #666;"><i class="fas fa-envelope"></i> <?= $singleListing['email'] ?></p>
                 <?php endif; ?>
-                <?php if (isset($sellerInfo['contact'])) : ?>
-                    <p class="seller-phone" style="font-size: 18px; color: #666;"><i class="fas fa-phone"></i> <?= $sellerInfo['contact'] ?></p>
+                <?php if (isset($singleListing['contact'])) : ?>
+                    <p class="seller-phone" style="font-size: 18px; color: #666;"><i class="fas fa-phone"></i> <?= $singleListing['contact'] ?></p>
                 <?php endif; ?>
             </div>
         </div>

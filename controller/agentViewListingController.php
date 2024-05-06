@@ -10,27 +10,19 @@ class agentViewListingController
         $this->propertyListing = new PropertyListing();
     }
 
-    public function getCreatedListings(string $agent_username): array
+    public function agentGetCreatedListings(string $agent_username): array
     {
         $allListings = $this->propertyListing->agentGetCreatedListing($agent_username);
 
         return $allListings;
     }
 
-    public function getSingleListing(int $listing_id): array
+    public function agentGetSingleListing(int $listing_id): array
     {
-        $allListings = $this->propertyListing->getSingleListing($listing_id);
+        $allListings = $this->propertyListing->agentGetSingleListing($listing_id);
 
         return $allListings;
     }
-
-    public function getSellerInfo(int $listing_id): array
-    {
-        $sellerInfo = $this->propertyListing->getSellerInfo($listing_id);
-
-        return $sellerInfo;
-    }
-
 }
 
 
