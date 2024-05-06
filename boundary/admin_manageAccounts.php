@@ -15,18 +15,16 @@ $user = null;
 
 if (isset($_POST["createUser"])) {
     $createUser = array();
-    echo "Users are not set";
 
     // store each login field data in array
     foreach ($_POST as $key => $value) {
         $createUser[$key] = $value;
-        echo $key . ' ' . $value;
     }
 
     // create controller object
     $createUserController = new CreateUserAccountController();
     $status = $createUserController->createUser($createUser);
-    $message = $status ? 'User created successfully' : 'Error creating user';
+    $message = $status == true ? 'User created successfully' : 'Error creating user';
 }
 
 if (isset($_GET['search'])) {
@@ -47,18 +45,28 @@ if (isset($_GET['suspend_user'])) {
 
 function deleteUser($username)
 {
-    global $status, $message;
+    global $status, $message, $allUsers;
     $deleteUserController = new DeleteUserAccountController();
     $status = $deleteUserController->deleteUser($username);
     $message = $status ? 'User deleted successfully' : 'Error deleting user';
+
+    if ($status) {
+        $viewUserAccountController = new ViewUserAccountController();
+        $allUsers = $viewUserAccountController->getUsers();
+    }
 }
 
 function suspendUser($username)
 {
-    global $status, $message;
+    global $status, $message, $allUsers;
     $suspendUser = new SuspendUserAccountController();
     $status = $suspendUser->suspendUser($username);
     $message = $status ? 'User suspended successfully' : 'Error suspending user';
+
+    if ($status) {
+        $viewUserAccountController = new ViewUserAccountController();
+        $allUsers = $viewUserAccountController->getUsers();
+    }
 }
 
 ?>
@@ -72,10 +80,8 @@ if (!isset($allUsers)) {
     echo "Users are not set";
 } else {
     // Open the row div
-
-    if (isset($status) && isset($message) && $status != null) {
-
-        if ($status) {
+    if (isset($status) && isset($message)) {
+        if ($status == true) {
 ?>
             <div class="alert alert-success alert-dismissible fade show m-2" role="alert">
                 <?php echo $message ?>
@@ -130,23 +136,23 @@ if (!isset($allUsers)) {
                         <form action="admin_manageAccounts.php" method="post">
                             <div class="form-group">
                                 <label for="fullname">Full Name</label>
-                                <input type="text" class="form-control" id="fullname"  name="fullname" required>
+                                <input type="text" class="form-control" id="fullname" name="fullname" maxlength="255" required>
                             </div>
                             <div class="form-group">
                                 <label for="username">Username</label>
-                                <input type="text" class="form-control" id="username"  name="username" required>
+                                <input type="text" class="form-control" id="username" name="username" maxlength="100" required>
                             </div>
                             <div class="form-group">
                                 <label for="dob">Date of birth</label>
-                                <input type="date" class="form-control" id="dob"  name="dob" required>
+                                <input type="date" class="form-control" id="dob" name="dob" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email address</label>
-                                <input type="email" class="form-control" id="email"  name="email" placeholder="Enter email" required>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" maxlength="255" required>
                             </div>
                             <div class="form-group">
                                 <label for="profile">Select profile</label>
-                                <select class="form-control" id="profile"  name="profile" required>
+                                <select class="form-control" id="profile" name="profile" required>
                                     <option value="admin">admin</option>
                                     <option value="agent">agent</option>
                                     <option value="buyer">buyer</option>
@@ -155,7 +161,7 @@ if (!isset($allUsers)) {
                             </div>
                             <div class="form-group">
                                 <label for="status">Status</label>
-                                <select class="form-control" id="status"  name="status"required>
+                                <select class="form-control" id="status" name="status" required>
                                     <option value="active">active</option>
                                     <option value="suspended">suspended</option>
                                 </select>
@@ -166,7 +172,7 @@ if (!isset($allUsers)) {
                             </div>
                             <div class="form-group">
                                 <label for="password" class="mb-0">Password</label>
-                                <input type="password" class="form-control" id="password" name="password">
+                                <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="modal-footer ">
                                 <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->

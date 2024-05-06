@@ -116,7 +116,16 @@ class UserAccount
 
     public function createUser(array $userDetails)
     {
+        //check if username or email is already used
+        $username = $userDetails['username'];
+        $email = $userDetails['email'];
+        $query = "SELECT * FROM UserAccount WHERE email = '$email' OR username = '$username'";
 
+        $result = $this->conn->query($query);
+        if($result != null){
+            return false;
+        }
+        
         $username = isset($userDetails["username"]) ?  $userDetails['username'] : null;
         $passwordHash =  isset($userDetails["password"]) ? password_hash($userDetails['password'], PASSWORD_DEFAULT) : 'password123';
         $dob =  isset($userDetails["dob"]) ? $userDetails['dob'] : null;
@@ -131,6 +140,6 @@ class UserAccount
 
         $result = $this->conn->query($query);
 
-        return $result;
+        return $result ? true:false;
     }
 }
