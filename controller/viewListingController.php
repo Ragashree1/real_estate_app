@@ -3,7 +3,7 @@ require_once "../entity/propertyListing.php";
 
 class ViewListingController
 {
-    private PropertyListing $propertyListing; 
+    private PropertyListing $propertyListing;
 
     public function __construct()
     {

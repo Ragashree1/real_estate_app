@@ -49,7 +49,7 @@ class UserAccount
 
         // Verify the provided password against the hashed password
         if (!password_verify($password, $hashedPassword)) {
-            return false; // Passwords do not match
+            return false; 
         }
         return true; // Login credentials are valid
     }
@@ -91,7 +91,6 @@ class UserAccount
 
         return $allUsers;
     }
-
 
     public function deleteUser(string $username)
     {
