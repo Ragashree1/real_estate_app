@@ -24,7 +24,7 @@ $sqlUser = "CREATE TABLE IF NOT EXISTS UserAccount (
     contact VARCHAR(255),
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile VARCHAR(100), 
-    status VARCHAR(50) DEFAULT 'active'
+    status VARCHAR(50) DEFAULT 'active',
     FOREIGN KEY (profile) REFERENCES UserProfile(profile_name) ON DELETE SET NULL
     )";
 
@@ -55,10 +55,6 @@ $sqlListing = "CREATE TABLE IF NOT EXISTS PropertyListing (
     FOREIGN KEY (listed_by) REFERENCES UserAccount(username) ON DELETE SET NULL,
     FOREIGN KEY (sold_by) REFERENCES UserAccount(username) ON DELETE SET NULL
 )";
-
-$sqlForeignKey = "ALTER TABLE UserAccount
-    ADD CONSTRAINT FK_UserAccount_UserProfile 
-    FOREIGN KEY (profile) REFERENCES UserProfile(profile_name)";
 
 
 if ($conn->query($sqlListing) === TRUE) {
