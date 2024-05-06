@@ -10,7 +10,7 @@ class UserAccount
         $username = "root";
         $password = "";
         $dbname = "lucky7property";
-        $port = 3306;
+        $port = 3310;
 
         // Create connection
         $this->conn = new mysqli($servername, $username, $password, $dbname, $port);

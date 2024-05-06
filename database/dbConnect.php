@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$port = 3306;
+$port = 3310;
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, "", $port);
