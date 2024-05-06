@@ -10,7 +10,7 @@ class UserAccount
         $username = "root";
         $password = "";
         $dbname = "lucky7property";
-        $port = 3310;
+        $port = 3306;
 
         // Create connection
         $this->conn = new mysqli($servername, $username, $password, $dbname, $port);
@@ -49,7 +49,7 @@ class UserAccount
 
         // Verify the provided password against the hashed password
         if (!password_verify($password, $hashedPassword)) {
-            return false; 
+            return false;
         }
         return true; // Login credentials are valid
     }
