@@ -51,6 +51,10 @@ class PropertyListing
 
         // return empty array if not found
         if ($result->num_rows == 1) {
+            // Increment the view count
+            $sql = "UPDATE PropertyListing SET num_views = num_views + 1 WHERE listing_id = $listing_id";
+            $this->conn->query($sql);
+
             $listingData = $result->fetch_assoc();
             return $listingData;
         } else {
@@ -140,7 +144,7 @@ class PropertyListing
     }
 
     // get all listings created by agent
-    public function getCreatedListing(string $agent_username): array
+    public function agentGetCreatedListing(string $agent_username): array
     {
         $allListings = [];
 
@@ -262,6 +266,10 @@ class PropertyListing
         if (!isset($createInfo['title']) || strlen($createInfo['title']) > 255) {
             $errors['title'] = 'Title must be less than 255 characters';
         }
+        elseif(!isset($createInfo['title']) || empty($createInfo['title'])) 
+        {
+            $errors['title'] = 'title is required';
+        }
 
         // Validate description
         if (!isset($createInfo['description']) || empty($createInfo['description'])) {
@@ -277,53 +285,87 @@ class PropertyListing
         if (isset($createInfo['type']) && strlen($createInfo['type']) > 255) {
             $errors['type'] = 'Type must be less than 255 characters';
         }
+        elseif(!isset($createInfo['type']) || empty($createInfo['type'])) 
+        {
+            $errors['type'] = 'type is required';
+        }
 
         // Validate location 
         if (isset($createInfo['location']) && strlen($createInfo['location']) > 255) {
             $errors['location'] = 'Location must be less than 255 characters';
         }
+        elseif(!isset($createInfo['location']) || empty($createInfo['location'])) 
+        {
+            $errors['location'] = 'location is required';
+        }
+        
 
         // Validate price 
-        if (isset($createInfo['price']) && !is_numeric($createInfo['price'])) {
-            $errors['price'] = 'Price must be a number';
+        if(!isset($createInfo['price']) || empty($createInfo['price'])) 
+        {
+            $errors['price'] = 'price is required';
         }
+        elseif (isset($createInfo['price'])) {
+            if (!is_numeric($createInfo['price']) || $createInfo['price'] <= 0) {
+                $errors['price'] = 'Price must be a number greater than 0';
+            }
+        }
+        
 
         // Validate area 
-        if (isset($createInfo['area']) && !is_numeric($createInfo['area'])) {
-            $errors['area'] = 'Area must be a number';
+        if(!isset($createInfo['area']) || empty($createInfo['area'])) 
+        {
+            $errors['area'] = 'area is required';
+        }
+        elseif (isset($createInfo['area'])) {
+            if (!is_numeric($createInfo['area']) || $createInfo['area'] <= 0) {
+                $errors['area'] = 'area must be a number greater than 0';
+            }
         }
 
         // Validate bhk 
-        if (isset($createInfo['bhk']) && !is_numeric($createInfo['bhk'])) {
-            $errors['bhk'] = 'BHK must be a number';
+        if(!isset($createInfo['bhk']) || empty($createInfo['bhk'])) 
+        {
+            $errors['bhk'] = 'bhk is required';
+        }
+        elseif (isset($createInfo['bhk'])) {
+            if (!is_numeric($createInfo['bhk']) || $createInfo['bhk'] <= 0) {
+                $errors['bhk'] = 'bhk must be a number greater than 0';
+            }
         }
         
         // Validate status 
         if (isset($createInfo['status']) && strlen($createInfo['status']) > 50) {
             $errors['sold_by'] = 'Sold by must be less than 50 characters';
         }
+        elseif(!isset($createInfo['status']) || empty($createInfo['status'])) 
+        {
+            $errors['status'] = 'status is required';
+        }
         
-        // Validate sold_by 
+        // Validate 'sold_by' to ensure it is less than 100 characters
         if (isset($createInfo['sold_by']) && strlen($createInfo['sold_by']) > 100) {
             $errors['sold_by'] = 'Sold by must be less than 100 characters';
         }
 
         // Check if seller username exists in the database
-        if (isset($createInfo['sold_by'])) 
-        {
+        if (isset($createInfo['sold_by']) && !empty($createInfo['sold_by'])) {
             $sellerUsername = $createInfo['sold_by'];
-            $sql = "SELECT * FROM UserAccount WHERE username = '$sellerUsername'";
-            $result = $this->conn->query($sql);
+            // Use prepared statements to prevent SQL Injection
+            $stmt = $this->conn->prepare("SELECT * FROM UserAccount WHERE username = ?");
+            $stmt->bind_param("s", $sellerUsername);
+            $stmt->execute();
+            $result = $stmt->get_result();
             if ($result->num_rows == 0) {
                 $errors['sold_by'] = 'Seller username does not exist';
-                return $errors;
             }
+            $stmt->close();
         }
 
         return $errors;
     }
 
-
+    // agent create a listing
     function agentCreateListings(array $createInfo): array
     {
         // Validate the listing information
@@ -345,22 +387,37 @@ class PropertyListing
         $bhk = $createInfo['bhk'];
         $status = $createInfo['status'];
         $listed_by = $createInfo['listed_by'];
-        $sold_by = $createInfo['sold_by'];
+        
+        // Check if sold_by is provided in createInfo and is not empty
+        if (isset($createInfo['sold_by']) && !empty($createInfo['sold_by'])) {
+            $sold_by = $createInfo['sold_by'];
+        } else {
+            $sold_by = NULL;
+        }
 
-        // Insert the listing into the database
+       // Prepare the SQL query with placeholders
         $sql = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, status, sold_by) 
-                VALUES ('$title', '$description', '$image', '$type', '$location', '$price', '$area', '$bhk', '$listed_by', '$status', '$sold_by')";
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        // Execute the query
-        if ($this->conn->query($sql) === TRUE) {
-            // Listing successfully inserted
+        // Prepare the statement
+        $stmt = $this->conn->prepare($sql);
+
+        // Bind parameters
+        $stmt->bind_param("sssssssssss", $title, $description, $image, $type, $location, $price, $area, $bhk, $listed_by, $status, $sold_by);
+
+        // Execute the statement
+        if ($stmt->execute()) {
             return [];
         } else {
-            // If there's an error, return it
-            return ["error" => "Error inserting listing: " . $this->conn->error];
+            return ["error" => "Error creating listing: " . $stmt->error];
         }
+
+        // Close the statement
+        $stmt->close();
+
     }
 
+    // agent delete a listing
     function agentDeleteListings(int $listing_id): bool
     {
         // Prepare the DELETE query
@@ -382,6 +439,59 @@ class PropertyListing
         } else {
             return false;
         }
+    }
+
+    // agent update a listing
+    function agentUpdateListings(array $updateInfo, int $listing_id): array
+    {
+        // Validate the listing information
+        $errors = $this->validateForm($updateInfo);
+
+        // If there are validation errors, return them
+        if (!empty($errors)) {
+            return $errors;
+        }
+
+        // Extract data from the $updateInfo array
+        $title = $updateInfo['title'];
+        $description = $updateInfo['description'];
+        $image = $updateInfo['image'];
+        $type = $updateInfo['type'];
+        $location = $updateInfo['location'];
+        $price = $updateInfo['price'];
+        $area = $updateInfo['area'];
+        $bhk = $updateInfo['bhk'];
+        $status = $updateInfo['status'];
+        $listed_by = $updateInfo['listed_by'];
+
+        // Check if sold_by is provided in createInfo and is not empty
+        if (isset($updateInfo['sold_by']) && !empty($updateInfo['sold_by'])) {
+            $sold_by = $updateInfo['sold_by'];
+        } else {
+            $sold_by = NULL;
+        }
+
+       // Prepare the SQL query with placeholders
+        $sql = "UPDATE PropertyListing 
+        SET title=?, description=?, image=?, type=?, location=?, price=?, area=?, bhk=?, listed_by=?, status=?, sold_by=?
+        WHERE listing_id=?";
+
+        // Prepare the statement
+        $stmt = $this->conn->prepare($sql);
+
+        // Bind parameters
+        $stmt->bind_param("sssssssssssi", $title, $description, $image, $type, $location, 
+                        $price, $area, $bhk, $listed_by, $status, $sold_by, $listing_id);
+
+        // Execute the statement
+        if ($stmt->execute()) {
+            return [];
+        } else {
+            return ["error" => "Error updating listing: " . $stmt->error];
+        }
+
+        $stmt->close();
+
     }
 }
 

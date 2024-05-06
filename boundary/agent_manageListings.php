@@ -2,7 +2,6 @@
 require_once "partials/header.php"; 
 require_once "../controller/agentViewListingController.php";
 require_once "../controller/agentSearchListingController.php";
-require_once "../controller/agentCreateListingController.php";
 require_once "../controller/agentDeleteListingController.php";
 
 $loggedInUsername = $_SESSION["username"];
@@ -68,46 +67,7 @@ function deleteFail()
         </div>';
 }
 
-function createListing()
-{
-    $createInfo = array();
-    global $loggedInUsername;
-    global $errors;
 
-    // store each login field data in array
-    foreach ($_POST as $key => $value) {
-        $createInfo[$key] = $value;
-    }
-    
-    $createInfo["listed_by"] = $loggedInUsername;
-
-    $agentCreateListingController = new AgentCreateListingController();
-    $errors = $agentCreateListingController->agentCreateListings($createInfo);
-    
-    // Check if there are any errors
-    if (empty($errors)) {
-        createSuccess();
-    }
-    else
-        createFail();
-}
-
-function createSuccess()
-{
-    echo '<div class="alert alert-success" role="alert">
-            Created successfully, refreshing...
-        </div>';
-
-    // Redirect using JavaScript after the alert is closed
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageListings.php"; }, 2000);</script>';
-}
-
-function createFail()
-{
-    echo '<div class="alert alert-danger" role="alert">
-            Created fail..
-        </div>';
-}
 
 // search listings created by agent
 if(isset($_GET['searchForm']))
@@ -117,11 +77,6 @@ if(isset($_GET['searchForm']))
 else
 {
     displayCreatedListings();
-}
-
-if(isset($_POST['createListing']))
-{
-    createListing();
 }
 
 if(isset($_GET['delete_id']))
@@ -147,87 +102,11 @@ if(isset($_GET['delete_id']))
 </div>
 <br>
 
-<!-- Create listings button -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createListingModal">
-<i class="fas fa-plus"></i>
-  Create Listing
-</button>
-<br />
-<br/>
-
-<!-- Create listings Modal -->
-<div class="modal fade" id="createListingModal" tabindex="-1" role="dialog" aria-labelledby="createListingModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createListingModalLabel">Create New Listing</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="createListingForm" action="" method="post">
-                    <!-- Form fields -->
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" name="title" required value="<?php echo isset($_POST['title']) ? $_POST['title'] : ''; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="3" required><?php echo isset($_POST['description']) ? $_POST['description'] : ''; ?></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="image">Image URL</label>
-                        <input type="text" class="form-control" id="image" name="image" value="<?php echo isset($_POST['image']) ? $_POST['image'] : ''; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Type</label>
-                        <input type="text" class="form-control" id="type" name="type" required value="<?php echo isset($_POST['type']) ? $_POST['type'] : ''; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="location">Location</label>
-                        <input type="text" class="form-control" id="location" name="location" required value="<?php echo isset($_POST['location']) ? $_POST['location'] : ''; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Price</label>
-                        <input type="number" class="form-control" id="price" name="price" step="100000" required value="<?php echo isset($_POST['price']) ? $_POST['price'] : ''; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="area">Area</label>
-                        <input type="number" class="form-control" id="area" name="area" required value="<?php echo isset($_POST['area']) ? $_POST['area'] : ''; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="bhk">BHK</label>
-                        <input type="number" class="form-control" id="bhk" name="bhk" required value="<?php echo isset($_POST['bhk']) ? $_POST['bhk'] : ''; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <input type="text" class="form-control" id="status" name="status" value="new" value="<?php echo isset($_POST['status']) ? $_POST['status'] : ''; ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="sold_by">Sold By</label>
-                        <input type="text" class="form-control" id="sold_by" name="sold_by" required value="<?php echo isset($_POST['sold_by']) ? $_POST['sold_by'] : ''; ?>">
-                    </div>
-
-                    <!-- Display errors for each field -->
-                    <?php if (isset($errors) && !empty($errors)) : ?>
-                        <div class="alert alert-danger">
-                            <ul>
-                                <?php foreach ($errors as $error) : ?>
-                                    <li><?php echo $error; ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
-
-                    <button type="submit" class="btn btn-primary" name="createListing" value="createListing">Create</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
+<!-- Create listings -->
+<a href="agent_createListings.php" class="btn btn-primary">
+    <i class="fas fa-plus"></i> Create Listing
+</a>
+<br/><br/>
 
 <?php
 // Check if $allListing is empty
@@ -267,7 +146,7 @@ if (empty($allListing)) {
                     <td>
                         <a href="agent_viewSingleListing.php?listing_id=<?php echo $listing['listing_id']; ?>" class="btn btn-primary btn-sm">
                         <i class="fas fa-eye"></i>View</a>
-                        <a href="agent_updateListings?listing_id=<?php echo $listing['listing_id']; ?>" class="btn btn-success btn-sm">
+                        <a href="agent_updateListings.php?listing_id=<?php echo $listing['listing_id']; ?>" class="btn btn-success btn-sm">
                         <i class="fas fa-pencil"></i>Update</a>
                         <a href="?delete_id=<?php echo $listing['listing_id']; ?>" class="btn btn-danger btn-sm">
                         <i class="fas fa-trash"></i>Delete</a>

@@ -12,7 +12,7 @@ class agentViewListingController
 
     public function getCreatedListings(string $agent_username): array
     {
-        $allListings = $this->propertyListing->getCreatedListing($agent_username);
+        $allListings = $this->propertyListing->agentGetCreatedListing($agent_username);
 
         return $allListings;
     }
