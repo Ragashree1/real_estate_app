@@ -6,14 +6,16 @@ require_once "../controller/deleteUserAccountController.php";
 require_once "../controller/suspendUserAccountController.php";
 require_once "../controller/createUserAccountController.php";
 require_once "../controller/updateUserAccountController.php";
+require_once "../controller/viewProfileController.php";
+
 
 $status = null;
 $message = null;
 $userAccount = null;
 $allUsers = [];
+$userProfiles = [];
 
 
-//todo get userprofile from profile controller 
 
 if (isset($_POST["createUser"])) {
     $createUser = array();
@@ -41,22 +43,23 @@ if (isset($_POST["updateUser"])) {
     $updateUserController = new UpdateUserAccountController();
     $status = $updateUserController->updateUser($updateUser);
     $message = $status == true ? 'User updated successfully' : 'Error updating user';
-  
+
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
 if (isset($_GET['search'])) {
     $searchUserAccountController = new SearchUserAccountController();
     $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
+    $allProfiles = (new ViewProfileController())->getProfiles();
 } else {
     $viewUserAccountController = new ViewUserAccountController();
     $allUsers = $viewUserAccountController->getUsers();
+    $allProfiles = (new ViewProfileController())->getProfiles();
 }
 
 if (isset($_GET['delete_user'])) {
     deleteUser($_GET['delete_user']);
     $_GET = array();
-
 }
 
 if (isset($_GET['suspend_user'])) {
@@ -72,7 +75,6 @@ function deleteUser($username)
     $message = $status ? 'User deleted successfully' : 'Error deleting user';
 
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
-
 }
 
 function suspendUser($username)
@@ -83,7 +85,6 @@ function suspendUser($username)
     $message = $status ? 'User suspended successfully' : 'Error suspending user';
 
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
-
 }
 
 ?>
@@ -170,10 +171,14 @@ if (!isset($allUsers)) {
                             <div class="form-group">
                                 <label for="profile">Select profile</label>
                                 <select class="form-control" id="profile" name="profile" required>
-                                    <option value="admin">admin</option>
-                                    <option value="agent">agent</option>
-                                    <option value="buyer">buyer</option>
-                                    <option value="seller">seller</option>
+                                    <?php
+                                    foreach ($allProfiles as $profile) {
+                                    ?>
+                                        <tr>
+                                            <option value=<?php echo $profile['profile_name'] ?>><?= $profile['profile_name'] ?></option>
+                                        <?php
+                                    }
+                                        ?>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -192,7 +197,6 @@ if (!isset($allUsers)) {
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="modal-footer ">
-                                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                                 <input type="submit" class="btn btn-primary" value="Submit" name="createUser" <?php if (isset($status) && $status) {
                                                                                                                     echo "data-dismiss='modal'";
                                                                                                                 } ?>>
@@ -220,7 +224,6 @@ if (!isset($allUsers)) {
 
         </tr>
         <?php
-        // Iterate over the array and display each listing
         foreach ($allUsers as $user) {
         ?>
             <tr>
@@ -285,10 +288,15 @@ if (!isset($allUsers)) {
                         <div class="form-group">
                             <label for="profile">Select profile</label>
                             <select class="form-control" id="edit_profile" name="profile" required>
-                                <option value="admin">admin</option>
-                                <option value="agent">agent</option>
-                                <option value="buyer">buyer</option>
-                                <option value="seller">seller</option>
+                                <?php
+                                foreach ($allProfiles as $profile) {
+                                ?>
+                                    <tr>
+                                        <option value=<?php echo $profile['profile_name'] ?>><?= $profile['profile_name'] ?></option>
+                                    <?php
+                                }
+                                    ?>
+
                             </select>
                         </div>
                         <div class="form-group">
