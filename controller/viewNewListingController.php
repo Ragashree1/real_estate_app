@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/propertyListing.php";
 
-class ViewListingController
+class ViewNewListingController
 {
     private PropertyListing $propertyListing;
 

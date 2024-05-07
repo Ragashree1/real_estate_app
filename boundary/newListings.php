@@ -1,12 +1,12 @@
 <?php 
 require_once "partials/header.php"; 
 require_once "partials/hero.php"; 
-require_once "../controller/ViewListingController.php";
+require_once "../controller/ViewNewListingController.php";
 require_once "../controller/SearchNewListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/listingstyle.css">';
 
 $loggedInProfile = $_SESSION['username'];
-$ViewListingController = new ViewListingController();
+$ViewListingController = new ViewNewListingController();
 $searchNewListingController = new SearchNewListingController();
 $allListing;
 
