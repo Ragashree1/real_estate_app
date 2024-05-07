@@ -1,22 +1,21 @@
 <?php 
 require_once "partials/header.php"; 
-require_once "../controller/agentViewListingController.php";
+require_once "../controller/agentViewAllListingController.php";
 require_once "../controller/agentSearchListingController.php";
 require_once "../controller/agentDeleteListingController.php";
 
 $loggedInUsername = $_SESSION["username"];
-$agentViewListingController = new agentViewListingController();
+$agentViewAllListingController = new agentViewAllListingController();
 $allListing;
-$errors;
 
 // display new listings
 function displayCreatedListings()
 {
     global $loggedInUsername;
-    global $agentViewListingController;
+    global $agentViewAllListingController;
     global $allListing;
 
-    $allListing = $agentViewListingController->agentGetCreatedListings($loggedInUsername);  
+    $allListing = $agentViewAllListingController->agentGetCreatedListings($loggedInUsername);  
 }
 
 function searchCreatedListings()
@@ -34,7 +33,7 @@ function searchCreatedListings()
     $allListing = $agentSearchListingController->agentSearchListings($searchInfo);
 }
 
-function deleteCreatedListings()
+function deleteAListing()
 {
     $agentDeleteListingController = new AgentDeleteListingController();
     $deleted = $agentDeleteListingController->agentDeleteListings($_GET["delete_id"]);
@@ -57,7 +56,7 @@ function deleteSuccess()
         </div>';
 
     // Redirect using JavaScript after the alert is closed
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageListings.php"; }, 1000);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "agent_manageAllListings.php"; }, 1000);</script>';
 }
 
 function deleteFail()
@@ -81,7 +80,7 @@ else
 
 if(isset($_GET['delete_id']))
 {
-    deleteCreatedListings();
+    deleteAListing();
 }
 
 ?>
@@ -148,7 +147,7 @@ if (empty($allListing)) {
                         <i class="fas fa-eye"></i>View</a>
                         <a href="agent_updateListings.php?listing_id=<?php echo $listing['listing_id']; ?>" class="btn btn-success btn-sm">
                         <i class="fas fa-pencil"></i>Update</a>
-                        <a href="?delete_id=<?php echo $listing['listing_id']; ?>" class="btn btn-danger btn-sm">
+                        <a href="?delete_id=<?php echo $listing['listing_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('confirm delete')">
                         <i class="fas fa-trash"></i>Delete</a>
                     </td>
                 </tr>

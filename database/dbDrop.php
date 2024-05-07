@@ -1,6 +1,14 @@
 <?php
-
 // drop profile
+$dropShortlist= "DROP TABLE IF EXISTS Shortlist";
+
+if ($conn->query($dropShortlist) === TRUE) {
+    echo "Table Shortlist dropped successfully\n";
+} else {
+    echo "Error dropping table: " . $conn->error . "\n";
+}
+
+// drop listing
 $dropListing = "DROP TABLE IF EXISTS PropertyListing";
 
 if ($conn->query($dropListing) === TRUE) {

@@ -66,13 +66,13 @@ class PropertyListing
     }
 
     // search listings
-    function searchListings(array $searchInfo): array
+    function searchNewListings(array $searchInfo): array
     {
         // Initialize an empty array to store the search results
         $searchResults = [];
 
         // Build the SQL query based on search parameters
-        $sql = "SELECT * FROM PropertyListing WHERE 1=1"; 
+        $sql = "SELECT * FROM PropertyListing WHERE status = 'new'"; 
 
         // Add conditions based on search parameters
         if (!empty($searchInfo['search'])) {
@@ -234,124 +234,9 @@ class PropertyListing
         return $searchResults;
     }
 
-    function validateForm(array $createInfo): array
-    {
-        $errors = [];
-
-        // Validate title
-        if (!isset($createInfo['title']) || strlen($createInfo['title']) > 255) {
-            $errors['title'] = 'Title must be less than 255 characters';
-        }
-        elseif(!isset($createInfo['title']) || empty($createInfo['title'])) 
-        {
-            $errors['title'] = 'title is required';
-        }
-
-        // Validate description
-        if (!isset($createInfo['description']) || empty($createInfo['description'])) {
-            $errors['description'] = 'Description is required';
-        }
-
-        // Validate image
-        if (!isset($createInfo['image']) && strlen($createInfo['image']) > 255) {
-            $errors['image'] = 'Image URL must be less than 255 characters';
-        }
-
-        // Validate type 
-        if (isset($createInfo['type']) && strlen($createInfo['type']) > 255) {
-            $errors['type'] = 'Type must be less than 255 characters';
-        }
-        elseif(!isset($createInfo['type']) || empty($createInfo['type'])) 
-        {
-            $errors['type'] = 'type is required';
-        }
-
-        // Validate location 
-        if (isset($createInfo['location']) && strlen($createInfo['location']) > 255) {
-            $errors['location'] = 'Location must be less than 255 characters';
-        }
-        elseif(!isset($createInfo['location']) || empty($createInfo['location'])) 
-        {
-            $errors['location'] = 'location is required';
-        }
-        
-
-        // Validate price 
-        if(!isset($createInfo['price']) || empty($createInfo['price'])) 
-        {
-            $errors['price'] = 'price is required';
-        }
-        elseif (isset($createInfo['price'])) {
-            if (!is_numeric($createInfo['price']) || $createInfo['price'] <= 0) {
-                $errors['price'] = 'Price must be a number greater than 0';
-            }
-        }
-        
-
-        // Validate area 
-        if(!isset($createInfo['area']) || empty($createInfo['area'])) 
-        {
-            $errors['area'] = 'area is required';
-        }
-        elseif (isset($createInfo['area'])) {
-            if (!is_numeric($createInfo['area']) || $createInfo['area'] <= 0) {
-                $errors['area'] = 'area must be a number greater than 0';
-            }
-        }
-
-        // Validate bhk 
-        if(!isset($createInfo['bhk']) || empty($createInfo['bhk'])) 
-        {
-            $errors['bhk'] = 'bhk is required';
-        }
-        elseif (isset($createInfo['bhk'])) {
-            if (!is_numeric($createInfo['bhk']) || $createInfo['bhk'] <= 0) {
-                $errors['bhk'] = 'bhk must be a number greater than 0';
-            }
-        }
-        
-        // Validate status 
-        if (isset($createInfo['status']) && strlen($createInfo['status']) > 50) {
-            $errors['sold_by'] = 'Sold by must be less than 50 characters';
-        }
-        elseif(!isset($createInfo['status']) || empty($createInfo['status'])) 
-        {
-            $errors['status'] = 'status is required';
-        }
-        
-        // Validate 'sold_by' to ensure it is less than 100 characters
-        if (isset($createInfo['sold_by']) && strlen($createInfo['sold_by']) > 100) {
-            $errors['sold_by'] = 'Sold by must be less than 100 characters';
-        }
-
-        // Check if seller username exists in the database
-        if (isset($createInfo['sold_by']) && !empty($createInfo['sold_by'])) {
-            $sellerUsername = $createInfo['sold_by'];
-            // Use prepared statements to prevent SQL Injection
-            $stmt = $this->conn->prepare("SELECT * FROM UserAccount WHERE username = ?");
-            $stmt->bind_param("s", $sellerUsername);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows == 0) {
-                $errors['sold_by'] = 'Seller username does not exist';
-            }
-            $stmt->close();
-        }
-
-        return $errors;
-    }
-
     // agent create a listing
-    function agentCreateListings(array $createInfo): array
+    function agentCreateListings(array $createInfo): bool
     {
-        // Validate the listing information
-        $errors = $this->validateForm($createInfo);
-
-        // If there are validation errors, return them
-        if (!empty($errors)) {
-            return $errors;
-        }
-
         // Extract data from the $createInfo array
         $title = $createInfo['title'];
         $description = $createInfo['description'];
@@ -363,13 +248,7 @@ class PropertyListing
         $bhk = $createInfo['bhk'];
         $status = $createInfo['status'];
         $listed_by = $createInfo['listed_by'];
-        
-        // Check if sold_by is provided in createInfo and is not empty
-        if (isset($createInfo['sold_by']) && !empty($createInfo['sold_by'])) {
-            $sold_by = $createInfo['sold_by'];
-        } else {
-            $sold_by = NULL;
-        }
+        $sold_by = $createInfo['sold_by'];
 
        // Prepare the SQL query with placeholders
         $sql = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, status, sold_by) 
@@ -377,15 +256,17 @@ class PropertyListing
 
         // Prepare the statement
         $stmt = $this->conn->prepare($sql);
-
-        // Bind parameters
         $stmt->bind_param("sssssssssss", $title, $description, $image, $type, $location, $price, $area, $bhk, $listed_by, $status, $sold_by);
 
         // Execute the statement
-        if ($stmt->execute()) {
-            return [];
-        } else {
-            return ["error" => "Error creating listing: " . $stmt->error];
+        try {
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (mysqli_sql_exception $e) {
+            return false;
         }
 
         // Close the statement
@@ -418,16 +299,8 @@ class PropertyListing
     }
 
     // agent update a listing
-    function agentUpdateListings(array $updateInfo, int $listing_id): array
+    function agentUpdateListings(array $updateInfo, int $listing_id): bool
     {
-        // Validate the listing information
-        $errors = $this->validateForm($updateInfo);
-
-        // If there are validation errors, return them
-        if (!empty($errors)) {
-            return $errors;
-        }
-
         // Extract data from the $updateInfo array
         $title = $updateInfo['title'];
         $description = $updateInfo['description'];
@@ -439,13 +312,7 @@ class PropertyListing
         $bhk = $updateInfo['bhk'];
         $status = $updateInfo['status'];
         $listed_by = $updateInfo['listed_by'];
-
-        // Check if sold_by is provided in createInfo and is not empty
-        if (isset($updateInfo['sold_by']) && !empty($updateInfo['sold_by'])) {
-            $sold_by = $updateInfo['sold_by'];
-        } else {
-            $sold_by = NULL;
-        }
+        $sold_by = $updateInfo['sold_by'];
 
        // Prepare the SQL query with placeholders
         $sql = "UPDATE PropertyListing 
@@ -460,10 +327,14 @@ class PropertyListing
                         $price, $area, $bhk, $listed_by, $status, $sold_by, $listing_id);
 
         // Execute the statement
-        if ($stmt->execute()) {
-            return [];
-        } else {
-            return ["error" => "Error updating listing: " . $stmt->error];
+        try {
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (mysqli_sql_exception $e) {
+            return false;
         }
 
         $stmt->close();

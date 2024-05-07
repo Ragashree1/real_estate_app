@@ -1,15 +1,24 @@
 <?php 
 require_once "partials/header.php"; 
-require_once "../controller/viewListingController.php";
+require_once "../controller/sellerViewSingleNewListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/singlelistingstyle.css">';
 
-if (isset($_GET['listing_id'])) {
+$singleListing;
+
+function displaySingleListing()
+{
+    global $singleListing;
     $listing_id = $_GET['listing_id'];
 
     // get selected listing
-    $ViewListingController = new ViewListingController();
-    $singleListing = $ViewListingController->getSingleListing($listing_id);
+    $ViewSingleListingController = new SellerViewSingleNewListingController();
+    $singleListing = $ViewSingleListingController->getSingleListing($listing_id);
 }
+
+if (isset($_GET['listing_id'])) {
+    displaySingleListing();
+}
+    
 ?>
 
 <br/> &nbsp;

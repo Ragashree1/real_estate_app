@@ -61,4 +61,21 @@ if ($conn->query($sqlListing) === TRUE) {
 } else {
     echo "Error creating table PropertyListing: " . $conn->error;
 }
+
+// create shortlist table
+$sqlshortlist = "CREATE TABLE IF NOT EXISTS Shortlist (
+    buyer_username VARCHAR(100),
+    listing_id INT(6) UNSIGNED,
+    PRIMARY KEY (buyer_username, listing_id),
+    FOREIGN KEY (buyer_username) REFERENCES UserAccount(username),
+    FOREIGN KEY (listing_id) REFERENCES PropertyListing(listing_id)
+)";
+
+if ($conn->query($sqlshortlist) === TRUE) {
+    echo "Table Shortlist created successfully\n";
+} else {
+    echo "Error creating table Shortlist: " . $conn->error;
+}
+
+
 ?>

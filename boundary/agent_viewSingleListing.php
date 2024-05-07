@@ -1,19 +1,27 @@
 <?php 
 require_once "partials/header.php"; 
-require_once "../controller/agentViewListingController.php";
+require_once "../controller/agentViewSingleListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/singlelistingstyle.css">';
 
-if (isset($_GET['listing_id'])) {
+$singleListing;
+
+function displaySingleListing()
+{
+    global $singleListing;
     $listing_id = $_GET['listing_id'];
 
     // get selected listing
-    $agentViewListingController = new AgentViewListingController();
-    $singleListing = $agentViewListingController->agentGetSingleListing($listing_id);
+    $agentViewSingleListingController = new AgentViewSingleListingController();
+    $singleListing = $agentViewSingleListingController->agentGetSingleListing($listing_id);
+}
+
+if (isset($_GET['listing_id'])) {
+    displaySingleListing();
 }
 ?>
 
 <br/> &nbsp;
-<a href="agent_manageListings.php"><i class="fas fa-arrow-left"></i> Back</a>
+<a href="agent_viewAllListings.php"><i class="fas fa-arrow-left"></i> Back</a>
 <br/>
 <br>
 <!-- DISPLAY SINGLE LISTING -->

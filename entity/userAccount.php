@@ -23,18 +23,11 @@ class UserAccount
 
     public function validateLogin(array $loginInfo): bool
     {
-        // check for spacing values
-        foreach ($loginInfo as $value) {
-            if (trim($value) === '') {
-                return false;
-            }
-        }
-        
         $username = $loginInfo['username'];
         $password = $loginInfo['password'];
         $profile = $loginInfo['profile'];
 
-        // Example SQL query to validate login
+        //SQL query to validate login
         $query = "SELECT * FROM UserAccount WHERE (username = '$username' OR email = '$username') 
                                                 AND profile = '$profile'";
         $result = $this->conn->query($query);

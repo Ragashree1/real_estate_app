@@ -54,13 +54,12 @@ if($loggedIn)
             if (isset($loggedInProfile)) {
                 $profile = $_SESSION['profile'];
                 if ($profile === 'agent') {
-                    echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="agent_manageListings.php" style="color: white;"><i class="fas fa-gear"></i> Manage Listings</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="agent_manageAllListings.php" style="color: white;"><i class="fas fa-gear"></i> Manage Listings</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="agent_ratingsReviews.php" style="color: white;"><i class="fas fa-comments"></i> Ratings & Reviews</a></li>';
                 } elseif ($profile === 'buyer') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_soldListings.php"  style="color: white;"><i class="fas fa-gavel"></i> Sold Properties</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="buyer_favourites.php" style="color: white;"><i class="fas fa-heart" ></i> Favourites</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="buyer_favourites.php" style="color: white;"><i class="fas fa-heart" ></i> Shortlist</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="" style="color: white;"><i class="fas fa-calculator" ></i> Calculate Mortgage</a></li>';
                 } elseif ($profile === 'seller') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';

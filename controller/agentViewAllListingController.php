@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/propertyListing.php";
 
-class ViewListingController
+class agentViewAllListingController
 {
     private PropertyListing $propertyListing;
 
@@ -10,12 +10,13 @@ class ViewListingController
         $this->propertyListing = new PropertyListing();
     }
 
-    public function getNewListing(): array
+    public function agentGetCreatedListings(string $agent_username): array
     {
-        $allListings = $this->propertyListing->getNewListing();
+        $allListings = $this->propertyListing->agentGetCreatedListing($agent_username);
 
         return $allListings;
     }
 }
+
 
 ?>
