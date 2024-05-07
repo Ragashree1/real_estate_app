@@ -20,24 +20,24 @@ class PropertyListing
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
-    
+
     // get all listings with status = new
     public function getNewListing(): array
     {
-         $allListings = [];
+        $allListings = [];
 
-         // Perform a database query to fetch all listings
-         $query = "SELECT * FROM PropertyListing WHERE status = 'new' ORDER BY date_listed DESC";
-         $result = $this->conn->query($query);
- 
-         // Check if there are any listings
-         if ($result->num_rows > 0) {
-             while ($row = $result->fetch_assoc()) {
-                 $allListings[] = $row;
-             }
-         }
- 
-         return $allListings;
+        // Perform a database query to fetch all listings
+        $query = "SELECT * FROM PropertyListing WHERE status = 'new' ORDER BY date_listed DESC";
+        $result = $this->conn->query($query);
+
+        // Check if there are any listings
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $allListings[] = $row;
+            }
+        }
+
+        return $allListings;
     }
 
     public function getSingleListing(int $listing_id): array
@@ -72,7 +72,7 @@ class PropertyListing
         $searchResults = [];
 
         // Build the SQL query based on search parameters
-        $sql = "SELECT * FROM PropertyListing WHERE 1=1"; 
+        $sql = "SELECT * FROM PropertyListing WHERE 1=1";
 
         // Add conditions based on search parameters
         if (!empty($searchInfo['search'])) {
@@ -178,7 +178,7 @@ class PropertyListing
         $searchResults = [];
 
         // Build the SQL query based on search parameters
-        $sql = "SELECT * FROM PropertyListing WHERE 1=1"; 
+        $sql = "SELECT * FROM PropertyListing WHERE 1=1";
 
         // Add conditions based on search parameters
         if (!empty($searchInfo['search'])) {
@@ -241,9 +241,7 @@ class PropertyListing
         // Validate title
         if (!isset($createInfo['title']) || strlen($createInfo['title']) > 255) {
             $errors['title'] = 'Title must be less than 255 characters';
-        }
-        elseif(!isset($createInfo['title']) || empty($createInfo['title'])) 
-        {
+        } elseif (!isset($createInfo['title']) || empty($createInfo['title'])) {
             $errors['title'] = 'title is required';
         }
 
@@ -260,65 +258,53 @@ class PropertyListing
         // Validate type 
         if (isset($createInfo['type']) && strlen($createInfo['type']) > 255) {
             $errors['type'] = 'Type must be less than 255 characters';
-        }
-        elseif(!isset($createInfo['type']) || empty($createInfo['type'])) 
-        {
+        } elseif (!isset($createInfo['type']) || empty($createInfo['type'])) {
             $errors['type'] = 'type is required';
         }
 
         // Validate location 
         if (isset($createInfo['location']) && strlen($createInfo['location']) > 255) {
             $errors['location'] = 'Location must be less than 255 characters';
-        }
-        elseif(!isset($createInfo['location']) || empty($createInfo['location'])) 
-        {
+        } elseif (!isset($createInfo['location']) || empty($createInfo['location'])) {
             $errors['location'] = 'location is required';
         }
-        
+
 
         // Validate price 
-        if(!isset($createInfo['price']) || empty($createInfo['price'])) 
-        {
+        if (!isset($createInfo['price']) || empty($createInfo['price'])) {
             $errors['price'] = 'price is required';
-        }
-        elseif (isset($createInfo['price'])) {
+        } elseif (isset($createInfo['price'])) {
             if (!is_numeric($createInfo['price']) || $createInfo['price'] <= 0) {
                 $errors['price'] = 'Price must be a number greater than 0';
             }
         }
-        
+
 
         // Validate area 
-        if(!isset($createInfo['area']) || empty($createInfo['area'])) 
-        {
+        if (!isset($createInfo['area']) || empty($createInfo['area'])) {
             $errors['area'] = 'area is required';
-        }
-        elseif (isset($createInfo['area'])) {
+        } elseif (isset($createInfo['area'])) {
             if (!is_numeric($createInfo['area']) || $createInfo['area'] <= 0) {
                 $errors['area'] = 'area must be a number greater than 0';
             }
         }
 
         // Validate bhk 
-        if(!isset($createInfo['bhk']) || empty($createInfo['bhk'])) 
-        {
+        if (!isset($createInfo['bhk']) || empty($createInfo['bhk'])) {
             $errors['bhk'] = 'bhk is required';
-        }
-        elseif (isset($createInfo['bhk'])) {
+        } elseif (isset($createInfo['bhk'])) {
             if (!is_numeric($createInfo['bhk']) || $createInfo['bhk'] <= 0) {
                 $errors['bhk'] = 'bhk must be a number greater than 0';
             }
         }
-        
+
         // Validate status 
         if (isset($createInfo['status']) && strlen($createInfo['status']) > 50) {
             $errors['sold_by'] = 'Sold by must be less than 50 characters';
-        }
-        elseif(!isset($createInfo['status']) || empty($createInfo['status'])) 
-        {
+        } elseif (!isset($createInfo['status']) || empty($createInfo['status'])) {
             $errors['status'] = 'status is required';
         }
-        
+
         // Validate 'sold_by' to ensure it is less than 100 characters
         if (isset($createInfo['sold_by']) && strlen($createInfo['sold_by']) > 100) {
             $errors['sold_by'] = 'Sold by must be less than 100 characters';
@@ -363,7 +349,7 @@ class PropertyListing
         $bhk = $createInfo['bhk'];
         $status = $createInfo['status'];
         $listed_by = $createInfo['listed_by'];
-        
+
         // Check if sold_by is provided in createInfo and is not empty
         if (isset($createInfo['sold_by']) && !empty($createInfo['sold_by'])) {
             $sold_by = $createInfo['sold_by'];
@@ -371,7 +357,7 @@ class PropertyListing
             $sold_by = NULL;
         }
 
-       // Prepare the SQL query with placeholders
+        // Prepare the SQL query with placeholders
         $sql = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, status, sold_by) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -390,7 +376,6 @@ class PropertyListing
 
         // Close the statement
         $stmt->close();
-
     }
 
     // agent delete a listing
@@ -398,17 +383,17 @@ class PropertyListing
     {
         // Prepare the DELETE query
         $query = "DELETE FROM PropertyListing WHERE listing_id = ?";
-        
+
         // Prepare the statement
         $stmt = $this->conn->prepare($query);
-        
+
         if (!$stmt) {
             // If preparation fails, return false
             return false;
         }
         $stmt->bind_param("i", $listing_id);
         $result = $stmt->execute();
-        
+
         // Check if the deletion was successful
         if ($result) {
             return true;
@@ -447,7 +432,7 @@ class PropertyListing
             $sold_by = NULL;
         }
 
-       // Prepare the SQL query with placeholders
+        // Prepare the SQL query with placeholders
         $sql = "UPDATE PropertyListing 
         SET title=?, description=?, image=?, type=?, location=?, price=?, area=?, bhk=?, listed_by=?, status=?, sold_by=?
         WHERE listing_id=?";
@@ -456,8 +441,21 @@ class PropertyListing
         $stmt = $this->conn->prepare($sql);
 
         // Bind parameters
-        $stmt->bind_param("sssssssssssi", $title, $description, $image, $type, $location, 
-                        $price, $area, $bhk, $listed_by, $status, $sold_by, $listing_id);
+        $stmt->bind_param(
+            "sssssssssssi",
+            $title,
+            $description,
+            $image,
+            $type,
+            $location,
+            $price,
+            $area,
+            $bhk,
+            $listed_by,
+            $status,
+            $sold_by,
+            $listing_id
+        );
 
         // Execute the statement
         if ($stmt->execute()) {
@@ -467,8 +465,5 @@ class PropertyListing
         }
 
         $stmt->close();
-
     }
 }
-
-?>

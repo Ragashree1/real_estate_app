@@ -49,7 +49,7 @@ class UserAccount
 
         // Verify the provided password against the hashed password
         if (!password_verify($password, $hashedPassword)) {
-            return false; 
+            return false;
         }
         return true; // Login credentials are valid
     }
