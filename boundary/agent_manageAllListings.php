@@ -90,10 +90,10 @@ if(isset($_GET['delete_id']))
     <form class="form-inline" method="GET" action=""
             style="background-color: grey; padding: 10px; border-radius: 5px; width: 90vw;">
         <input class="form-control mr-sm-2" type="search" placeholder="Title/type/location/status/seller" aria-label="Search" name="search" style="width: 25%;">
-        <input class="form-control mr-sm-2" type="number" placeholder="Min Price" name="min_price" style="width: 15%;">
-        <input class="form-control mr-sm-2" type="number" placeholder="Max Price" name="max_price" style="width: 15%;">
-        <input class="form-control mr-sm-2" type="number" placeholder="Min Area" name="min_area" style="width: 15%;">
-        <input class="form-control mr-sm-2" type="number" placeholder="bedroom+hall+kitchen num" name="bhk" style="width: 20;">
+        <input class="form-control mr-sm-2" type="number" placeholder="Min Price" name="min_price" style="width: 15%;" min="0">
+        <input class="form-control mr-sm-2" type="number" placeholder="Max Price" name="max_price" style="width: 15%;" min="0">
+        <input class="form-control mr-sm-2" type="number" placeholder="Min Area" name="min_area" style="width: 15%;" min="0">
+        <input class="form-control mr-sm-2" type="number" placeholder="bedroom+hall+kitchen num" name="bhk" style="width: 20;" min="0">
         <button class="btn btn-success my-2 my-sm-0" type="submit" name="searchForm" value="search" style="width: 10%;">
             <i class="fas fa-search"></i> Search
         </button>

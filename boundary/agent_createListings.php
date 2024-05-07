@@ -91,17 +91,17 @@ if(isset($_POST['createListing']))
         <!-- Price -->
         <div class="form-group">
             <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" name="price" value="<?php echo isset($_POST['price']) ? $_POST['price'] : ''; ?>" required>
+            <input type="number" class="form-control" id="price" name="price" value="<?php echo isset($_POST['price']) ? $_POST['price'] : ''; ?>" min="0" required >
         </div>
         <!-- Area -->
         <div class="form-group">
             <label for="area">Area</label>
-            <input type="number" class="form-control" id="area" name="area" value="<?php echo isset($_POST['area']) ? $_POST['area'] : ''; ?>" required>
+            <input type="number" class="form-control" id="area" name="area" value="<?php echo isset($_POST['area']) ? $_POST['area'] : ''; ?>" min="0" required>
         </div>
         <!-- BHK -->
         <div class="form-group">
             <label for="bhk">BHK</label>
-            <input type="number" class="form-control" id="bhk" name="bhk" value="<?php echo isset($_POST['bhk']) ? $_POST['bhk'] : ''; ?>" required>
+            <input type="number" class="form-control" id="bhk" name="bhk" value="<?php echo isset($_POST['bhk']) ? $_POST['bhk'] : ''; ?>"  min="0" required>
         </div>
         <!-- Status -->
         <div class="form-group">
