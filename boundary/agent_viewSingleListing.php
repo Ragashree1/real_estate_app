@@ -21,7 +21,7 @@ if (isset($_GET['listing_id'])) {
 ?>
 
 <br/> &nbsp;
-<a href="agent_manageCreatedListings.php"><i class="fas fa-arrow-left"></i> Back</a>
+<a href="#" onclick="window.history.back();"><i class="fas fa-arrow-left"></i> Back</a>
 <br/>
 <br>
 <!-- DISPLAY SINGLE LISTING -->

@@ -77,5 +77,44 @@ if ($conn->query($sqlshortlist) === TRUE) {
     echo "Error creating table Shortlist: " . $conn->error;
 }
 
+// create ratings table
+$sqlRatings = "CREATE TABLE IF NOT EXISTS Rating (
+    rater_username VARCHAR(100),
+    agent_username VARCHAR(100),
+    profile VARCHAR(100),
+    rating_communication INT,
+    rating_professionalism INT,
+    rating_marketKnowledge INT,
+    date_rated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (rater_username, agent_username),
+    FOREIGN KEY (rater_username) REFERENCES UserAccount(username) ON DELETE CASCADE,
+    FOREIGN KEY (agent_username) REFERENCES UserAccount(username) ON DELETE CASCADE
+)" ;
+
+if ($conn->query($sqlRatings) === TRUE) {
+    echo "Table Rating created successfully\n";
+} else {
+    echo "Error creating table Rating: " . $conn->error;
+}
+
+
+// create reviews table
+$sqlReviews = "CREATE TABLE IF NOT EXISTS Review (
+    reviewer_username VARCHAR(100),
+    agent_username VARCHAR(100),
+    profile VARCHAR(100),
+    review_text TEXT,
+    date_reviewed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (reviewer_username, agent_username),
+    FOREIGN KEY (reviewer_username) REFERENCES UserAccount(username) ON DELETE CASCADE,
+    FOREIGN KEY (agent_username) REFERENCES UserAccount(username) ON DELETE CASCADE
+)" ;
+
+if ($conn->query($sqlReviews) === TRUE) {
+    echo "Table Reviews created successfully\n";
+} else {
+    echo "Error creating table Reviews: " . $conn->error;
+}
+
 
 ?>

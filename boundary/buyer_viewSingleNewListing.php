@@ -3,6 +3,8 @@ require_once "partials/header.php";
 require_once "../controller/buyerViewSingleNewListingController.php";
 require_once "../controller/buyerShortlistNewListingController.php";
 require_once "../controller/buyerRemoveShortlistNewListingController.php";
+require_once "../controller/rateAgentController.php";
+require_once "../controller/reviewAgentController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/singlelistingstyle.css">';
 
 $singleListing;
@@ -11,6 +13,8 @@ $listing_id = $_GET['listing_id'];
 $buyerShortlistController = new BuyerShortlistNewListingController();
 $buyerRemoveShortlistController = new BuyerRemoveShortlistNewListingController();
 $shortlisted;
+$rated;
+$reviewed;
 
 function displaySingleListing()
 {
@@ -67,7 +71,27 @@ function isShortlisted()
     global $loggedInUsername;
     global $shortlisted;
 
-    $shortlisted = $buyerShortlistController->isShortListed($loggedInUsername, $listing_id);;
+    $shortlisted = $buyerShortlistController->isShortListed($loggedInUsername, $listing_id);
+}
+
+function isRated()
+{
+    global $rated;
+    global $loggedInUsername;
+    global $singleListing;
+
+    $rateAgentController = new RateAgentController();
+    $rated = $rateAgentController->isRated($loggedInUsername, $singleListing['username']);
+}
+
+function isReviewed()
+{
+    global $reviewed;
+    global $loggedInUsername;
+    global $singleListing;
+
+    $reviewAgentController = new ReviewAgentController();
+    $reviewed = $reviewAgentController->isReviewed($loggedInUsername, $singleListing['username']);
 }
 
 if (isset($_GET['listing_id'])) {
@@ -86,7 +110,7 @@ if (isset($_GET['unlike'])) {
 ?>
 
 <br/> &nbsp;
-<a href="newListings.php"><i class="fas fa-arrow-left"></i> Back</a>
+<a href="#" onclick="window.history.back();"><i class="fas fa-arrow-left"></i> Back</a>
 <br/>
 <br>
 <!-- DISPLAY SINGLE LISTING -->
@@ -174,9 +198,52 @@ if (empty($singleListing)) {
                     <?php endif; ?>
                 </div>
             </div>
+            <div class="agent-buttons" style="margin-top: 20px;">
+                <div class="d-flex flex-row">
+                    <!-- View rating -->
+                    <form id="viewRatingForm" action="viewAgentRatings.php" method="post" class="mr-2">
+                        <input type="hidden" name="agent_username" value="<?= $singleListing['username'] ?>">
+                        <input type="hidden" name="fullname" value="<?= $singleListing['fullname'] ?>">
+                        <input type="hidden" name="contact" value="<?= $singleListing['contact'] ?>">
+                        <input type="hidden" name="email" value="<?= $singleListing['email'] ?>">
+                        <button type="submit" class="btn btn-primary"> <i class="far fa-eye"></i> View Rating</button>
+                    </form>
+
+                    <!-- View reviews -->
+                    <form id="viewReviewForm" action="viewAgentReviews.php" method="post" class="mr-2">
+                        <input type="hidden" name="agent_username" value="<?= $singleListing['username'] ?>">
+                        <input type="hidden" name="fullname" value="<?= $singleListing['fullname'] ?>">
+                        <input type="hidden" name="contact" value="<?= $singleListing['contact'] ?>">
+                        <input type="hidden" name="email" value="<?= $singleListing['email'] ?>">
+                        <button type="submit" class="btn btn-primary"> <i class="far fa-eye"></i> View Review</button>
+                    </form>
+
+                    <!-- Rate agent -->
+                    <form id="leaveRatingForm" action="rateAgent.php" method="post" class="mr-2">
+                        <input type="hidden" name="agent_username" value="<?= $singleListing['username'] ?>">
+                        <input type="hidden" name="agent_fullname" value="<?= $singleListing['fullname'] ?>">
+                        <?php isRated(); if($rated):?>
+                            <button type="button" class="btn btn-success"> <i class="fas fa-check"></i> You've rated this agent</button>
+                        <?php else: ?>
+                            <button type="submit" class="btn btn-success"> <i class="far fa-star"></i> Leave a Rating</button>
+                        <?php endif; ?>
+                    </form>
+
+                    <!-- Review agent -->
+                    <form id="leaveReviewForm" action="reviewAgent.php" method="post">
+                        <input type="hidden" name="agent_username" value="<?= $singleListing['username'] ?>">
+                        <input type="hidden" name="agent_fullname" value="<?= $singleListing['fullname'] ?>">
+                        <?php isReviewed(); if($reviewed):?>
+                            <button type="button" class="btn btn-success"> <i class="fas fa-check"></i> You've reviewed this agent</button>
+                        <?php else: ?>
+                            <button type="submit" class="btn btn-success"> <i class="far fa-star"></i> Leave a Review</button>
+                        <?php endif; ?>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
-
 
     <?php
 }

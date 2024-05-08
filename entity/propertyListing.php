@@ -62,7 +62,7 @@ class PropertyListing
     public function getSingleListing(int $listing_id): array
     {
         // Perform a database query to fetch the listing data
-        $query = "  SELECT PropertyListing.*, UserAccount.fullname, UserAccount.contact, UserAccount.email  
+        $query = "  SELECT PropertyListing.*, UserAccount.fullname, UserAccount.contact, UserAccount.email, UserAccount.username
                     FROM PropertyListing LEFT JOIN UserAccount 
                         ON PropertyListing.listed_by = UserAccount.username 
                     WHERE listing_id = ?";
@@ -195,7 +195,7 @@ class PropertyListing
     public function agentGetSingleListing(int $listing_id): array
     {
         // Perform a database query to fetch the listing data
-        $query = "SELECT PropertyListing.*, UserAccount.fullname, UserAccount.contact, UserAccount.email  
+        $query = "SELECT PropertyListing.*, UserAccount.fullname, UserAccount.contact, UserAccount.email, UserAccount.username
                     FROM PropertyListing LEFT JOIN UserAccount 
                         ON PropertyListing.sold_by = UserAccount.username 
                     WHERE listing_id = ?";

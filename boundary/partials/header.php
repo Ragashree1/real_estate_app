@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+$loggedInUsername;
+$loggedInProfile;
+
 // Check if user is not logged in, then redirect to login page
 function checkLoggedin(): bool
 {
@@ -17,6 +20,8 @@ $loggedIn = checkLoggedin();
 
 if($loggedIn)
 {
+    global $loggedInUsername;
+    global $loggedInProfile;
     $loggedInUsername = $_SESSION['username'];
     $loggedInProfile = $_SESSION['profile'];
 }
@@ -55,8 +60,20 @@ if($loggedIn)
                 $profile = $_SESSION['profile'];
                 if ($profile === 'agent') {
                     echo '<li class="nav-item"><a class="nav-link" href="agent_manageCreatedListings.php" style="color: white;"><i class="fas fa-gear"></i> Manage Listings</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="viewAgentRatings.php" style="color: white;"><i class="fas fa-star"></i> My Ratings</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="viewAgentReviews.php" style="color: white;"><i class="fas fa-pen"></i> My Reviews</a></li>';
+                    echo '<form action="viewAgentRatings.php" method="post">
+                                <input type="hidden" name="agent_username" value="' . $loggedInUsername . '">
+                                <button type="submit" class="nav-link" style="border: none; background: none; color: white;">
+                                    <i class="fas fa-star"></i> My Ratings
+                                </button>
+                            </form>
+                            ';
+                    echo '<form action="viewAgentReviews.php" method="post">
+                                <input type="hidden" name="agent_username" value="' . $loggedInUsername . '">
+                                <button type="submit" class="nav-link" style="border: none; background: none; color: white;">
+                                    <i class="fas fa-pen"></i> My Reviews
+                                </button>
+                            </form>
+                            ';
                 } elseif ($profile === 'buyer') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_soldListings.php"  style="color: white;"><i class="fas fa-gavel"></i> Sold Properties</a></li>';

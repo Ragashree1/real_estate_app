@@ -122,7 +122,7 @@ if(isset($_POST['createListing']))
         <button type="submit" class="btn btn-primary" name="createListing" value="createListing">Create</button>
 
         <!-- cancel !-->
-        <a href="agent_manageCreatedListings.php" class="btn btn-secondary">Cancel</a>
+        <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
     </form>
 </div>
 
