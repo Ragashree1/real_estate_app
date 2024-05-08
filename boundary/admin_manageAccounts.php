@@ -5,60 +5,86 @@ require_once "../controller/searchUserAccountController.php";
 require_once "../controller/deleteUserAccountController.php";
 require_once "../controller/suspendUserAccountController.php";
 require_once "../controller/createUserAccountController.php";
+require_once "../controller/updateUserAccountController.php";
+require_once "../controller/viewProfileController.php";
 
 
 $status = null;
 $message = null;
-$user = null;
+$userAccount = null;
+$allUsers = [];
+$userProfiles = [];
 
-//todo get userprofile from profile controller 
+
 
 if (isset($_POST["createUser"])) {
     $createUser = array();
-    echo "Users are not set";
 
-    // store each login field data in array
+    // store each field data in array
     foreach ($_POST as $key => $value) {
         $createUser[$key] = $value;
-        echo $key . ' ' . $value;
     }
 
     // create controller object
     $createUserController = new CreateUserAccountController();
     $status = $createUserController->createUser($createUser);
-    $message = $status ? 'User created successfully' : 'Error creating user';
+    echo '<script>setTimeout(function() { window.location.href = "agent_manageAccounts.php"; }, 1000);</script>';
+}
+
+if (isset($_POST["updateUser"])) {
+    $updateUser = array();
+
+    // store each field data in array
+    foreach ($_POST as $key => $value) {
+        $updateUser[$key] = $value;
+    }
+
+    // create controller object
+    $updateUserController = new UpdateUserAccountController();
+    $status = $updateUserController->updateUser($updateUser);
+    $message = $status == true ? 'User updated successfully' : 'Error updating user';
+
+    echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
 if (isset($_GET['search'])) {
     $searchUserAccountController = new SearchUserAccountController();
     $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
+    $allProfiles = (new ViewProfileController())->getProfiles();
 } else {
     $viewUserAccountController = new ViewUserAccountController();
     $allUsers = $viewUserAccountController->getUsers();
+    $allProfiles = (new ViewProfileController())->getProfiles();
 }
 
 if (isset($_GET['delete_user'])) {
     deleteUser($_GET['delete_user']);
+    $_GET = array();
 }
 
 if (isset($_GET['suspend_user'])) {
     suspendUser($_GET['suspend_user']);
+    $_GET = array();
 }
 
 function deleteUser($username)
 {
-    global $status, $message;
+    global $status, $message, $allUsers;
     $deleteUserController = new DeleteUserAccountController();
     $status = $deleteUserController->deleteUser($username);
     $message = $status ? 'User deleted successfully' : 'Error deleting user';
+
+    echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
 function suspendUser($username)
 {
-    global $status, $message;
+    global $status, $message, $allUsers;
     $suspendUser = new SuspendUserAccountController();
     $status = $suspendUser->suspendUser($username);
     $message = $status ? 'User suspended successfully' : 'Error suspending user';
+
+    echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
 ?>
@@ -72,10 +98,8 @@ if (!isset($allUsers)) {
     echo "Users are not set";
 } else {
     // Open the row div
-
-    if (isset($status) && isset($message) && $status != null) {
-
-        if ($status) {
+    if (isset($status) && isset($message)) {
+        if ($status == true) {
 ?>
             <div class="alert alert-success alert-dismissible fade show m-2" role="alert">
                 <?php echo $message ?>
@@ -130,32 +154,36 @@ if (!isset($allUsers)) {
                         <form action="admin_manageAccounts.php" method="post">
                             <div class="form-group">
                                 <label for="fullname">Full Name</label>
-                                <input type="text" class="form-control" id="fullname"  name="fullname" required>
+                                <input type="text" class="form-control" id="fullname" name="fullname" maxlength="255" required>
                             </div>
                             <div class="form-group">
                                 <label for="username">Username</label>
-                                <input type="text" class="form-control" id="username"  name="username" required>
+                                <input type="text" class="form-control" id="username" name="username" maxlength="100" required>
                             </div>
                             <div class="form-group">
                                 <label for="dob">Date of birth</label>
-                                <input type="date" class="form-control" id="dob"  name="dob" required>
+                                <input type="date" class="form-control" id="dob" name="dob" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email address</label>
-                                <input type="email" class="form-control" id="email"  name="email" placeholder="Enter email" required>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" maxlength="255" required>
                             </div>
                             <div class="form-group">
                                 <label for="profile">Select profile</label>
-                                <select class="form-control" id="profile"  name="profile" required>
-                                    <option value="admin">admin</option>
-                                    <option value="agent">agent</option>
-                                    <option value="buyer">buyer</option>
-                                    <option value="seller">seller</option>
+                                <select class="form-control" id="profile" name="profile" required>
+                                    <?php
+                                    foreach ($allProfiles as $profile) {
+                                    ?>
+                                        <tr>
+                                            <option value=<?php echo $profile['profile_name'] ?>><?= $profile['profile_name'] ?></option>
+                                        <?php
+                                    }
+                                        ?>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="status">Status</label>
-                                <select class="form-control" id="status"  name="status"required>
+                                <select class="form-control" id="status" name="status" required>
                                     <option value="active">active</option>
                                     <option value="suspended">suspended</option>
                                 </select>
@@ -166,13 +194,12 @@ if (!isset($allUsers)) {
                             </div>
                             <div class="form-group">
                                 <label for="password" class="mb-0">Password</label>
-                                <input type="password" class="form-control" id="password" name="password">
+                                <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="modal-footer ">
-                                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                                <input type="submit" class="btn btn-primary" value="createUser" name="createUser" <?php if (isset($status) && $status) {
-                                                                                                                        echo "data-dismiss='modal'";
-                                                                                                                    } ?>>
+                                <input type="submit" class="btn btn-primary" value="Submit" name="createUser" <?php if (isset($status) && $status) {
+                                                                                                                    echo "data-dismiss='modal'";
+                                                                                                                } ?>>
                             </div>
                         </form>
                     </div>
@@ -181,6 +208,9 @@ if (!isset($allUsers)) {
                 </div>
             </div>
         </div>
+
+
+
     </div>
 
     <table class="table">
@@ -194,7 +224,6 @@ if (!isset($allUsers)) {
 
         </tr>
         <?php
-        // Iterate over the array and display each listing
         foreach ($allUsers as $user) {
         ?>
             <tr>
@@ -203,7 +232,8 @@ if (!isset($allUsers)) {
                 <td><?= $user['contact'] ?></td>
                 <td><?= $user['profile'] ?></td>
                 <td><?= $user['status'] ?></td>
-                <td><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" style="cursor:pointer;">
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" data-toggle="modal" data-target="#updateUser" width="1em" height="1em" viewBox="0 0 24 24" style="cursor:pointer;" onclick="setUser('<?php echo htmlspecialchars(json_encode($user), ENT_QUOTES, 'UTF-8'); ?>')">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0zM15 6l3 3m-5 11h8" />
                     </svg>
                     <a href="admin_manageAccounts.php?suspend_user=<?php echo $user['username']; ?>" style="text-decoration: none; color: inherit;">
@@ -220,6 +250,7 @@ if (!isset($allUsers)) {
                 </td>
 
             </tr>
+
     <?php
         }
         // Close the row div
@@ -227,5 +258,94 @@ if (!isset($allUsers)) {
 
     }
     ?>
+    <div class="modal fade" id="updateUser" tabindex="-1" role="dialog" aria-labelledby="UpdateUserLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateUserLabel">Update User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-3">
+                    <form action="admin_manageAccounts.php" method="post">
+                        <div class="form-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" class="form-control" id="edit_fullname" name="fullname" maxlength="255" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="edit_username" name="username" maxlength="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of birth</label>
+                            <input type="date" class="form-control" id="edit_dob" name="dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="edit_email" name="email" placeholder="Enter email" maxlength="255" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile">Select profile</label>
+                            <select class="form-control" id="edit_profile" name="profile" required>
+                                <?php
+                                foreach ($allProfiles as $profile) {
+                                ?>
+                                    <tr>
+                                        <option value=<?php echo $profile['profile_name'] ?>><?= $profile['profile_name'] ?></option>
+                                    <?php
+                                }
+                                    ?>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" id="edit_status" name="status" required>
+                                <option value="active">active</option>
+                                <option value="suspended">suspended</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact">Contact</label>
+                            <input type="tel" id="edit_contact" class="form-control" name="contact">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="mb-0">New Password</label>
+                            <input type="password" class="form-control" id="edit_password" name="password">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="account_id" name="account_id">
+                        </div>
+                        <div class="modal-footer ">
+                            <input type="submit" class="btn btn-primary" value="Submit" name="updateUser" <?php if (isset($status) && $status) {
+                                                                                                                echo "data-dismiss='modal'";
+                                                                                                            } ?>>
+                        </div>
+
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <script>
+        var userData;
+
+        function setUser(user) {
+            userData = JSON.parse(user);
+            console.log(userData.account_id)
+            document.getElementById('edit_profile').value = userData.profile;
+            document.getElementById('edit_fullname').value = userData.fullname;
+            document.getElementById('edit_username').value = userData.username;
+            document.getElementById('edit_dob').value = userData.dob;
+            document.getElementById('edit_email').value = userData.email;
+            document.getElementById('edit_status').value = userData.status;
+            document.getElementById('edit_contact').value = userData.contact;
+            document.getElementById('account_id').value = userData.account_id;
+        }
+    </script>
+
 
     <?php require_once "partials/footer.php"; ?>
