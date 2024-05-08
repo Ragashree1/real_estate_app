@@ -1,15 +1,15 @@
 <?php 
 require_once "partials/header.php"; 
-require_once "../controller/buyerViewSingleNewListingController.php";
-require_once "../controller/buyerShortlistNewListingController.php";
-require_once "../controller/buyerRemoveShortlistNewListingController.php";
+require_once "../controller/buyerViewSingleSoldListingController.php";
+require_once "../controller/buyerShortlistSoldListingController.php";
+require_once "../controller/buyerRemoveShortlistSoldListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/singlelistingstyle.css">';
 
 $singleListing;
 $loggedInUsername = $_SESSION['username'];
 $listing_id = $_GET['listing_id'];
-$buyerShortlistController = new BuyerShortlistNewListingController();
-$buyerRemoveShortlistController = new BuyerRemoveShortlistNewListingController();
+$buyerShortlistController = new BuyerShortlistSoldListingController();
+$buyerRemoveShortlistController = new BuyerRemoveShortlistSoldListingController();
 $shortlisted;
 
 function displaySingleListing()
@@ -18,7 +18,7 @@ function displaySingleListing()
     global $listing_id;
 
     // get selected listing
-    $ViewSingleListingController = new BuyerViewSingleNewListingController();
+    $ViewSingleListingController = new BuyerViewSingleSoldListingController();
     $singleListing = $ViewSingleListingController->getSingleListing($listing_id);
 }
 
@@ -32,7 +32,7 @@ function shortlist()
 
     if ($shortlistSuccess){
         // Redirect 
-        echo '<script>window.location.href = "buyer_viewSingleNewListing.php?listing_id='. $listing_id . '";</script>';
+        echo '<script>window.location.href = "buyer_viewSingleSoldListing.php?listing_id='. $listing_id . '";</script>';
     }
     else
     {
@@ -51,7 +51,7 @@ function removeShortlist()
 
     if ($removeSuccess){
         // Redirect 
-        echo '<script>window.location.href = "buyer_viewSingleNewListing.php?listing_id='. $listing_id . '";</script>';
+        echo '<script>window.location.href = "buyer_viewSingleSoldListing.php?listing_id='. $listing_id . '";</script>';
     }
     else
     {
@@ -86,7 +86,7 @@ if (isset($_GET['unlike'])) {
 ?>
 
 <br/> &nbsp;
-<a href="newListings.php"><i class="fas fa-arrow-left"></i> Back</a>
+<a href="buyer_soldListings.php"><i class="fas fa-arrow-left"></i> Back</a>
 <br/>
 <br>
 <!-- DISPLAY SINGLE LISTING -->
@@ -147,8 +147,8 @@ if (empty($singleListing)) {
                         <?php if (isset($singleListing['date_listed'])) : ?>
                             <p class="single-listing-date"><i class="fa-solid fa-calendar"></i> Listed on: <?= $singleListing['date_listed'] ?></p>
                         <?php endif; ?>
-                        <p class="listing-status" style="color: green;">
-                            <i class="fa-solid fa-star"></i> New
+                        <p class="listing-status" style="color: red;">
+                            <i class="fa-solid fa-tag"></i> Sold
                         </p>
                     </div>
                 </div>

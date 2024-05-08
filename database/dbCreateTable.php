@@ -52,8 +52,8 @@ $sqlListing = "CREATE TABLE IF NOT EXISTS PropertyListing (
     status VARCHAR(50) DEFAULT 'new' NOT NULL,
     listed_by VARCHAR(100),
     sold_by VARCHAR(100) NULL,
-    FOREIGN KEY (listed_by) REFERENCES UserAccount(username),
-    FOREIGN KEY (sold_by) REFERENCES UserAccount(username)
+    FOREIGN KEY (listed_by) REFERENCES UserAccount(username) ON DELETE CASCADE,
+    FOREIGN KEY (sold_by) REFERENCES UserAccount(username) ON DELETE CASCADE
 )";
 
 if ($conn->query($sqlListing) === TRUE) {
@@ -67,8 +67,8 @@ $sqlshortlist = "CREATE TABLE IF NOT EXISTS Shortlist (
     buyer_username VARCHAR(100),
     listing_id INT(6) UNSIGNED,
     PRIMARY KEY (buyer_username, listing_id),
-    FOREIGN KEY (buyer_username) REFERENCES UserAccount(username),
-    FOREIGN KEY (listing_id) REFERENCES PropertyListing(listing_id)
+    FOREIGN KEY (buyer_username) REFERENCES UserAccount(username) ON DELETE CASCADE,
+    FOREIGN KEY (listing_id) REFERENCES PropertyListing(listing_id) ON DELETE CASCADE
 )";
 
 if ($conn->query($sqlshortlist) === TRUE) {

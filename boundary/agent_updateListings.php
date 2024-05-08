@@ -56,7 +56,7 @@ function updateSuccess()
         </div>';
 
     // Redirect using JavaScript after the alert is closed
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageAllListings.php"; }, 1500);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "agent_manageCreatedListings.php"; }, 1500);</script>';
 }
 
 function updateFail()
@@ -126,7 +126,10 @@ if(isset($_POST['updateListing']))
         <!-- Status -->
         <div class="form-group">
             <label for="status">Status</label>
-            <input type="text" class="form-control" id="status" name="status" value="<?php echo isset($listingToUpdate['status']) ? $listingToUpdate['status'] : 'new'; ?>" required>
+            <select class="form-control" id="status" name="status" required>
+                <option value="new" <?php echo isset($listingToUpdate['status']) && $listingToUpdate['status'] === 'new' ? 'selected' : ''; ?>>New</option>
+                <option value="sold" <?php echo isset($listingToUpdate['status']) && $listingToUpdate['status'] === 'sold' ? 'selected' : ''; ?>>Sold</option>
+            </select>
         </div>
         <!-- Sold By -->
         <div class="form-group">
@@ -140,7 +143,7 @@ if(isset($_POST['updateListing']))
         <button type="submit" class="btn btn-primary" name="updateListing" value="updateListing">Update</button>
         
         <!-- cancel !-->
-        <a href="agent_manageAllListings.php" class="btn btn-secondary">Cancel</a>
+        <a href="agent_manageCreatedListings.php" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 

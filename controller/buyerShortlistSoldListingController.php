@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/shortlist.php";
 
-class BuyerShortlistNewListingController
+class BuyerShortlistSoldListingController
 {
     private Shortlist $shortlist;
 

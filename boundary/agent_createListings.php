@@ -43,7 +43,7 @@ function createSuccess()
         </div>';
 
     // Redirect using JavaScript after the alert is closed
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageAllListings.php"; }, 2000);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "agent_manageCreatedListings.php"; }, 2000);</script>';
 }
 
 function createFail()
@@ -59,7 +59,6 @@ if(isset($_POST['createListing']))
 }
 ?>
 
-<br>
 <div class="container" style="background-color: #f8f9fa; padding: 20px;">
     <h2>Create New Listing</h2>
     <form id="createListingForm" action="" method="post">
@@ -106,7 +105,10 @@ if(isset($_POST['createListing']))
         <!-- Status -->
         <div class="form-group">
             <label for="status">Status</label>
-            <input type="text" class="form-control" id="status" name="status" value="<?php echo isset($_POST['status']) ? $_POST['status'] : 'new'; ?>" required>
+            <select class="form-control" id="status" name="status" required>
+                <option value="new" <?php echo isset($_POST['status']) && $_POST['status'] === 'new' ? 'selected' : ''; ?>>New</option>
+                <option value="sold" <?php echo isset($_POST['status']) && $_POST['status'] === 'sold' ? 'selected' : ''; ?>>Sold</option>
+            </select>
         </div>
         <!-- Sold By -->
         <div class="form-group">
@@ -120,7 +122,7 @@ if(isset($_POST['createListing']))
         <button type="submit" class="btn btn-primary" name="createListing" value="createListing">Create</button>
 
         <!-- cancel !-->
-        <a href="agent_manageAllListings.php" class="btn btn-secondary">Cancel</a>
+        <a href="agent_manageCreatedListings.php" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 

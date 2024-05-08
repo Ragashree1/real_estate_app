@@ -5,7 +5,7 @@ require_once "../controller/ViewNewListingController.php";
 require_once "../controller/SearchNewListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/listingstyle.css">';
 
-$loggedInProfile = $_SESSION['username'];
+$loggedInProfile = $_SESSION['profile'];
 $ViewListingController = new ViewNewListingController();
 $searchNewListingController = new SearchNewListingController();
 $allListing;
@@ -134,15 +134,9 @@ if (empty($allListing)) {
                                 Listed on: <?= $listing['date_listed'] ?>
                             </p>
                         <?php endif; ?>
-                        <?php if (isset($listing['status']) && $listing['status'] === 'new') : ?>
-                            <p class="listing-status" style="color: green;">
-                                <i class="fa-solid fa-star"></i> New
-                            </p>
-                        <?php elseif (isset($listing['status']) && $listing['status'] === 'sold') : ?>
-                            <p class="listing-status" style="color: red;">
-                                <i class="fa-solid fa-tag"></i> Sold
-                            </p>
-                        <?php endif; ?>
+                        <p class="listing-status" style="color: green;">
+                            <i class="fa-solid fa-star"></i> New
+                        </p>
                     </div>
 
                 </div> 

@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/propertyListing.php";
 
-class agentViewAllListingController
+class AgentViewCreatedListingController
 {
     private PropertyListing $propertyListing;
 

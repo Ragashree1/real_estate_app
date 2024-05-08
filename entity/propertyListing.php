@@ -40,11 +40,30 @@ class PropertyListing
          return $allListings;
     }
 
+    // get all listings with status = sold
+    public function getSoldListing(): array
+    {
+         $allListings = [];
+
+         // Perform a database query to fetch all listings
+         $query = "SELECT * FROM PropertyListing WHERE status = 'sold' ORDER BY date_listed DESC";
+         $result = $this->conn->query($query);
+ 
+         // Check if there are any listings
+         if ($result->num_rows > 0) {
+             while ($row = $result->fetch_assoc()) {
+                 $allListings[] = $row;
+             }
+         }
+ 
+         return $allListings;
+    }
+
     public function getSingleListing(int $listing_id): array
     {
         // Perform a database query to fetch the listing data
         $query = "  SELECT PropertyListing.*, UserAccount.fullname, UserAccount.contact, UserAccount.email  
-                    FROM PropertyListing JOIN UserAccount 
+                    FROM PropertyListing LEFT JOIN UserAccount 
                         ON PropertyListing.listed_by = UserAccount.username 
                     WHERE listing_id = ?";
         $stmt = $this->conn->prepare($query);
@@ -65,13 +84,13 @@ class PropertyListing
         }
     }
 
-    // search listings
+    // search listings for new properties
     function searchNewListings(array $searchInfo): array
     {
         // Initialize an empty array to store the search results
         $searchResults = [];
 
-        // Build the SQL query based on search parameters
+        // create sql query statement
         $sql = "SELECT * FROM PropertyListing WHERE status = 'new'"; 
 
         // Add conditions based on search parameters
@@ -79,8 +98,61 @@ class PropertyListing
             $searchTerm = $this->conn->real_escape_string($searchInfo['search']);
             $sql .= " AND (title LIKE '%$searchTerm%' 
                     OR type LIKE '%$searchTerm%' 
-                    OR location LIKE '%$searchTerm%' 
-                    OR status LIKE '%$searchTerm%')";
+                    OR location LIKE '%$searchTerm%')";
+        }
+
+        if (!empty($searchInfo['min_price'])) {
+            $minPrice = (float) $searchInfo['min_price'];
+            $sql .= " AND price >= $minPrice";
+        }
+
+        if (!empty($searchInfo['max_price'])) {
+            $maxPrice = (float) $searchInfo['max_price'];
+            $sql .= " AND price <= $maxPrice";
+        }
+
+        if (!empty($searchInfo['min_area'])) {
+            $minArea = (float) $searchInfo['min_area'];
+            $sql .= " AND area >= $minArea";
+        }
+
+        if (!empty($searchInfo['bhk'])) {
+            $bhk = (float) $searchInfo['bhk'];
+            $sql .= " AND bhk >= $bhk";
+        }
+
+        // Order the results by create_date in descending order
+        $sql .= " ORDER BY date_listed DESC";
+
+        // Execute the query
+        $result = $this->conn->query($sql);
+
+        // Check if any rows are returned
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $searchResults[] = $row;
+            }
+        }
+
+        $this->conn->close();
+        return $searchResults;
+    }
+
+    // search listings for sold properties
+    function searchSoldListings(array $searchInfo): array
+    {
+        // Initialize an empty array to store the search results
+        $searchResults = [];
+
+        // Build the SQL query based on search parameters
+        $sql = "SELECT * FROM PropertyListing WHERE status = 'sold'"; 
+
+        // create sql statement
+        if (!empty($searchInfo['search'])) {
+            $searchTerm = $this->conn->real_escape_string($searchInfo['search']);
+            $sql .= " AND (title LIKE '%$searchTerm%' 
+                    OR type LIKE '%$searchTerm%' 
+                    OR location LIKE '%$searchTerm%')";
         }
 
         if (!empty($searchInfo['min_price'])) {
@@ -124,7 +196,7 @@ class PropertyListing
     {
         // Perform a database query to fetch the listing data
         $query = "SELECT PropertyListing.*, UserAccount.fullname, UserAccount.contact, UserAccount.email  
-                    FROM PropertyListing JOIN UserAccount 
+                    FROM PropertyListing LEFT JOIN UserAccount 
                         ON PropertyListing.sold_by = UserAccount.username 
                     WHERE listing_id = ?";
         $stmt = $this->conn->prepare($query);
@@ -211,8 +283,8 @@ class PropertyListing
         }
 
         if (!empty($searchInfo['listed_by'])) {
-            $listed_by = (float) $searchInfo['listed_by'];
-            $sql .= " AND listed_by >= $listed_by";
+            $listed_by = $searchInfo['listed_by'];
+            $sql .= " AND listed_by = '$listed_by'";
         }
 
         // Order the results by create_date in descending order
@@ -339,6 +411,84 @@ class PropertyListing
 
         $stmt->close();
 
+    }
+
+    // get listed properties of a seller
+    public function sellerGetListedProperties(string $seller_username): array
+    {
+        $allListings = [];
+
+        // Prepare the SQL query with a parameterized query to avoid SQL injection
+        $query = "SELECT * FROM PropertyListing WHERE sold_by = ? ORDER BY date_listed DESC";
+
+        // Prepare the statement
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("s", $seller_username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Check if there are any listings
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $allListings[] = $row;
+            }
+        }
+
+        $stmt->close();
+
+        return $allListings;
+    }
+
+    // search listings
+    function sellerSearchListedProperties(array $searchInfo): array
+    {
+        $searchResults = [];
+
+        // Build the SQL query based on search parameters
+        $sql = "SELECT * FROM PropertyListing WHERE 1=1"; 
+
+        // Add conditions based on search parameters
+        if (!empty($searchInfo['search'])) {
+            $searchTerm = $this->conn->real_escape_string($searchInfo['search']);
+            $sql .= " AND (title LIKE '%$searchTerm%' 
+                    OR type LIKE '%$searchTerm%' 
+                    OR location LIKE '%$searchTerm%' 
+                    OR status LIKE '%$searchTerm%'
+                    OR listed_by LIKE '%$searchTerm%')";
+        }
+
+        if (!empty($searchInfo['sold_by'])) {
+            $sold_by = $searchInfo['sold_by'];
+            $sql .= " AND sold_by = '$sold_by'";
+        }
+
+        if (!empty($searchInfo['num_views'])) {
+            $num_views = (float) $searchInfo['num_views'];
+            $sql .= " AND num_views >= '$num_views'";
+        }
+
+        if (!empty($searchInfo['num_shortlist'])) {
+            $num_shortlist = (float) $searchInfo['num_shortlist'];
+            $sql .= " AND num_shortlist >= '$num_shortlist'";
+        }
+
+        // Order the results by create_date in descending order
+        $sql .= " ORDER BY date_listed DESC";
+
+        // Execute the query
+        $result = $this->conn->query($sql);
+
+        // Check if any rows are returned
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $searchResults[] = $row;
+            }
+        }
+
+        // Close the database connection
+        $this->conn->close();
+
+        return $searchResults;
     }
 }
 

@@ -1,11 +1,11 @@
 <?php 
 require_once "partials/header.php"; 
-require_once "../controller/agentViewAllListingController.php";
+require_once "../controller/agentViewCreatedListingController.php";
 require_once "../controller/agentSearchListingController.php";
 require_once "../controller/agentDeleteListingController.php";
 
 $loggedInUsername = $_SESSION["username"];
-$agentViewAllListingController = new agentViewAllListingController();
+$agentViewAllListingController = new AgentViewCreatedListingController();
 $allListing;
 
 // display new listings
@@ -21,6 +21,7 @@ function displayCreatedListings()
 function searchCreatedListings()
 {
     global $allListing;
+    global $loggedInUsername;
 
     $searchInfo = array();
 
@@ -28,6 +29,8 @@ function searchCreatedListings()
     foreach ($_GET as $key => $value) {
         $searchInfo[$key] = $value;
     }
+
+    $searchInfo['listed_by'] = $loggedInUsername;
 
     $agentSearchListingController = new AgentSearchListingController();
     $allListing = $agentSearchListingController->agentSearchListings($searchInfo);
@@ -56,7 +59,7 @@ function deleteSuccess()
         </div>';
 
     // Redirect using JavaScript after the alert is closed
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageAllListings.php"; }, 1000);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "agent_manageCreatedListings.php"; }, 1000);</script>';
 }
 
 function deleteFail()
@@ -65,8 +68,6 @@ function deleteFail()
             Delete fail..try again!
         </div>';
 }
-
-
 
 // search listings created by agent
 if(isset($_GET['searchForm']))
@@ -84,6 +85,9 @@ if(isset($_GET['delete_id']))
 }
 
 ?>
+
+<br>
+<h2> &nbsp;My Listed Properties</h2>
 
 <!-- search bar -->
 <div class="container-fluid mt-3">

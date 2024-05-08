@@ -12,7 +12,7 @@ function displaySingleListing()
 
     // get selected listing
     $ViewSingleListingController = new SellerViewSingleNewListingController();
-    $singleListing = $ViewSingleListingController->getSingleListing($listing_id);
+    $singleListing = $ViewSingleListingController->getSingleNewListing($listing_id);
 }
 
 if (isset($_GET['listing_id'])) {
@@ -71,15 +71,9 @@ if (empty($singleListing)) {
                         <?php if (isset($singleListing['date_listed'])) : ?>
                             <p class="single-listing-date"><i class="fa-solid fa-calendar"></i> Listed on: <?= $singleListing['date_listed'] ?></p>
                         <?php endif; ?>
-                        <?php if (isset($singleListing['status']) && $singleListing['status'] === 'new') : ?>
-                            <p class="listing-status" style="color: green;">
-                                <i class="fa-solid fa-star"></i> New
-                            </p>
-                        <?php elseif (isset($singleListing['status']) && $singleListing['status'] === 'sold') : ?>
-                            <p class="listing-status" style="color: red;">
-                                <i class="fa-solid fa-tag"></i> Sold
-                            </p>
-                        <?php endif; ?>
+                        <p class="listing-status" style="color: green;">
+                            <i class="fa-solid fa-star"></i> New
+                        </p>
                     </div>
                 </div>
             </div>
