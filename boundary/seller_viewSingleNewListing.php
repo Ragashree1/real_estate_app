@@ -1,19 +1,52 @@
 <?php 
 require_once "partials/header.php"; 
-require_once "../controller/viewListingController.php";
+require_once "../controller/sellerViewSingleNewListingController.php";
+require_once "../controller/rateAgentController.php";
+require_once "../controller/reviewAgentController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/singlelistingstyle.css">';
 
-if (isset($_GET['listing_id'])) {
+$singleListing;
+$rated;
+$reviewed;
+
+function displaySingleListing()
+{
+    global $singleListing;
     $listing_id = $_GET['listing_id'];
 
     // get selected listing
-    $ViewListingController = new ViewListingController();
-    $singleListing = $ViewListingController->getSingleListing($listing_id);
+    $ViewSingleListingController = new SellerViewSingleNewListingController();
+    $singleListing = $ViewSingleListingController->getSingleNewListing($listing_id);
 }
+
+function isRated()
+{
+    global $rated;
+    global $loggedInUsername;
+    global $singleListing;
+
+    $rateAgentController = new RateAgentController();
+    $rated = $rateAgentController->isRated($loggedInUsername, $singleListing['username']);
+}
+
+function isReviewed()
+{
+    global $reviewed;
+    global $loggedInUsername;
+    global $singleListing;
+
+    $reviewAgentController = new ReviewAgentController();
+    $reviewed = $reviewAgentController->isReviewed($loggedInUsername, $singleListing['username']);
+}
+
+if (isset($_GET['listing_id'])) {
+    displaySingleListing();
+}
+    
 ?>
 
 <br/> &nbsp;
-<a href="newListings.php"><i class="fas fa-arrow-left"></i> Back</a>
+<a href="#" onclick="window.history.back();"><i class="fas fa-arrow-left"></i> Back</a>
 <br/>
 <br>
 <!-- DISPLAY SINGLE LISTING -->
@@ -62,15 +95,9 @@ if (empty($singleListing)) {
                         <?php if (isset($singleListing['date_listed'])) : ?>
                             <p class="single-listing-date"><i class="fa-solid fa-calendar"></i> Listed on: <?= $singleListing['date_listed'] ?></p>
                         <?php endif; ?>
-                        <?php if (isset($singleListing['status']) && $singleListing['status'] === 'new') : ?>
-                            <p class="listing-status" style="color: green;">
-                                <i class="fa-solid fa-star"></i> New
-                            </p>
-                        <?php elseif (isset($singleListing['status']) && $singleListing['status'] === 'sold') : ?>
-                            <p class="listing-status" style="color: red;">
-                                <i class="fa-solid fa-tag"></i> Sold
-                            </p>
-                        <?php endif; ?>
+                        <p class="listing-status" style="color: green;">
+                            <i class="fa-solid fa-star"></i> New
+                        </p>
                     </div>
                 </div>
             </div>
@@ -94,6 +121,51 @@ if (empty($singleListing)) {
                 <?php endif; ?>
             </div>
         </div>
+
+        <div class="agent-buttons" style="margin-top: 20px;">
+                <div class="d-flex flex-row">
+                    <!-- View rating -->
+                    <form id="viewRatingForm" action="viewAgentRatings.php" method="post" class="mr-2">
+                        <input type="hidden" name="agent_username" value="<?= $singleListing['username'] ?>">
+                        <input type="hidden" name="fullname" value="<?= $singleListing['fullname'] ?>">
+                        <input type="hidden" name="contact" value="<?= $singleListing['contact'] ?>">
+                        <input type="hidden" name="email" value="<?= $singleListing['email'] ?>">
+                        <button type="submit" class="btn btn-primary"> <i class="far fa-eye"></i> View Rating</button>
+                    </form>
+
+                    <!-- View reviews -->
+                    <form id="viewReviewForm" action="viewAgentReviews.php" method="post" class="mr-2">
+                        <input type="hidden" name="agent_username" value="<?= $singleListing['username'] ?>">
+                        <input type="hidden" name="fullname" value="<?= $singleListing['fullname'] ?>">
+                        <input type="hidden" name="contact" value="<?= $singleListing['contact'] ?>">
+                        <input type="hidden" name="email" value="<?= $singleListing['email'] ?>">
+                        <button type="submit" class="btn btn-primary"> <i class="far fa-eye"></i> View Review</button>
+                    </form>
+
+                    <!-- Rate agent -->
+                    <form id="leaveRatingForm" action="rateAgent.php" method="post" class="mr-2">
+                        <input type="hidden" name="agent_username" value="<?= $singleListing['username'] ?>">
+                        <input type="hidden" name="agent_fullname" value="<?= $singleListing['fullname'] ?>">
+                        <?php isRated(); if($rated):?>
+                            <button type="button" class="btn btn-success"> <i class="fas fa-check"></i> You've rated this agent</button>
+                        <?php else: ?>
+                            <button type="submit" class="btn btn-success"> <i class="far fa-star"></i> Leave a Rating</button>
+                        <?php endif; ?>
+                    </form>
+
+                    <!-- Review agent -->
+                    <form id="leaveReviewForm" action="reviewAgent.php" method="post">
+                        <input type="hidden" name="agent_username" value="<?= $singleListing['username'] ?>">
+                        <input type="hidden" name="agent_fullname" value="<?= $singleListing['fullname'] ?>">
+                        <?php isReviewed(); if($reviewed):?>
+                            <button type="button" class="btn btn-success"> <i class="fas fa-check"></i> You've reviewed this agent</button>
+                        <?php else: ?>
+                            <button type="submit" class="btn btn-success"> <i class="far fa-star"></i> Leave a Review</button>
+                        <?php endif; ?>
+                    </form>
+                </div>
+            </div>
+
     </div>
 
 

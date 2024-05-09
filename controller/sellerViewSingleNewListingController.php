@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/propertyListing.php";
 
-class BuyerViewSoldListingController
+class SellerViewSingleNewListingController
 {
     private PropertyListing $propertyListing;
 
@@ -10,11 +10,11 @@ class BuyerViewSoldListingController
         $this->propertyListing = new PropertyListing();
     }
 
-    public function getSoldListing(): array
+    public function getSingleNewListing(int $listing_id): array
     {
-        $allListings = $this->propertyListing->getSoldListing();
+        $listing = $this->propertyListing->getSingleListing($listing_id);
 
-        return $allListings;
+        return $listing;
     }
 }
 

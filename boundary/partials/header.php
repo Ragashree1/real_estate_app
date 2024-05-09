@@ -2,6 +2,9 @@
 session_start();
 require_once "buyer_calculateMortgage.php";
 
+$loggedInUsername;
+$loggedInProfile;
+
 // Check if user is not logged in, then redirect to login page
 function checkLoggedin(): bool
 {
@@ -18,6 +21,8 @@ $loggedIn = checkLoggedin();
 
 if($loggedIn)
 {
+    global $loggedInUsername;
+    global $loggedInProfile;
     $loggedInUsername = $_SESSION['username'];
     $loggedInProfile = $_SESSION['profile'];
 }
@@ -58,17 +63,34 @@ if($loggedIn)
             if (isset($loggedInProfile)) {
                 $profile = $_SESSION['profile'];
                 if ($profile === 'agent') {
-                    echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="agent_manageListings.php" style="color: white;"><i class="fas fa-gear"></i> Manage Listings</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="agent_ratingsReviews.php" style="color: white;"><i class="fas fa-comments"></i> Ratings & Reviews</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="agent_manageCreatedListings.php" style="color: white;"><i class="fas fa-gear"></i> Manage Listings</a></li>';
+                    echo '<form action="viewAgentRatings.php" method="post">
+                                <input type="hidden" name="agent_username" value="' . $loggedInUsername . '">
+                                <button type="submit" class="nav-link" style="border: none; background: none; color: white;">
+                                    <i class="fas fa-star"></i> My Ratings
+                                </button>
+                            </form>
+                            ';
+                    echo '<form action="viewAgentReviews.php" method="post">
+                                <input type="hidden" name="agent_username" value="' . $loggedInUsername . '">
+                                <button type="submit" class="nav-link" style="border: none; background: none; color: white;">
+                                    <i class="fas fa-pen"></i> My Reviews
+                                </button>
+                            </form>
+                            ';
                 } elseif ($profile === 'buyer') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_soldListings.php"  style="color: white;"><i class="fas fa-gavel"></i> Sold Properties</a></li>';
+
+                    echo '<li class="nav-item"><a class="nav-link" href="buyer_viewShortlist.php" style="color: white;"><i class="fas fa-heart" ></i> Shortlist</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="buyer_calculateMortgage.php" style="color: white;"><i class="fas fa-calculator" ></i> Calculate Mortgage</a></li>';
+
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_favourites.php" style="color: white;"><i class="fas fa-heart" ></i> Favourites</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#modalCalculator" style="color: white;"><i class="fas fa-calculator"></i> Calculate Mortgage</a></li>';
+
                 } elseif ($profile === 'seller') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="buyer_listings.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="seller_viewCreatedListings.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
                 } elseif ($profile === 'admin') {
                     echo '<li class="nav-item"><a class="nav-link" href="admin_manageAccounts.php" style="color: white;"><i class="fas fa-user-cog"></i> Manage Account</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="admin_manageProfiles.php" style="color: white;"><i class="fas fa-cog"></i> Manage Profile</a></li>';
