@@ -29,14 +29,10 @@ class Review
         // Prepare the query
         $query = "SELECT * FROM Review WHERE agent_username = ?";
         $stmt = $this->conn->prepare($query);
-
-        // Bind the parameter
         $stmt->bind_param("s", $agent_username);
 
         // Execute the query
         $stmt->execute();
-
-        // Get the result
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -46,8 +42,6 @@ class Review
 
         // Close the statement
         $stmt->close();
-
-        // Return the array of reviews
         return $reviews;
     }
 
@@ -59,12 +53,8 @@ class Review
         $profile = $reviewInfo['profile'];
         $review = $reviewInfo['review_text'];
 
-        print_r($reviewInfo);
-        
         // Prepare the SQL query
         $query = "INSERT INTO Review (reviewer_username, agent_username, profile, review_text) VALUES (?, ?, ?, ?)";
-
-        // Prepare the statement
         $stmt = $this->conn->prepare($query);
 
         // Bind parameters

@@ -497,7 +497,6 @@ class PropertyListing
             }
         }
 
-        // Close the database connection
         $this->conn->close();
 
         return $searchResults;
