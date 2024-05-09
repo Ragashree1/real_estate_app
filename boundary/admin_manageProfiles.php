@@ -1,10 +1,10 @@
 <?php require_once "partials/header.php";
 
-require_once "../controller/viewProfileController.php";
-require_once "../controller/searchProfileController.php";
-require_once "../controller/deleteProfileController.php";
-require_once "../controller/createProfileController.php";
-require_once "../controller/updateProfileController.php";
+require_once "../controller/adminViewProfileController.php";
+require_once "../controller/adminSearchProfileController.php";
+require_once "../controller/adminDeleteProfileController.php";
+require_once "../controller/adminCreateProfileController.php";
+require_once "../controller/adminUpdateProfileController.php";
 
 $status = null;
 $message = null;
@@ -22,7 +22,7 @@ if (isset($_POST["createProfile"])) {
     }
 
     // create controller object
-    $createProfileController = new CreateProfileController();
+    $createProfileController = new AdminCreateProfileController();
     $status = $createProfileController->createProfile($createProfile);
     echo '<script>setTimeout(function() { window.location.href = "agent_manageAccounts.php"; }, 1000);</script>';
 }
@@ -36,7 +36,7 @@ if (isset($_POST["updateProfile"])) {
     }
 
     // create controller object
-    $updateProfileController = new UpdateProfileController();
+    $updateProfileController = new AdminUpdateProfileController();
     $status = $updateProfileController->updateProfile($updateProfile);
     $message = $status == true ? 'Profile updated successfully' : 'Error updating profile';
   
@@ -44,10 +44,10 @@ if (isset($_POST["updateProfile"])) {
 }
 
 if (isset($_GET['search'])) {
-    $searchProfileController = new SearchProfileController();
+    $searchProfileController = new AdminSearchProfileController();
     $allProfiles = $searchProfileController->searchProfiles($_GET['search']);
 } else {
-    $viewProfileController = new ViewProfileController();
+    $viewProfileController = new AdminViewProfileController();
     $allProfiles = $viewProfileController->getProfiles();
 }
 
@@ -60,7 +60,7 @@ if (isset($_GET['delete_profile'])) {
 function deleteProfile($profilename)
 {
     global $status, $message;
-    $deleteProfileController = new DeleteProfileController();
+    $deleteProfileController = new AdminDeleteProfileController();
     $status = $deleteProfileController->deleteProfile($profilename);
     $message = $status ? 'Profile deleted successfully' : 'Error deleting profile';
 

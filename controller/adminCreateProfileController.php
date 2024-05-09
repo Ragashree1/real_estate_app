@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/Profile.php";
 
-class UpdateProfileController
+class AdminCreateProfileController
 {
     private Profile $profile; 
 
@@ -10,9 +10,9 @@ class UpdateProfileController
         $this->profile = new Profile();
     }
 
-    public function updateProfile(array $profileDetails) : bool
+    public function createProfile(array $profileDetails) : bool
     {
-        $status = $this->profile->updateProfile($profileDetails);
+        $status = $this->profile->createProfile($profileDetails);
         return $status != null && $status != false;
     }
 }

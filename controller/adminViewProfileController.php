@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/profile.php";
 
-class ViewProfileController
+class AdminViewProfileController
 {
     private Profile $profile; 
 

@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/userAccount.php";
 
-class ViewUserAccountController
+class AdminSuspendUserAccountController
 {
     private UserAccount $userAccount; 
 
@@ -10,11 +10,11 @@ class ViewUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function getUsers(): array
+    public function suspendUser(string $username)
     {
-        $allUsers = $this->userAccount->getUsers();
+        $flag = $this->userAccount->suspendUser($username);
 
-        return $allUsers;
+        return $flag;
     }
 
 }
