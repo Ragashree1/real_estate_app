@@ -20,24 +20,24 @@ class PropertyListing
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
-    
+
     // get all listings with status = new
     public function getNewListing(): array
     {
-         $allListings = [];
+        $allListings = [];
 
-         // Perform a database query to fetch all listings
-         $query = "SELECT * FROM PropertyListing WHERE status = 'new' ORDER BY date_listed DESC";
-         $result = $this->conn->query($query);
- 
-         // Check if there are any listings
-         if ($result->num_rows > 0) {
-             while ($row = $result->fetch_assoc()) {
-                 $allListings[] = $row;
-             }
-         }
- 
-         return $allListings;
+        // Perform a database query to fetch all listings
+        $query = "SELECT * FROM PropertyListing WHERE status = 'new' ORDER BY date_listed DESC";
+        $result = $this->conn->query($query);
+
+        // Check if there are any listings
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $allListings[] = $row;
+            }
+        }
+
+        return $allListings;
     }
 
     // get all listings with status = sold
@@ -89,6 +89,7 @@ class PropertyListing
     {
         // Initialize an empty array to store the search results
         $searchResults = [];
+
 
         // create sql query statement
         $sql = "SELECT * FROM PropertyListing WHERE status = 'new'"; 
@@ -250,7 +251,7 @@ class PropertyListing
         $searchResults = [];
 
         // Build the SQL query based on search parameters
-        $sql = "SELECT * FROM PropertyListing WHERE 1=1"; 
+        $sql = "SELECT * FROM PropertyListing WHERE 1=1";
 
         // Add conditions based on search parameters
         if (!empty($searchInfo['search'])) {
@@ -321,8 +322,8 @@ class PropertyListing
         $status = $createInfo['status'];
         $listed_by = $createInfo['listed_by'];
         $sold_by = $createInfo['sold_by'];
-
-       // Prepare the SQL query with placeholders
+  
+        // Prepare the SQL query with placeholders
         $sql = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, status, sold_by) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -343,7 +344,6 @@ class PropertyListing
 
         // Close the statement
         $stmt->close();
-
     }
 
     // agent delete a listing
@@ -351,17 +351,17 @@ class PropertyListing
     {
         // Prepare the DELETE query
         $query = "DELETE FROM PropertyListing WHERE listing_id = ?";
-        
+
         // Prepare the statement
         $stmt = $this->conn->prepare($query);
-        
+
         if (!$stmt) {
             // If preparation fails, return false
             return false;
         }
         $stmt->bind_param("i", $listing_id);
         $result = $stmt->execute();
-        
+
         // Check if the deletion was successful
         if ($result) {
             return true;
@@ -386,7 +386,7 @@ class PropertyListing
         $listed_by = $updateInfo['listed_by'];
         $sold_by = $updateInfo['sold_by'];
 
-       // Prepare the SQL query with placeholders
+        // Prepare the SQL query with placeholders
         $sql = "UPDATE PropertyListing 
         SET title=?, description=?, image=?, type=?, location=?, price=?, area=?, bhk=?, listed_by=?, status=?, sold_by=?
         WHERE listing_id=?";
@@ -395,8 +395,21 @@ class PropertyListing
         $stmt = $this->conn->prepare($sql);
 
         // Bind parameters
-        $stmt->bind_param("sssssssssssi", $title, $description, $image, $type, $location, 
-                        $price, $area, $bhk, $listed_by, $status, $sold_by, $listing_id);
+        $stmt->bind_param(
+            "sssssssssssi",
+            $title,
+            $description,
+            $image,
+            $type,
+            $location,
+            $price,
+            $area,
+            $bhk,
+            $listed_by,
+            $status,
+            $sold_by,
+            $listing_id
+        );
 
         // Execute the statement
         try {
@@ -410,7 +423,6 @@ class PropertyListing
         }
 
         $stmt->close();
-
     }
 
     // get listed properties of a seller
@@ -491,5 +503,3 @@ class PropertyListing
         return $searchResults;
     }
 }
-
-?>

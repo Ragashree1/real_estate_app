@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once "buyer_calculateMortgage.php";
 
 $loggedInUsername;
 $loggedInProfile;
@@ -40,6 +41,9 @@ if($loggedIn)
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
 
@@ -77,8 +81,13 @@ if($loggedIn)
                 } elseif ($profile === 'buyer') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_soldListings.php"  style="color: white;"><i class="fas fa-gavel"></i> Sold Properties</a></li>';
+
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_viewShortlist.php" style="color: white;"><i class="fas fa-heart" ></i> Shortlist</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_calculateMortgage.php" style="color: white;"><i class="fas fa-calculator" ></i> Calculate Mortgage</a></li>';
+
+                    echo '<li class="nav-item"><a class="nav-link" href="buyer_favourites.php" style="color: white;"><i class="fas fa-heart" ></i> Favourites</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#modalCalculator" style="color: white;"><i class="fas fa-calculator"></i> Calculate Mortgage</a></li>';
+
                 } elseif ($profile === 'seller') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="seller_viewCreatedListings.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
