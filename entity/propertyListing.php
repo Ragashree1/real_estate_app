@@ -430,8 +430,10 @@ class PropertyListing
     {
         $allListings = [];
 
-        // Prepare the SQL query with a parameterized query to avoid SQL injection
-        $query = "SELECT * FROM PropertyListing WHERE sold_by = ? ORDER BY date_listed DESC";
+        // Prepare the SQL query
+        $query = "SELECT *
+                 FROM PropertyListing 
+                 WHERE sold_by = ? ORDER BY date_listed DESC";
 
         // Prepare the statement
         $stmt = $this->conn->prepare($query);
