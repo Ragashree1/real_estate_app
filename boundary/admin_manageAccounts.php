@@ -28,7 +28,7 @@ if (isset($_POST["createUser"])) {
     // create controller object
     $createUserController = new AdminCreateUserAccountController();
     $status = $createUserController->createUser($createUser);
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageAccounts.php"; }, 1000);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
 if (isset($_POST["updateUser"])) {

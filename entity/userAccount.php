@@ -65,7 +65,7 @@ class UserAccount
         return $allUsers;
     }
 
-    public function searchUsers(string $username)
+    public function searchUsers(string $username): array
     {
         $allUsers = [];
 

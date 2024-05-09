@@ -11,7 +11,7 @@ $message = null;
 $allProfiles = [];
 
 
-//todo get profileprofile from profile controller 
+//to get profileprofile from profile controller 
 
 if (isset($_POST["createProfile"])) {
     $createProfile = array();
@@ -24,7 +24,7 @@ if (isset($_POST["createProfile"])) {
     // create controller object
     $createProfileController = new AdminCreateProfileController();
     $status = $createProfileController->createProfile($createProfile);
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageAccounts.php"; }, 1000);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
 if (isset($_POST["updateProfile"])) {
