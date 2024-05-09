@@ -87,7 +87,7 @@ if($loggedIn)
 
                 } elseif ($profile === 'seller') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="seller_viewCreatedListings.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="seller_viewListedProperties.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
                 } elseif ($profile === 'admin') {
                     echo '<li class="nav-item"><a class="nav-link" href="admin_manageAccounts.php" style="color: white;"><i class="fas fa-user-cog"></i> Manage Account</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="admin_manageProfiles.php" style="color: white;"><i class="fas fa-cog"></i> Manage Profile</a></li>';
