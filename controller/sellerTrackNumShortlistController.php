@@ -12,9 +12,9 @@ class sellerTrackNumShortlistController
 
     public function getNumShortlist(int $listing_id): int
     {
-        $numViews = $this->propertyListing->getNumShortlist($listing_id);
+        $numShortlist = $this->propertyListing->getNumShortlist($listing_id);
 
-        return $numViews;
+        return $numShortlist;
     }
 
 }

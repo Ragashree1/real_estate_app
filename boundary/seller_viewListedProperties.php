@@ -7,7 +7,6 @@ require_once "../controller/sellerTrackNumViewsController.php";
 require_once "../controller/sellerTrackNumShortlistController.php";
 
 $loggedInUsername = $_SESSION["username"];
-$viewListedPropertyController = new SellerViewListedPropertyController();
 $allListing;
 $current_listing;
 
@@ -15,9 +14,9 @@ $current_listing;
 function displayListedProperties()
 {
     global $loggedInUsername;
-    global $viewListedPropertyController;
     global $allListing;
 
+    $viewListedPropertyController = new SellerViewListedPropertyController();
     $allListing = $viewListedPropertyController->sellerGetListedProperties($loggedInUsername);  
 }
 
@@ -124,7 +123,7 @@ if (empty($allListing)) {
                     <td><?php echo $listing['listed_by']; ?></td>
                     <td>
                         <span class="badge badge-pill badge-primary p-2">
-                            <i class="fas fa-chart-line fa-lg"></i>
+                            <i class="fas fa-eye"></i>
                             <span class="font-weight-bold ml-2" style="font-size: 1.2rem;">
                                 <?php 
                                     $current_listing = $listing['listing_id'];
@@ -148,7 +147,7 @@ if (empty($allListing)) {
                     </td>
                     <td>
                         <a href="seller_viewSingleListedProperty.php?listing_id=<?php echo $listing['listing_id']; ?>" class="btn btn-primary btn-sm">
-                        <i class="fas fa-eye"></i>View</a>
+                        <i class="fas fa-info-circle"></i>Details</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

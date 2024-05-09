@@ -86,7 +86,7 @@ if(isset($_GET['delete_id']))
 ?>
 
 <br>
-<h2> &nbsp;My Listed Properties</h2>
+<h2> &nbsp;Manage created listings</h2>
 
 <!-- search bar -->
 <div class="container-fluid mt-3">

@@ -119,7 +119,7 @@ if (empty($singleListing)) {
 } else {
     ?>
     <div class="row" style="padding-left: 50px; padding-right:50px;">
-    <div class="single-listing" style="position: relative;">
+        <div class="single-listing" style="position: relative;">
         <!-- Like Button -->
         <?php if ($shortlisted) : ?>
              <!-- If the item is shortlisted -->
