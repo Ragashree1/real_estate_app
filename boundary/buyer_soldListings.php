@@ -6,15 +6,14 @@ require_once "../controller/buyerSearchSoldListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/listingstyle.css">';
 
 $loggedInProfile = $_SESSION['username'];
-$ViewListingController = new BuyerViewSoldListingController();
-$searchSoldListingController = new BuyerSearchSoldListingController();
 $allListing;
 
 // display sold listings
 function displaySoldListings()
 {
-    global $ViewListingController;
     global $allListing;
+
+    $ViewListingController = new BuyerViewSoldListingController();
     $allListing = $ViewListingController->getSoldListing();  
 }
 
@@ -31,6 +30,8 @@ function searchSoldListings()
     }
     
     $searchInfo['status'] = 'sold';
+
+    $searchSoldListingController = new BuyerSearchSoldListingController();
     $allListing = $searchSoldListingController->searchSoldListings($searchInfo);
 }
 

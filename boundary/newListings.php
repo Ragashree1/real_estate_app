@@ -6,22 +6,20 @@ require_once "../controller/SearchNewListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/listingstyle.css">';
 
 $loggedInProfile = $_SESSION['profile'];
-$ViewListingController = new ViewNewListingController();
-$searchNewListingController = new SearchNewListingController();
 $allListing;
 
 // display new listings
 function displayNewListings()
 {
-    global $ViewListingController;
     global $allListing;
+
+    $ViewListingController = new ViewNewListingController();
     $allListing = $ViewListingController->getNewListing();  
 }
 
 function searchNewListings()
 {
     global $allListing;
-    global $searchNewListingController;
 
     $searchInfo = array();
 
@@ -29,8 +27,8 @@ function searchNewListings()
     foreach ($_GET as $key => $value) {
         $searchInfo[$key] = $value;
     }
-    
-    $searchInfo['status'] = 'new';
+
+    $searchNewListingController = new SearchNewListingController();
     $allListing = $searchNewListingController->searchNewListings($searchInfo);
 }
 

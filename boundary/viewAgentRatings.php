@@ -7,14 +7,13 @@ $loggedInUsername = $_SESSION['username'];
 $loggedInProfile = $_SESSION['profile'];
 $agent_username;
 $allRatings;
-$viewAgentRatingController = new ViewAgentRatingController();
 
 function getAllRatings()
 {        
     global $agent_username;
-    global $viewAgentRatingController;
     global $allRatings;
 
+    $viewAgentRatingController = new ViewAgentRatingController();
     $allRatings = $viewAgentRatingController->getAllRatings($agent_username);
 
 }

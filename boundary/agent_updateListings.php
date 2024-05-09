@@ -4,7 +4,6 @@ require_once "../controller/agentUpdateListingController.php";
 
 $updated = true;
 $loggedInUsername = $_SESSION["username"];
-$agentUpdateListingController = new AgentUpdateListingController();
 $listing_id = isset($_GET['listing_id']) ? $_GET['listing_id'] : null;
 $listingToUpdate;
  
@@ -12,8 +11,8 @@ function getListingToUpdate()
 {
     global $listingToUpdate;
     global $listing_id;
-    global $agentUpdateListingController;
 
+    $agentUpdateListingController = new AgentUpdateListingController();
     $listingToUpdate = $agentUpdateListingController->getListingToUpdate($listing_id);
 }
 
@@ -23,7 +22,6 @@ function updateListing()
     global $loggedInUsername;
     global $updated;
     global $listing_id;
-    global $agentUpdateListingController;
 
     // store each login field data in array
     foreach ($_POST as $key => $value) {
@@ -39,6 +37,7 @@ function updateListing()
     
     $updateInfo["listed_by"] = $loggedInUsername;
 
+    $agentUpdateListingController = new AgentUpdateListingController();
     $updated = $agentUpdateListingController->agentUpdateListings($updateInfo, $listing_id);
     
     // Check if there are any errors

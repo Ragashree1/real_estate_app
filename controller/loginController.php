@@ -10,9 +10,9 @@ class LoginController
         $this->account = new UserAccount();
     }
 
-    public function validateLogin(array $loginInfo): bool
+    public function login(array $loginInfo): bool
     {
-        $validated = $this->account->validateLogin($loginInfo);
+        $validated = $this->account->login($loginInfo);
 
         return $validated;
     }

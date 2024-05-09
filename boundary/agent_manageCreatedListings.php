@@ -5,16 +5,15 @@ require_once "../controller/agentSearchListingController.php";
 require_once "../controller/agentDeleteListingController.php";
 
 $loggedInUsername = $_SESSION["username"];
-$agentViewAllListingController = new AgentViewCreatedListingController();
 $allListing;
 
 // display new listings
 function displayCreatedListings()
 {
     global $loggedInUsername;
-    global $agentViewAllListingController;
     global $allListing;
 
+    $agentViewAllListingController = new AgentViewCreatedListingController();
     $allListing = $agentViewAllListingController->agentGetCreatedListings($loggedInUsername);  
 }
 

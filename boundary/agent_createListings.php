@@ -16,7 +16,6 @@ function createListing()
         $createInfo[$key] = $value;
     }
     
-    // Check if sold_by is empty
     if (isset($_POST['sold_by']) && !empty($_POST['sold_by'])) {
         $createInfo['sold_by'] = $createInfo['sold_by'];
     } else {
@@ -25,6 +24,7 @@ function createListing()
 
     $createInfo["listed_by"] = $loggedInUsername;
 
+    // create controller object
     $agentCreateListingController = new AgentCreateListingController();
     $created = $agentCreateListingController->agentCreateListings($createInfo);
     
