@@ -1,12 +1,12 @@
 <?php require_once "partials/header.php";
 
-require_once "../controller/viewUserAccountController.php";
-require_once "../controller/searchUserAccountController.php";
-require_once "../controller/deleteUserAccountController.php";
-require_once "../controller/suspendUserAccountController.php";
-require_once "../controller/createUserAccountController.php";
-require_once "../controller/updateUserAccountController.php";
-require_once "../controller/viewProfileController.php";
+require_once "../controller/adminViewUserAccountController.php";
+require_once "../controller/adminSearchUserAccountController.php";
+require_once "../controller/adminDeleteUserAccountController.php";
+require_once "../controller/adminSuspendUserAccountController.php";
+require_once "../controller/adminCreateUserAccountController.php";
+require_once "../controller/adminUpdateUserAccountController.php";
+require_once "../controller/adminViewProfileController.php";
 
 
 $status = null;
@@ -26,9 +26,9 @@ if (isset($_POST["createUser"])) {
     }
 
     // create controller object
-    $createUserController = new CreateUserAccountController();
+    $createUserController = new AdminCreateUserAccountController();
     $status = $createUserController->createUser($createUser);
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageAccounts.php"; }, 1000);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
 if (isset($_POST["updateUser"])) {
@@ -40,7 +40,7 @@ if (isset($_POST["updateUser"])) {
     }
 
     // create controller object
-    $updateUserController = new UpdateUserAccountController();
+    $updateUserController = new AdminUpdateUserAccountController();
     $status = $updateUserController->updateUser($updateUser);
     $message = $status == true ? 'User updated successfully' : 'Error updating user';
 
@@ -48,13 +48,13 @@ if (isset($_POST["updateUser"])) {
 }
 
 if (isset($_GET['search'])) {
-    $searchUserAccountController = new SearchUserAccountController();
+    $searchUserAccountController = new AdminSearchUserAccountController();
     $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
-    $allProfiles = (new ViewProfileController())->getProfiles();
+    $allProfiles = (new AdminViewProfileController())->getProfiles();
 } else {
-    $viewUserAccountController = new ViewUserAccountController();
+    $viewUserAccountController = new AdminViewUserAccountController();
     $allUsers = $viewUserAccountController->getUsers();
-    $allProfiles = (new ViewProfileController())->getProfiles();
+    $allProfiles = (new AdminViewProfileController())->getProfiles();
 }
 
 if (isset($_GET['delete_user'])) {
@@ -70,7 +70,7 @@ if (isset($_GET['suspend_user'])) {
 function deleteUser($username)
 {
     global $status, $message, $allUsers;
-    $deleteUserController = new DeleteUserAccountController();
+    $deleteUserController = new AdminDeleteUserAccountController();
     $status = $deleteUserController->deleteUser($username);
     $message = $status ? 'User deleted successfully' : 'Error deleting user';
 
@@ -80,7 +80,7 @@ function deleteUser($username)
 function suspendUser($username)
 {
     global $status, $message, $allUsers;
-    $suspendUser = new SuspendUserAccountController();
+    $suspendUser = new AdminSuspendUserAccountController();
     $status = $suspendUser->suspendUser($username);
     $message = $status ? 'User suspended successfully' : 'Error suspending user';
 

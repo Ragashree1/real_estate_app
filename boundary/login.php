@@ -16,7 +16,7 @@ function login()
 
     // create controller object
     $loginController = new LoginController();
-    $validated = $loginController->validateLogin($loginInfo);
+    $validated = $loginController->login($loginInfo);
 
 	if ($validated) {
 		$validated = true;

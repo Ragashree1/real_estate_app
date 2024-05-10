@@ -21,33 +21,25 @@ class UserAccount
         }
     }
 
-    public function validateLogin(array $loginInfo): bool
+    public function login(array $loginInfo): bool
     {
-        // check for spacing values
-        foreach ($loginInfo as $value) {
-            if (trim($value) === '') {
-                return false;
-            }
-        }
-
         $username = $loginInfo['username'];
         $password = $loginInfo['password'];
         $profile = $loginInfo['profile'];
 
-        // Example SQL query to validate login
+        //SQL query to validate login
         $query = "SELECT * FROM UserAccount WHERE (username = '$username' OR email = '$username') 
                                                 AND profile = '$profile'";
         $result = $this->conn->query($query);
 
+        // return false when no records found
         if ($result->num_rows <= 0) {
-            return false; // No matching user found
+            return false; 
         }
 
         // Retrieve the user's hashed password from the database
         $row = $result->fetch_assoc();
         $hashedPassword = $row['passwordHash'];
-
-        // Verify the provided password against the hashed password
         if (!password_verify($password, $hashedPassword)) {
             return false;
         }
@@ -72,7 +64,7 @@ class UserAccount
         return $allUsers;
     }
 
-    public function searchUsers(string $username)
+    public function searchUsers(string $username): array
     {
         $allUsers = [];
 

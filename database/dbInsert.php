@@ -115,6 +115,21 @@ $listings = [
         'num_views' => 600,
         'num_shortlist' => 505
     ],
+    [
+        'title' => 'This is to test sold property',
+        'description' => 'Again this is to test sold property',
+        'image' => 'images/image4.png',
+        'type' => 'Condo',
+        'location' => 'Southern Greench Argean Sea',
+        'price' => 760000,
+        'area' => 4000,
+        'bhk' => 5,
+        'listed_by' => 'agent001', // Listed by agent
+        'sold_by' => 'seller001', // Sold by seller
+        'status' => 'sold',
+        'num_views' => 70,
+        'num_shortlist' => 70
+    ],
 ];
 
 // Prepare and execute INSERT statements
@@ -141,6 +156,28 @@ foreach ($listings as $listing) {
     } else {
         echo "Error inserting listing: " . $conn->error;
     }
+}
+
+// insrt into ratings
+$sqlInsert = "INSERT INTO Rating (rater_username, agent_username, profile, rating_communication, rating_professionalism, rating_marketKnowledge)
+    VALUES ('buyer001', 'agent001', 'buyer', 4, 5, 4),
+            ('seller001', 'agent001', 'seller', 5, 5, 5)" ;
+
+if ($conn->query($sqlInsert) === TRUE) {
+    echo "Rating inserted successfully\n";
+} else {
+    echo "Error inserting Rating: " . $conn->error;
+}
+
+    // insert reviews
+$sqlInsert = "INSERT INTO Review (reviewer_username, agent_username, profile, review_text)
+    VALUES ('buyer001', 'agent001', 'buyer', 'Agent001 was very professional and responsive. I would highly recommend their services.'),
+            ('seller001', 'agent001', 'seller', 'I am very satisfied with the service provided by Agent001.')";
+
+if ($conn->query($sqlInsert) === TRUE) {
+    echo "Reviews inserted successfully\n";
+} else {
+    echo "Error inserting Reviews: " . $conn->error;
 }
 
 ?>

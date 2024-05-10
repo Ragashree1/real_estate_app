@@ -2,9 +2,8 @@
 require_once "partials/header.php"; 
 require_once "../controller/agentUpdateListingController.php";
 
-$errors;
+$updated = true;
 $loggedInUsername = $_SESSION["username"];
-$agentUpdateListingController = new AgentUpdateListingController();
 $listing_id = isset($_GET['listing_id']) ? $_GET['listing_id'] : null;
 $listingToUpdate;
  
@@ -12,8 +11,8 @@ function getListingToUpdate()
 {
     global $listingToUpdate;
     global $listing_id;
-    global $agentUpdateListingController;
 
+    $agentUpdateListingController = new AgentUpdateListingController();
     $listingToUpdate = $agentUpdateListingController->getListingToUpdate($listing_id);
 }
 
@@ -21,21 +20,28 @@ function updateListing()
 {
     $updateInfo = array();
     global $loggedInUsername;
-    global $errors;
+    global $updated;
     global $listing_id;
-    global $agentUpdateListingController;
 
     // store each login field data in array
     foreach ($_POST as $key => $value) {
         $updateInfo[$key] = $value;
     }
+
+    // Check if sold_by is empty
+    if (isset($_POST['sold_by']) && !empty($_POST['sold_by'])) {
+        $updateInfo['sold_by'] = $updateInfo['sold_by'];
+    } else {
+        $updateInfo['sold_by'] = NULL;
+    }
     
     $updateInfo["listed_by"] = $loggedInUsername;
 
-    $errors = $agentUpdateListingController->agentUpdateListings($updateInfo, $listing_id);
+    $agentUpdateListingController = new AgentUpdateListingController();
+    $updated = $agentUpdateListingController->agentUpdateListings($updateInfo, $listing_id);
     
     // Check if there are any errors
-    if (empty($errors)) {
+    if ($updated) {
         updateSuccess();
     }
     else
@@ -49,7 +55,7 @@ function updateSuccess()
         </div>';
 
     // Redirect using JavaScript after the alert is closed
-    echo '<script>setTimeout(function() { window.location.href = "agent_manageListings.php"; }, 1500);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "agent_manageCreatedListings.php"; }, 1500);</script>';
 }
 
 function updateFail()
@@ -68,98 +74,76 @@ if(isset($_POST['updateListing']))
 }
 ?>
 
-<div class="container">
+<br>
+<div class="container" style="background-color: #f8f9fa; padding: 20px;">
     <h2>Update Listing</h2>
     <form id="updateListingForm" action="" method="post">
         <!-- Title -->
         <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="title" value="<?php echo isset($listingToUpdate['title']) ? $listingToUpdate['title'] : ''; ?>">
-            <?php if (isset($errors['title'])) : ?>
-                <div class="text-danger"><?php echo $errors['title']; ?></div>
-            <?php endif; ?>
+            <input type="text" class="form-control" id="title" name="title" value="<?php echo isset($listingToUpdate['title']) ? $listingToUpdate['title'] : ''; ?>" required>
         </div>
         <!-- Description -->
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="3"><?php echo isset($listingToUpdate['description']) ? $listingToUpdate['description'] : ''; ?></textarea>
-            <?php if (isset($errors['description'])) : ?>
-                <div class="text-danger"><?php echo $errors['description']; ?></div>
-            <?php endif; ?>
+            <textarea class="form-control" id="description" name="description" rows="3" required><?php echo isset($listingToUpdate['description']) ? $listingToUpdate['description'] : ''; ?></textarea>
         </div>
         <!-- Image URL -->
         <div class="form-group">
             <label for="image">Image URL</label>
             <input type="text" class="form-control" id="image" name="image" value="<?php echo isset($listingToUpdate['image']) ? $listingToUpdate['image'] : ''; ?>">
-            <?php if (isset($errors['image'])) : ?>
-                <div class="text-danger"><?php echo $errors['image']; ?></div>
-            <?php endif; ?>
             <!-- Display image if available -->
             <?php if (isset($listingToUpdate['image'])) : ?>
-                <img src="<?php echo $listingToUpdate['image']; ?>" alt="<no image>" style="max-width: 20%;">
+                <img src="<?php echo $listingToUpdate['image']; ?>" alt="<no image>" style="max-width: 20%;" required>
             <?php endif; ?>
         </div>
         <!-- Type -->
         <div class="form-group">
             <label for="type">Type</label>
-            <input type="text" class="form-control" id="type" name="type" value="<?php echo isset($listingToUpdate['type']) ? $listingToUpdate['type'] : ''; ?>">
-            <?php if (isset($errors['type'])) : ?>
-                <div class="text-danger"><?php echo $errors['type']; ?></div>
-            <?php endif; ?>
+            <input type="text" class="form-control" id="type" name="type" value="<?php echo isset($listingToUpdate['type']) ? $listingToUpdate['type'] : ''; ?>" required>
         </div>
         <!-- Location -->
         <div class="form-group">
             <label for="location">Location</label>
-            <input type="text" class="form-control" id="location" name="location" value="<?php echo isset($listingToUpdate['location']) ? $listingToUpdate['location'] : ''; ?>">
-            <?php if (isset($errors['location'])) : ?>
-                <div class="text-danger"><?php echo $errors['location']; ?></div>
-            <?php endif; ?>
+            <input type="text" class="form-control" id="location" name="location" value="<?php echo isset($listingToUpdate['location']) ? $listingToUpdate['location'] : ''; ?>" required>
         </div>
         <!-- Price -->
         <div class="form-group">
             <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" name="price" value="<?php echo isset($listingToUpdate['price']) ? $listingToUpdate['price'] : ''; ?>">
-            <?php if (isset($errors['price'])) : ?>
-                <div class="text-danger"><?php echo $errors['price']; ?></div>
-            <?php endif; ?>
+            <input type="number" class="form-control" id="price" name="price" value="<?php echo isset($listingToUpdate['price']) ? $listingToUpdate['price'] : ''; ?>" min="0" required>
         </div>
         <!-- Area -->
         <div class="form-group">
             <label for="area">Area</label>
-            <input type="number" class="form-control" id="area" name="area" value="<?php echo isset($listingToUpdate['area']) ? $listingToUpdate['area'] : ''; ?>">
-            <?php if (isset($errors['area'])) : ?>
-                <div class="text-danger"><?php echo $errors['area']; ?></div>
-            <?php endif; ?>
+            <input type="number" class="form-control" id="area" name="area" value="<?php echo isset($listingToUpdate['area']) ? $listingToUpdate['area'] : ''; ?>" min="0" required>
         </div>
         <!-- BHK -->
         <div class="form-group">
             <label for="bhk">BHK</label>
-            <input type="number" class="form-control" id="bhk" name="bhk" value="<?php echo isset($listingToUpdate['bhk']) ? $listingToUpdate['bhk'] : ''; ?>">
-            <?php if (isset($errors['bhk'])) : ?>
-                <div class="text-danger"><?php echo $errors['bhk']; ?></div>
-            <?php endif; ?>
+            <input type="number" class="form-control" id="bhk" name="bhk" value="<?php echo isset($listingToUpdate['bhk']) ? $listingToUpdate['bhk'] : ''; ?>" min="0" required>
         </div>
         <!-- Status -->
         <div class="form-group">
             <label for="status">Status</label>
-            <input type="text" class="form-control" id="status" name="status" value="<?php echo isset($listingToUpdate['status']) ? $listingToUpdate['status'] : 'new'; ?>">
-            <?php if (isset($errors['status'])) : ?>
-                <div class="text-danger"><?php echo $errors['status']; ?></div>
-            <?php endif; ?>
+            <select class="form-control" id="status" name="status" required>
+                <option value="new" <?php echo isset($listingToUpdate['status']) && $listingToUpdate['status'] === 'new' ? 'selected' : ''; ?>>New</option>
+                <option value="sold" <?php echo isset($listingToUpdate['status']) && $listingToUpdate['status'] === 'sold' ? 'selected' : ''; ?>>Sold</option>
+            </select>
         </div>
         <!-- Sold By -->
         <div class="form-group">
             <label for="sold_by">Sold By</label>
             <input type="text" class="form-control" id="sold_by" name="sold_by" value="<?php echo isset($listingToUpdate['sold_by']) ? $listingToUpdate['sold_by'] : ''; ?>">
-            <?php if (isset($errors['sold_by'])) : ?>
-                <div class="text-danger"><?php echo $errors['sold_by']; ?></div>
+            <?php if(!$updated): ?>
+                <div class="text-danger"> Error: Seller username might not exist </div>
             <?php endif; ?>
         </div>
         <!-- Submit Button -->
         <button type="submit" class="btn btn-primary" name="updateListing" value="updateListing">Update</button>
+        
+        <!-- cancel !-->
+        <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
     </form>
 </div>
-
-
 
 <?php require_once "partials/footer.php"; ?>

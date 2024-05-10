@@ -10,11 +10,11 @@ class AgentCreateListingController
         $this->propertyListing = new PropertyListing();
     }
 
-    public function agentCreateListings(array $createInfo): array
+    public function agentCreateListings(array $createInfo): bool
     {
-        $errors = $this->propertyListing->agentCreateListings($createInfo);
+        $created = $this->propertyListing->agentCreateListings($createInfo);
         
-        return $errors;
+        return $created;
     }
 }
 
