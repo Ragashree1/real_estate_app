@@ -39,7 +39,7 @@ class Profile
         return $allProfiles;
     }
 
-    public function searchProfiles(string $profileName)
+    public function searchProfiles(string $profileName): array
     {
         $allProfiles = [];
 

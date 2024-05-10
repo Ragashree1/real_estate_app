@@ -21,7 +21,7 @@ class UserAccount
         }
     }
 
-    public function validateLogin(array $loginInfo): bool
+    public function login(array $loginInfo): bool
     {
         $username = $loginInfo['username'];
         $password = $loginInfo['password'];
@@ -32,15 +32,14 @@ class UserAccount
                                                 AND profile = '$profile'";
         $result = $this->conn->query($query);
 
+        // return false when no records found
         if ($result->num_rows <= 0) {
-            return false; // No matching user found
+            return false; 
         }
 
         // Retrieve the user's hashed password from the database
         $row = $result->fetch_assoc();
         $hashedPassword = $row['passwordHash'];
-
-        // Verify the provided password against the hashed password
         if (!password_verify($password, $hashedPassword)) {
             return false;
         }
@@ -65,7 +64,7 @@ class UserAccount
         return $allUsers;
     }
 
-    public function searchUsers(string $username)
+    public function searchUsers(string $username): array
     {
         $allUsers = [];
 

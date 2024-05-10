@@ -3,18 +3,20 @@ require_once "partials/header.php";
 require_once "partials/hero.php"; 
 require_once "../controller/sellerViewListedPropertyController.php";
 require_once "../controller/sellerSearchListedPropertyController.php";
+require_once "../controller/sellerTrackNumViewsController.php";
+require_once "../controller/sellerTrackNumShortlistController.php";
 
 $loggedInUsername = $_SESSION["username"];
-$viewListedPropertyController = new SellerViewListedPropertyController();
 $allListing;
+$current_listing;
 
 // display new listings
 function displayListedProperties()
 {
     global $loggedInUsername;
-    global $viewListedPropertyController;
     global $allListing;
 
+    $viewListedPropertyController = new SellerViewListedPropertyController();
     $allListing = $viewListedPropertyController->sellerGetListedProperties($loggedInUsername);  
 }
 
@@ -34,6 +36,24 @@ function searchListedProperties()
 
     $searchListedPropertyr = new SellerSearchListedPropertyController();
     $allListing = $searchListedPropertyr->searchListedProperty($searchInfo);
+}
+
+function getNumViews()
+{
+    global $current_listing;
+    global $numViews;
+
+    $sellerTrackNumViewsController = new SellerTrackNumViewsController();
+    $numViews = $sellerTrackNumViewsController->getNumViews($current_listing);
+}
+
+function getNumShortlist()
+{
+    global $current_listing;
+    global $numShortlist;
+
+    $sellerTrackNumShortlistController = new SellerTrackNumShortlistController();
+    $numShortlist = $sellerTrackNumShortlistController->getNumShortlist($current_listing);
 }
 
 
@@ -103,19 +123,31 @@ if (empty($allListing)) {
                     <td><?php echo $listing['listed_by']; ?></td>
                     <td>
                         <span class="badge badge-pill badge-primary p-2">
-                            <i class="fas fa-chart-line fa-lg"></i>
-                            <span class="font-weight-bold ml-2" style="font-size: 1.2rem;"><?php echo $listing['num_views']; ?></span>
+                            <i class="fas fa-eye"></i>
+                            <span class="font-weight-bold ml-2" style="font-size: 1.2rem;">
+                                <?php 
+                                    $current_listing = $listing['listing_id'];
+                                    getNumViews();
+                                    echo $numViews;
+                                ?>
+                            </span>
                         </span>
                     </td>
                     <td>
                         <span class="badge badge-pill badge-warning p-2">
                             <i class="fas fa-heart fa-lg"></i>
-                            <span class="font-weight-bold ml-2" style="font-size: 1.2rem;"><?php echo $listing['num_shortlist']; ?></span>
+                            <span class="font-weight-bold ml-2" style="font-size: 1.2rem;">
+                                <?php 
+                                    $current_listing = $listing['listing_id'];
+                                    getNumShortlist();
+                                    echo $numShortlist;
+                                ?>
+                            </span>
                         </span>
                     </td>
                     <td>
                         <a href="seller_viewSingleListedProperty.php?listing_id=<?php echo $listing['listing_id']; ?>" class="btn btn-primary btn-sm">
-                        <i class="fas fa-eye"></i>View</a>
+                        <i class="fas fa-info-circle"></i>Details</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/userAccount.php";
 
-class UpdateUserAccountController
+class AdminCreateUserAccountController
 {
     private UserAccount $userAccount; 
 
@@ -10,9 +10,9 @@ class UpdateUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function updateUser(array $userDetails) : bool
+    public function createUser(array $userDetails) : bool
     {
-        $status = $this->userAccount->updateUser($userDetails);
+        $status = $this->userAccount->createUser($userDetails);
         return $status != null && $status != false;
     }
 }

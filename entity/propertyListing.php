@@ -430,8 +430,10 @@ class PropertyListing
     {
         $allListings = [];
 
-        // Prepare the SQL query with a parameterized query to avoid SQL injection
-        $query = "SELECT * FROM PropertyListing WHERE sold_by = ? ORDER BY date_listed DESC";
+        // Prepare the SQL query
+        $query = "SELECT listing_id, title, type, bhk, price, status, type, listed_by, area
+                 FROM PropertyListing 
+                 WHERE sold_by = ? ORDER BY date_listed DESC";
 
         // Prepare the statement
         $stmt = $this->conn->prepare($query);
@@ -449,6 +451,48 @@ class PropertyListing
         $stmt->close();
 
         return $allListings;
+    }
+
+    // get number of views
+    public function getNumViews(int $listing_id): int
+    {
+        $numViews = 0;
+
+        // Prepare the SQL query
+        $query = "SELECT num_views
+                FROM PropertyListing 
+                WHERE listing_id = ?";
+
+        // Prepare the statement adn execute
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $listing_id);
+        $stmt->execute();
+        $stmt->bind_result($numViews);
+        $stmt->fetch();
+        $stmt->close();
+
+        return $numViews ?? 0; 
+    }
+
+    // get number of shortlist
+    public function getNumShortlist(int $listing_id): int
+    {
+        $numShortlist = 0;
+
+        // Prepare the SQL query
+        $query = "SELECT num_shortlist
+                FROM PropertyListing 
+                WHERE listing_id = ?";
+
+        // Prepare the statement adn execute
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $listing_id);
+        $stmt->execute();
+        $stmt->bind_result($numShortlist);
+        $stmt->fetch();
+        $stmt->close();
+
+        return $numShortlist ?? 0; 
     }
 
     // search listings
@@ -497,7 +541,6 @@ class PropertyListing
             }
         }
 
-        // Close the database connection
         $this->conn->close();
 
         return $searchResults;

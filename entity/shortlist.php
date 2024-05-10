@@ -30,10 +30,6 @@ class Shortlist
         
          // Execute the query
         if ($stmt->execute()) {
-            // Increment the shortlist count
-            $sql = "UPDATE PropertyListing SET num_shortlist = num_shortlist + 1 WHERE listing_id = $listing_id";
-            $this->conn->query($sql);
-
             return true;  
         }
         return false;  
@@ -49,10 +45,6 @@ class Shortlist
         // Execute the query
         if ($stmt->execute()) {
             if ($stmt->affected_rows > 0) {
-                // decrement the shortlist count
-                $sql = "UPDATE PropertyListing SET num_shortlist = num_shortlist - 1 WHERE listing_id = $listing_id";
-                $this->conn->query($sql);
-
                 return true;  
             }
         }

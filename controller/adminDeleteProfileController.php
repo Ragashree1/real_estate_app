@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/Profile.php";
 
-class DeleteProfileController
+class AdminDeleteProfileController
 {
     private Profile $profile; 
 

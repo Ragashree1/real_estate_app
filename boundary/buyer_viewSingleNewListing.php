@@ -10,8 +10,6 @@ echo '<link rel="stylesheet" type="text/css" href="css/singlelistingstyle.css">'
 $singleListing;
 $loggedInUsername = $_SESSION['username'];
 $listing_id = $_GET['listing_id'];
-$buyerShortlistController = new BuyerShortlistNewListingController();
-$buyerRemoveShortlistController = new BuyerRemoveShortlistNewListingController();
 $shortlisted;
 $rated;
 $reviewed;
@@ -28,10 +26,10 @@ function displaySingleListing()
 
 function shortlist()
 {
-    global $buyerShortlistController;
     global $listing_id;
     global $loggedInUsername;
- 
+    
+    $buyerShortlistController = new BuyerShortlistNewListingController();
     $shortlistSuccess = $buyerShortlistController->shortlist($loggedInUsername, $listing_id);
 
     if ($shortlistSuccess){
@@ -47,10 +45,10 @@ function shortlist()
 
 function removeShortlist()
 {
-    global $buyerRemoveShortlistController;
     global $listing_id;
     global $loggedInUsername;
 
+    $buyerRemoveShortlistController = new BuyerRemoveShortlistNewListingController();
     $removeSuccess = $buyerRemoveShortlistController->removeShortlist($loggedInUsername, $listing_id);
 
     if ($removeSuccess){
@@ -66,11 +64,11 @@ function removeShortlist()
 
 function isShortlisted()
 {
-    global $buyerShortlistController;
     global $listing_id;
     global $loggedInUsername;
     global $shortlisted;
 
+    $buyerShortlistController = new BuyerShortlistNewListingController();
     $shortlisted = $buyerShortlistController->isShortListed($loggedInUsername, $listing_id);
 }
 
@@ -121,7 +119,7 @@ if (empty($singleListing)) {
 } else {
     ?>
     <div class="row" style="padding-left: 50px; padding-right:50px;">
-    <div class="single-listing" style="position: relative;">
+        <div class="single-listing" style="position: relative;">
         <!-- Like Button -->
         <?php if ($shortlisted) : ?>
              <!-- If the item is shortlisted -->

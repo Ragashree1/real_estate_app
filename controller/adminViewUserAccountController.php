@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/userAccount.php";
 
-class DeleteUserAccountController
+class AdminViewUserAccountController
 {
     private UserAccount $userAccount; 
 
@@ -10,11 +10,11 @@ class DeleteUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function deleteUser(string $username)
+    public function getUsers(): array
     {
-        $flag = $this->userAccount->deleteUser($username);
+        $allUsers = $this->userAccount->getUsers();
 
-        return $flag;
+        return $allUsers;
     }
 
 }

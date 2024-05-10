@@ -7,16 +7,14 @@ $loggedInUsername = $_SESSION['username'];
 $loggedInProfile = $_SESSION['profile'];
 $agent_username;
 $allReviews;
-$viewAgentReviewController = new ViewAgentReviewController();
 
 function getAllReviews()
 {        
     global $agent_username;
-    global $viewAgentReviewController;
     global $allReviews;
 
+    $viewAgentReviewController = new ViewAgentReviewController();
     $allReviews = $viewAgentReviewController->getAllReviews($agent_username);
-
 }
 
 if (isset($_POST['agent_username']))

@@ -29,25 +29,18 @@ class Rating
         // Prepare the query
         $query = "SELECT * FROM Rating WHERE agent_username = ? ORDER BY date_rated DESC";
         $stmt = $this->conn->prepare($query);
-
-        // Bind the parameter
         $stmt->bind_param("s", $agent_username);
 
         // Execute the query
         $stmt->execute();
-
-        // Get the result
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $ratings[] = $row;
             }
         }
-
-        // Close the statement
         $stmt->close();
 
-        // Return the array of ratings
         return $ratings;
     }
 
@@ -63,13 +56,10 @@ class Rating
 
         // Prepare the SQL query
         $query = "INSERT INTO Rating (rater_username, agent_username, profile, rating_communication, rating_professionalism, rating_marketKnowledge) VALUES (?, ?, ?, ?, ?, ?)";
-
-        // Prepare the statement
         $stmt = $this->conn->prepare($query);
-
-        // Bind parameters
         $stmt->bind_param("sssiii", $rater_username, $agent_username, $profile, $rating_communication, $rating_professionalism, $rating_marketKnowledge);
 
+        // return false if any errors occured
         try {
             if ($stmt->execute()) {
                 return true;

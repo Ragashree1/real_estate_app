@@ -6,22 +6,20 @@ require_once "../controller/SearchNewListingController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/listingstyle.css">';
 
 $loggedInProfile = $_SESSION['profile'];
-$ViewListingController = new ViewNewListingController();
-$searchNewListingController = new SearchNewListingController();
 $allListing;
 
 // display new listings
 function displayNewListings()
 {
-    global $ViewListingController;
     global $allListing;
+
+    $ViewListingController = new ViewNewListingController();
     $allListing = $ViewListingController->getNewListing();  
 }
 
 function searchNewListings()
 {
     global $allListing;
-    global $searchNewListingController;
 
     $searchInfo = array();
 
@@ -29,8 +27,8 @@ function searchNewListings()
     foreach ($_GET as $key => $value) {
         $searchInfo[$key] = $value;
     }
-    
-    $searchInfo['status'] = 'new';
+
+    $searchNewListingController = new SearchNewListingController();
     $allListing = $searchNewListingController->searchNewListings($searchInfo);
 }
 
@@ -58,7 +56,7 @@ else
         <input class="form-control mr-sm-2" type="number" placeholder="Min Price" name="min_price" style="width: 15%;" min="0">
         <input class="form-control mr-sm-2" type="number" placeholder="Max Price" name="max_price" style="width: 15%;" min="0">
         <input class="form-control mr-sm-2" type="number" placeholder="Min Area" name="min_area" style="width: 15%;" min="0">
-        <input class="form-control mr-sm-2" type="number" placeholder="bedroom+hall+kitchen num" name="bhk" style="width: 20;" min="0">
+        <input class="form-control mr-sm-2" type="number" placeholder="bedroom+hall+kitchen num" name="bhk" style="width: 15%;" min="0">
         <button class="btn btn-success my-2 my-sm-0" type="submit" name="searchForm" value="search" style="width: 10%;">
             <i class="fas fa-search"></i> Search
         </button>

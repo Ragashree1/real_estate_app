@@ -1,6 +1,5 @@
 <?php
 session_start();
-require_once "buyer_calculateMortgage.php";
 
 $loggedInUsername;
 $loggedInProfile;
@@ -47,6 +46,8 @@ if($loggedIn)
 </head>
 <body>
 
+<?php require_once "buyer_calculateMortgage.php"; ?>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <img src="images/logo.png" alt="To Dashboard" height="30">
     <a class="navbar-brand" href="dashboard.php">Lucky7Property</a>
@@ -81,16 +82,12 @@ if($loggedIn)
                 } elseif ($profile === 'buyer') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_soldListings.php"  style="color: white;"><i class="fas fa-gavel"></i> Sold Properties</a></li>';
-
                     echo '<li class="nav-item"><a class="nav-link" href="buyer_viewShortlist.php" style="color: white;"><i class="fas fa-heart" ></i> Shortlist</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="buyer_calculateMortgage.php" style="color: white;"><i class="fas fa-calculator" ></i> Calculate Mortgage</a></li>';
-
-                    echo '<li class="nav-item"><a class="nav-link" href="buyer_favourites.php" style="color: white;"><i class="fas fa-heart" ></i> Favourites</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#modalCalculator" style="color: white;"><i class="fas fa-calculator"></i> Calculate Mortgage</a></li>';
 
                 } elseif ($profile === 'seller') {
                     echo '<li class="nav-item"><a class="nav-link" href="newListings.php" style="color: white;"><i class="fas fa-house"></i> New Properties</a></li>';
-                    echo '<li class="nav-item"><a class="nav-link" href="seller_viewCreatedListings.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="seller_viewListedProperties.php" style="color: white;"><i class="fas fa-tasks"></i> My Listings</a></li>';
                 } elseif ($profile === 'admin') {
                     echo '<li class="nav-item"><a class="nav-link" href="admin_manageAccounts.php" style="color: white;"><i class="fas fa-user-cog"></i> Manage Account</a></li>';
                     echo '<li class="nav-item"><a class="nav-link" href="admin_manageProfiles.php" style="color: white;"><i class="fas fa-cog"></i> Manage Profile</a></li>';
@@ -115,11 +112,8 @@ if($loggedIn)
                 echo '</li>';
             } 
             ?>
-            
-    
         </ul>
     </div>
-    
 </nav>
 
 

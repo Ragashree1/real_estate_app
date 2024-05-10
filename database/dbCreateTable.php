@@ -64,6 +64,7 @@ if ($conn->query($sqlListing) === TRUE) {
     echo "Error creating table PropertyListing: " . $conn->error;
 }
 
+
 // create shortlist table
 $sqlshortlist = "CREATE TABLE IF NOT EXISTS Shortlist (
     buyer_username VARCHAR(100),
@@ -77,6 +78,41 @@ if ($conn->query($sqlshortlist) === TRUE) {
     echo "Table Shortlist created successfully\n";
 } else {
     echo "Error creating table Shortlist: " . $conn->error;
+}
+
+
+// Create a trigger to increment num_shortlist when a new row is inserted into the Shortlist table
+$sqltrigger1 = "CREATE TRIGGER increment_num_shortlist
+AFTER INSERT ON Shortlist
+FOR EACH ROW
+BEGIN
+    UPDATE PropertyListing
+    SET num_shortlist = num_shortlist + 1
+    WHERE listing_id = NEW.listing_id;
+END";
+
+// Execute the SQL statement to create the trigger
+if ($conn->query($sqltrigger1) === TRUE) {
+    echo "Trigger created successfully";
+} else {
+    echo "Error creating trigger: " . $conn->error;
+}
+
+// Create a trigger to increment num_shortlist when a new row is deleted into the Shortlist table
+$sqltrigger2 = "CREATE TRIGGER decrement_num_shortlist
+AFTER DELETE ON Shortlist
+FOR EACH ROW
+BEGIN
+    UPDATE PropertyListing
+    SET num_shortlist = num_shortlist - 1
+    WHERE listing_id = OLD.listing_id;
+END";
+
+// Execute the SQL statement to create the trigger
+if ($conn->query($sqltrigger2) === TRUE) {
+    echo "Trigger created successfully";
+} else {
+    echo "Error creating trigger: " . $conn->error;
 }
 
 // create ratings table

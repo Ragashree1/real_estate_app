@@ -3,11 +3,15 @@ require_once "partials/header.php";
 require_once "../controller/sellerViewSingleListedPropertyController.php";
 require_once "../controller/rateAgentController.php";
 require_once "../controller/reviewAgentController.php";
+require_once "../controller/sellerTrackNumViewsController.php";
+require_once "../controller/sellerTrackNumShortlistController.php";
 echo '<link rel="stylesheet" type="text/css" href="css/singlelistingstyle.css">';
 
 $singleListing;
 $rated;
 $reviewed;
+$num_views;
+$num_shortlists;
 
 function displaySingleListing()
 {
@@ -39,6 +43,24 @@ function isReviewed()
     $reviewed = $reviewAgentController->isReviewed($loggedInUsername, $singleListing['username']);
 }
 
+function getNumViews()
+{
+    global $singleListing;
+    global $numViews;
+
+    $sellerTrackNumViewsController = new SellerTrackNumViewsController();
+    $numViews = $sellerTrackNumViewsController->getNumViews($singleListing['listing_id']);
+}
+
+function getNumShortlist()
+{
+    global $singleListing;
+    global $num_shortlists;
+
+    $sellerTrackNumShortlistController = new SellerTrackNumShortlistController();
+    $num_shortlists = $sellerTrackNumShortlistController->getNumShortlist($singleListing['listing_id']);
+}
+
 if (isset($_GET['listing_id'])) {
     displaySingleListing();
 }
@@ -56,8 +78,22 @@ if (empty($singleListing)) {
     echo "No property listing found";
 } else {
     ?>
-    <div class="row">
-        <div class="single-listing">
+    <div class="row" style="padding-left: 50px; padding-right:50px;">
+        <div class="single-listing" style="position: relative;">
+            <button class="btn btn-primary btn-lg" style="position: absolute; top: 10px; right: 230px;" >
+                <i class="fas fa-eye"></i> Views:  
+                <?php 
+                    getNumViews();
+                    echo $numViews;
+                ?>
+            </button>
+            <button class="btn btn-warning btn-lg" style="position: absolute; top: 10px; right: 50px;" >
+                <i class="fas fa-heart"></i> Shortlists: 
+                <?php 
+                    getNumShortlist();
+                    echo $num_shortlists;
+                ?>
+            </button>
             <div class="single-listing-inner">
                 <?php if (isset($singleListing['image'])) : ?>
                     <img src="<?= $singleListing['image'] ?>" alt="Listing Image" class="single-listing-image"

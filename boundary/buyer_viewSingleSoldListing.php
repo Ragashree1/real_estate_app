@@ -10,8 +10,6 @@ echo '<link rel="stylesheet" type="text/css" href="css/singlelistingstyle.css">'
 $singleListing;
 $loggedInUsername = $_SESSION['username'];
 $listing_id = $_GET['listing_id'];
-$buyerShortlistController = new BuyerShortlistSoldListingController();
-$buyerRemoveShortlistController = new BuyerRemoveShortlistSoldListingController();
 $shortlisted;
 
 function displaySingleListing()
@@ -26,10 +24,10 @@ function displaySingleListing()
 
 function shortlist()
 {
-    global $buyerShortlistController;
     global $listing_id;
     global $loggedInUsername;
  
+    $buyerShortlistController = new BuyerShortlistSoldListingController();
     $shortlistSuccess = $buyerShortlistController->shortlist($loggedInUsername, $listing_id);
 
     if ($shortlistSuccess){
@@ -45,10 +43,10 @@ function shortlist()
 
 function removeShortlist()
 {
-    global $buyerRemoveShortlistController;
     global $listing_id;
     global $loggedInUsername;
 
+    $buyerRemoveShortlistController = new BuyerRemoveShortlistSoldListingController();
     $removeSuccess = $buyerRemoveShortlistController->removeShortlist($loggedInUsername, $listing_id);
 
     if ($removeSuccess){
@@ -64,11 +62,11 @@ function removeShortlist()
 
 function isShortlisted()
 {
-    global $buyerShortlistController;
     global $listing_id;
     global $loggedInUsername;
     global $shortlisted;
 
+    $buyerShortlistController = new BuyerShortlistSoldListingController();
     $shortlisted = $buyerShortlistController->isShortListed($loggedInUsername, $listing_id);;
 }
 
