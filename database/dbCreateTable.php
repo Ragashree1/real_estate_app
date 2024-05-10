@@ -93,7 +93,7 @@ END";
 
 // Execute the SQL statement to create the trigger
 if ($conn->query($sqltrigger1) === TRUE) {
-    echo "Trigger created successfully";
+    echo "Trigger created successfully\n";
 } else {
     echo "Error creating trigger: " . $conn->error;
 }
@@ -110,7 +110,7 @@ END";
 
 // Execute the SQL statement to create the trigger
 if ($conn->query($sqltrigger2) === TRUE) {
-    echo "Trigger created successfully";
+    echo "Trigger created successfully\n";
 } else {
     echo "Error creating trigger: " . $conn->error;
 }
