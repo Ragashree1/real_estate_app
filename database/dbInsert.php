@@ -120,9 +120,10 @@ $isInserted = true;
 /*********  Listings  *********/
 for ($i = 0; $i < 10; $i++) {
     $listing = generateRandomListingData();
+    $soldBy = 'seller'.sprintf('%03d',mt_rand(2, 100));
 
     $listingInsert = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
-                      VALUES ('{$listing['title']}', '{$listing['description']}', '{$listing['image']}', '{$listing['type']}', '{$listing['location']}', '{$listing['price']}', '{$listing['area']}', '{$listing['bhk']}', 'agent001', 'seller001', '{$listing['status']}', '{$listing['num_views']}', '{$listing['num_shortlist']}')";
+                      VALUES ('{$listing['title']}', '{$listing['description']}', '{$listing['image']}', '{$listing['type']}', '{$listing['location']}', '{$listing['price']}', '{$listing['area']}', '{$listing['bhk']}', 'agent001', '$soldBy', '{$listing['status']}', '{$listing['num_views']}', '{$listing['num_shortlist']}')";
 
     if ($conn->query($listingInsert) !== TRUE) {
         $isInserted = false; 
@@ -130,7 +131,20 @@ for ($i = 0; $i < 10; $i++) {
     }
 }
 
-for ($i = 0; $i < 90; $i++) {
+for ($i = 0; $i < 10; $i++) {
+    $listing = generateRandomListingData();
+    $listBy = 'agent'.sprintf('%03d',mt_rand(2, 100));
+
+    $listingInsert = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
+                      VALUES ('{$listing['title']}', '{$listing['description']}', '{$listing['image']}', '{$listing['type']}', '{$listing['location']}', '{$listing['price']}', '{$listing['area']}', '{$listing['bhk']}', '$listBy', 'seller001', '{$listing['status']}', '{$listing['num_views']}', '{$listing['num_shortlist']}')";
+
+    if ($conn->query($listingInsert) !== TRUE) {
+        $isInserted = false; 
+        break; 
+    }
+}
+
+for ($i = 0; $i < 80; $i++) {
     $listing = generateRandomListingData();
     $listBy = 'agent'.sprintf('%03d',mt_rand(2, 100));
     $soldBy = 'seller'.sprintf('%03d',mt_rand(2, 100));
