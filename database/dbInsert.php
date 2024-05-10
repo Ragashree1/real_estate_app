@@ -38,7 +38,7 @@ function generateRandomListingData() {
         'sold_by' => 'seller'.sprintf('%03d',mt_rand(2, 100)), 
         'status' => $status[array_rand($status)],
         'num_views' => mt_rand(0, 1000), 
-        'num_shortlist' => 0 
+        'num_shortlist' => mt_rand(0, 100)
     );
 
     return $listing;
