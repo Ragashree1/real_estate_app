@@ -1,4 +1,49 @@
 <?php
+function generateRandomListingData() {
+    $descriptions = ['Near the MRT', 'Near the Shopping Center', 'Various footcourts nearby', 'Nearby Hospital'];
+    $types = ['Landed Property', 'Condo', 'HDB'];
+    $locations = ['Bedok', 'Woodlands', 'Tampinese', 'Jurong East', 'Toapayoh', 'Yishun'];
+    $bhk = mt_rand(1, 10); // Random number of bedrooms
+    $area = mt_rand(1000,9999); // Random area
+    $title = "Block ".mt_rand(100, 999)." - $bhk Room Estate";
+    $status = ['New', 'Old'];
+
+    $listing = array(
+        'title' => $title, 
+        'description' => $descriptions[array_rand($descriptions)], 
+        'image' => 'images/' . mt_rand(0, 11) . '.png', 
+        'type' => $types[array_rand($types)], 
+        'location' => $locations[array_rand($locations)], 
+        'price' => mt_rand(100000, 1000000),
+        'area' => $area,
+        'bhk' => $bhk, 
+        'listed_by' => 'agent'.mt_rand(1, 100), 
+        'sold_by' => 'seller'.mt_rand(1, 100), 
+        'status' => $status[array_rand($status)],
+        'num_views' => mt_rand(0, 1000), 
+        'num_shortlist' => 0 
+    );
+
+    return $listing;
+}
+
+function generateRandomDate() {
+    $start_date = strtotime('1950-01-01');
+    $end_date = strtotime('2000-01-01');
+    $random_date = mt_rand($start_date, $end_date);
+
+    return date('Y-m-d', $random_date);
+}
+
+function generateRandomName() {
+    $firstNames = ['John', 'Jane', 'David', 'Emily', 'Michael', 'Sarah', 'Robert', 'Olivia', 'William', 'Emma'];
+    $lastNames = ['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor'];
+    $firstName = $firstNames[array_rand($firstNames)];
+    $lastName = $lastNames[array_rand($lastNames)];
+    return $firstName . ' ' . $lastName;
+}
+
+
 // profile data
 $profileData = array(
     array('profile_name' => "admin", "description" => "perform CRUDS on accounts"),
@@ -14,133 +59,63 @@ foreach ($profileData as $profile) {
     VALUES ('{$profile['profile_name']}', '{$profile['description']}')";
 
     if ($conn->query($profileInsert) === TRUE) {
-        echo "Profile inserted successfully\n";
+        echo "Profile for {$profile['profile_name']} successfully\n";
     } else {
         echo "Error inserting record: " . $conn->error . "\n";
     }
 }
 
-// account data
-$accountData = array(
-    array('username' => 'admin001', 'passwordHash' => password_hash('password123', PASSWORD_DEFAULT), 'dob' => '1990-05-15', 'fullname' => 'John Doe', 
-                'email' => 'admin@example.com', 'contact' => '1234567890', 'profile' => 'admin', 'status' => 'active'),
-    array('username' => 'agent001', 'passwordHash' => password_hash('password123', PASSWORD_DEFAULT), 'dob' => '1985-10-20', 'fullname' => 'Jane Smith', 
-                'email' => 'agent@example.com', 'contact' => '9876543210', 'profile' => 'agent', 'status' => 'active'),
-    array('username' => 'buyer001', 'passwordHash' => password_hash('password123', PASSWORD_DEFAULT), 'dob' => '1999-10-16', 'fullname' => 'Mary Goh', 
-                'email' => 'buyer@example.com', 'contact' => '9876543210', 'profile' => 'buyer', 'status' => 'active'),
-    array('username' => 'seller001', 'passwordHash' => password_hash('password123', PASSWORD_DEFAULT), 'dob' => '1975-11-22', 'fullname' => 'Harry Styles', 
-                'email' => 'seller@example.com', 'contact' => '9876543210', 'profile' => 'seller', 'status' => 'active')
-);
+// Generate and insert account records for each user profile
+$profileNames = ['admin', 'agent', 'buyer', 'seller'];
+foreach ($profileNames as $profileName) {
+    $isInserted = true; // Initialize the flag outside the loop
 
-// insert account records
-foreach ($accountData as $account) {
-    $username = $account['username'];
-    $passwordHash = $account['passwordHash'];
-    $dob = $account['dob'];
-    $fullname = $account['fullname'];
-    $email = $account['email'];
-    $contact = $account['contact'];
-    $profile = $account['profile'];
-    $status = $account['status'];
+    for ($i = 1; $i <= 100; $i++) {
+        $username = $profileName . $i; 
+        $password = 'password123'; 
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $dob = generateRandomDate();
+        $fullname = generateRandomName();
+        $email = $username . '@abc.com'; 
+        $contact = mt_rand(10000000, 99999999); 
+        $status = 'active';
 
-    $accountInsert = "INSERT INTO UserAccount (username, passwordHash, dob, fullname, email, contact, profile, status) 
-        VALUES ('$username', '$passwordHash', '$dob', '$fullname', '$email', '$contact', '$profile', '$status')";
+        $accountInsert = "INSERT INTO UserAccount (username, passwordHash, dob, fullname, email, contact, profile, status) 
+                          VALUES ('$username', '$passwordHash', '$dob', '$fullname', '$email', '$contact', '$profileName', '$status')";
 
-    if ($conn->query($accountInsert) === TRUE) {
-        echo "Account inserted successfully\n";
-    } else {
-        echo "Error inserting record: " . $conn->error . "\n";
+        if ($conn->query($accountInsert) !== TRUE) {
+            $isInserted = false; 
+            break; 
+        }
+    }
+
+    if ($isInserted){
+        echo "Account for $profileName is inserted successfully\n";
+    } else{
+        echo "Error inserting record: $profileName\n";
     }
 }
 
-// insert listing records
-$listings = [
-    [
-        'title' => 'Beautiful Villa',
-        'description' => 'Spacious villa with garden',
-        'image' => 'images/image1.png',
-        'type' => 'Villa',
-        'location' => 'City Center',
-        'price' => 500000,
-        'area' => 3000,
-        'bhk' => 4,
-        'listed_by' => 'agent001', // Listed by agent
-        'sold_by' => 'seller001', // Sold by seller
-        'status' => 'new',
-        'num_views' => 100,
-        'num_shortlist' => 20
-    ],
-    [
-        'title' => 'Luxury Apartment',
-        'description' => 'Modern apartment with amenities',
-        'image' => 'images/image2.png',
-        'type' => 'Apartment',
-        'location' => 'Suburb',
-        'price' => 300000,
-        'area' => 1500,
-        'bhk' => 6,
-        'listed_by' => 'agent001', // Listed by agent
-        'sold_by' => 'seller001', // Sold by seller
-        'status' => 'new',
-        'num_views' => 50,
-        'num_shortlist' => 5
-    ],
-    [
-        'title' => 'Condo 21st floor quiet',
-        'description' => 'Condo with swimming pool and park',
-        'image' => 'images/image3.png',
-        'type' => 'Condo',
-        'location' => '1 Rosewood woodlands street',
-        'price' => 450000,
-        'area' => 750,
-        'bhk' => 3,
-        'listed_by' => 'agent001', // Listed by agent
-        'sold_by' => 'seller001', // Sold by seller
-        'status' => 'new',
-        'num_views' => 200,
-        'num_shortlist' => 50
-    ],
-    [
-        'title' => 'Santorini Villa',
-        'description' => 'cool blue and white themed villa good for holiday travels',
-        'image' => 'images/image4.png',
-        'type' => 'Villa',
-        'location' => 'Southern Greench Argean Sea',
-        'price' => 900000,
-        'area' => 900,
-        'bhk' => 9,
-        'listed_by' => 'agent001', // Listed by agent
-        'sold_by' => 'seller001', // Sold by seller
-        'status' => 'new',
-        'num_views' => 600,
-        'num_shortlist' => 505
-    ],
-];
+// Generate and insert listing records
+$isInserted = true; // Initialize the flag
+for ($i = 0; $i < 100; $i++) {
+    $listing = generateRandomListingData();
 
-// Prepare and execute INSERT statements
-foreach ($listings as $listing) {
-    $title = $listing['title'];
-    $description = $listing['description'];
-    $image = $listing['image'];
-    $type = $listing['type'];
-    $location = $listing['location'];
-    $price = $listing['price'];
-    $area = $listing['area'];
-    $bhk = $listing['bhk'];
-    $listed_by = $listing['listed_by'];
-    $sold_by = $listing['sold_by'];
-    $status = $listing['status'];
-    $num_views = $listing['num_views'];
-    $num_shortlist = $listing['num_shortlist'];
+    $listingInsert = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
+                      VALUES ('{$listing['title']}', '{$listing['description']}', '{$listing['image']}', '{$listing['type']}', '{$listing['location']}', '{$listing['price']}', '{$listing['area']}', '{$listing['bhk']}', '{$listing['listed_by']}', '{$listing['sold_by']}', '{$listing['status']}', '{$listing['num_views']}', '{$listing['num_shortlist']}')";
 
-    $sqlInsert = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
-                  VALUES ('$title', '$description', '$image', '$type', '$location', $price, $area, $bhk, '$listed_by', '$sold_by', '$status', '$num_views', '$num_shortlist')";
-
-    if ($conn->query($sqlInsert) === TRUE) {
-        echo "Listing inserted successfully\n";
-    } else {
-        echo "Error inserting listing: " . $conn->error;
+    if ($conn->query($listingInsert) !== TRUE) {
+        $isInserted = false; 
+        break; 
     }
 }
+
+if ($isInserted){
+    echo "All listings inserted successfully\n";
+} else{
+    echo "Error inserting one or more records\n";
+}
+
 
 ?>
+
