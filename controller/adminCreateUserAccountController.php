@@ -13,7 +13,7 @@ class AdminCreateUserAccountController
     public function createUser(array $userDetails) : bool
     {
         $status = $this->userAccount->createUser($userDetails);
-        return $status != null && $status != false;
+        return $status;
     }
 }
 

@@ -43,20 +43,20 @@ class PropertyListing
     // get all listings with status = sold
     public function getSoldListing(): array
     {
-         $allListings = [];
+        $allListings = [];
 
-         // Perform a database query to fetch all listings
-         $query = "SELECT * FROM PropertyListing WHERE status = 'sold' ORDER BY date_listed DESC";
-         $result = $this->conn->query($query);
- 
-         // Check if there are any listings
-         if ($result->num_rows > 0) {
-             while ($row = $result->fetch_assoc()) {
-                 $allListings[] = $row;
-             }
-         }
- 
-         return $allListings;
+        // Perform a database query to fetch all listings
+        $query = "SELECT * FROM PropertyListing WHERE status = 'sold' ORDER BY date_listed DESC";
+        $result = $this->conn->query($query);
+
+        // Check if there are any listings
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $allListings[] = $row;
+            }
+        }
+
+        return $allListings;
     }
 
     public function getSingleListing(int $listing_id): array
@@ -92,7 +92,7 @@ class PropertyListing
 
 
         // create sql query statement
-        $sql = "SELECT * FROM PropertyListing WHERE status = 'new'"; 
+        $sql = "SELECT * FROM PropertyListing WHERE status = 'new'";
 
         // Add conditions based on search parameters
         if (!empty($searchInfo['search'])) {
@@ -146,7 +146,7 @@ class PropertyListing
         $searchResults = [];
 
         // Build the SQL query based on search parameters
-        $sql = "SELECT * FROM PropertyListing WHERE status = 'sold'"; 
+        $sql = "SELECT * FROM PropertyListing WHERE status = 'sold'";
 
         // create sql statement
         if (!empty($searchInfo['search'])) {
@@ -322,7 +322,7 @@ class PropertyListing
         $status = $createInfo['status'];
         $listed_by = $createInfo['listed_by'];
         $sold_by = $createInfo['sold_by'];
-  
+
         // Prepare the SQL query with placeholders
         $sql = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, status, sold_by) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -471,7 +471,7 @@ class PropertyListing
         $stmt->fetch();
         $stmt->close();
 
-        return $numViews ?? 0; 
+        return $numViews ?? 0;
     }
 
     // get number of shortlist
@@ -492,7 +492,7 @@ class PropertyListing
         $stmt->fetch();
         $stmt->close();
 
-        return $numShortlist ?? 0; 
+        return $numShortlist ?? 0;
     }
 
     // search listings
@@ -501,7 +501,7 @@ class PropertyListing
         $searchResults = [];
 
         // Build the SQL query based on search parameters
-        $sql = "SELECT * FROM PropertyListing WHERE 1=1"; 
+        $sql = "SELECT * FROM PropertyListing WHERE 1=1";
 
         // Add conditions based on search parameters
         if (!empty($searchInfo['search'])) {

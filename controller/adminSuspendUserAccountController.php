@@ -10,7 +10,7 @@ class AdminSuspendUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function suspendUser(string $username)
+    public function suspendUser(string $username) : bool
     {
         $flag = $this->userAccount->suspendUser($username);
 

@@ -28,6 +28,7 @@ if (isset($_POST["createUser"])) {
     // create controller object
     $createUserController = new AdminCreateUserAccountController();
     $status = $createUserController->createUser($createUser);
+    $message = $status === true ? 'User created successfully' : 'Error creating user';
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
@@ -43,7 +44,6 @@ if (isset($_POST["updateUser"])) {
     $updateUserController = new AdminUpdateUserAccountController();
     $status = $updateUserController->updateUser($updateUser);
     $message = $status == true ? 'User updated successfully' : 'Error updating user';
-
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
@@ -69,7 +69,7 @@ if (isset($_GET['suspend_user'])) {
 
 function deleteUser($username)
 {
-    global $status, $message, $allUsers;
+    global $status, $message;
     $deleteUserController = new AdminDeleteUserAccountController();
     $status = $deleteUserController->deleteUser($username);
     $message = $status ? 'User deleted successfully' : 'Error deleting user';
@@ -79,7 +79,7 @@ function deleteUser($username)
 
 function suspendUser($username)
 {
-    global $status, $message, $allUsers;
+    global $status, $message;
     $suspendUser = new AdminSuspendUserAccountController();
     $status = $suspendUser->suspendUser($username);
     $message = $status ? 'User suspended successfully' : 'Error suspending user';
@@ -99,7 +99,7 @@ if (!isset($allUsers)) {
 } else {
     // Open the row div
     if (isset($status) && isset($message)) {
-        if ($status == true) {
+        if ($status === true) {
 ?>
             <div class="alert alert-success alert-dismissible fade show m-2" role="alert">
                 <?php echo $message ?>

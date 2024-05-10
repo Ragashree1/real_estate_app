@@ -34,7 +34,7 @@ class UserAccount
 
         // return false when no records found
         if ($result->num_rows <= 0) {
-            return false; 
+            return false;
         }
 
         // Retrieve the user's hashed password from the database
@@ -84,7 +84,7 @@ class UserAccount
         return $allUsers;
     }
 
-    public function deleteUser(string $username)
+    public function deleteUser(string $username): bool
     {
 
         $query = "DELETE FROM UserAccount WHERE username = '$username'";
@@ -96,7 +96,7 @@ class UserAccount
     }
 
 
-    public function suspendUser(string $username)
+    public function suspendUser(string $username): bool
     {
 
         $query = "UPDATE UserAccount SET status = 'suspended' WHERE username = '$username'";
@@ -106,7 +106,7 @@ class UserAccount
         return $result;
     }
 
-    public function createUser(array $userDetails)
+    public function createUser(array $userDetails): bool
     {
         //check if username or email is already used
         $username = $userDetails['username'];
@@ -114,7 +114,7 @@ class UserAccount
         $query = "SELECT * FROM UserAccount WHERE email = '$email' OR username = '$username'";
 
         $result = $this->conn->query($query);
-        if ($result && $result->num_rows > 0)  {
+        if ($result && $result->num_rows > 0) {
             return false;
         }
 
@@ -132,11 +132,11 @@ class UserAccount
 
         $result = $this->conn->query($query);
 
-        return $result ? true : false;
+        return $result;
     }
 
 
-    public function updateUser(array $userDetails)
+    public function updateUser(array $userDetails): bool
     {
         //check if username or email is already used by another account
         $username = $userDetails['username'];
@@ -145,7 +145,7 @@ class UserAccount
         $query = "SELECT * FROM UserAccount WHERE (email = '$email' OR username = '$username') AND account_id != '$account_id'";
 
         $result = $this->conn->query($query);
-        if ($result && $result->num_rows > 0)  {
+        if ($result && $result->num_rows > 0) {
             return false;
         }
 
@@ -171,7 +171,7 @@ class UserAccount
             $result = $stmt->execute();
             $stmt->close();
         }
-        
-        return $result ? true : false;
+
+        return $result;
     }
 }

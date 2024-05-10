@@ -59,7 +59,7 @@ class Profile
         return $allProfiles;
     }
 
-    public function deleteProfile(string $profileName)
+    public function deleteProfile(string $profileName) : bool
     {
 
         $query = "DELETE FROM UserProfile WHERE profile_name = '$profileName'";
@@ -71,7 +71,7 @@ class Profile
     }
 
 
-    public function createProfile(array $profileDetails)
+    public function createProfile(array $profileDetails) : bool
     {
         //check if profile_name or email is already used
         $profileName = $profileDetails['profile_name'];
@@ -94,7 +94,7 @@ class Profile
     }
 
 
-    public function updateProfile(array $profileDetails)
+    public function updateProfile(array $profileDetails) : bool
     {
         //check if profile_name or email is already used by another account
         $profileName = $profileDetails['profile_name'];
