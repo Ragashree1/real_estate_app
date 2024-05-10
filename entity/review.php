@@ -20,7 +20,7 @@ class Review
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
-    
+
 
     function getAllReviews(string $agent_username): array
     {
@@ -59,7 +59,7 @@ class Review
 
         // Bind parameters
         $stmt->bind_param("ssss", $reviewer_username, $agent_username, $profile, $review);
-        
+
         try {
             if ($stmt->execute()) {
                 return true;
@@ -88,6 +88,3 @@ class Review
         }
     }
 }
-
-
-?>

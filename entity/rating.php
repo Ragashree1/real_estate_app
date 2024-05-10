@@ -20,7 +20,7 @@ class Rating
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
-    
+
 
     function getAllRatings(string $agent_username): array
     {
@@ -87,8 +87,4 @@ class Rating
             return false;
         }
     }
-
 }
-
-
-?>

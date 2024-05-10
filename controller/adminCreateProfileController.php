@@ -13,7 +13,7 @@ class AdminCreateProfileController
     public function createProfile(array $profileDetails) : bool
     {
         $status = $this->profile->createProfile($profileDetails);
-        return $status != null && $status != false;
+        return $status;
     }
 }
 

@@ -24,6 +24,8 @@ if (isset($_POST["createProfile"])) {
     // create controller object
     $createProfileController = new AdminCreateProfileController();
     $status = $createProfileController->createProfile($createProfile);
+    $message = $status == true ? 'Profile created successfully' : 'Error creating profile';
+
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 

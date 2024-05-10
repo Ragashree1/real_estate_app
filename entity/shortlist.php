@@ -20,35 +20,35 @@ class Shortlist
             die("Connection failed: " . $this->conn->connect_error);
         }
     }
-    
+
     public function shortlist(string $buyer_username, int $listing_id): bool
-    {        
+    {
         // Prepare the SQL statement to insert into the Shortlist table
         $sql = "INSERT INTO Shortlist (buyer_username, listing_id) VALUES (?, ?)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("si", $buyer_username, $listing_id);
-        
-         // Execute the query
+
+        // Execute the query
         if ($stmt->execute()) {
-            return true;  
+            return true;
         }
-        return false;  
+        return false;
     }
 
     public function removeShortlist(string $buyer_username, int $listing_id): bool
-    {   
+    {
         // Prepare the SQL statement to delete from the Shortlist table
         $sql = "DELETE FROM Shortlist WHERE buyer_username = ? AND listing_id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("si", $buyer_username, $listing_id);
-        
+
         // Execute the query
         if ($stmt->execute()) {
             if ($stmt->affected_rows > 0) {
-                return true;  
+                return true;
             }
         }
-        return false;  
+        return false;
     }
 
     public function isShortlisted(string $buyer_username, int $listing_id): bool
@@ -89,10 +89,10 @@ class Shortlist
 
         // fetch results and store to array
         if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch_assoc()) {
                 $listings[] = $row;
             }
-        } 
+        }
 
         // Close the statement
         $stmt->close();
@@ -121,10 +121,10 @@ class Shortlist
 
         // fetch results and store to array
         if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch_assoc()) {
                 $listings[] = $row;
             }
-        } 
+        }
 
         // Close the statement
         $stmt->close();
@@ -132,6 +132,3 @@ class Shortlist
         return $listings;
     }
 }
-
-
-?>
