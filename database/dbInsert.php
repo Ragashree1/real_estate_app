@@ -127,7 +127,7 @@ if ($isInserted){
 for ($i = 1; $i <= 100; $i++) {
     $buyerUsername = 'buyer' . sprintf('%03d', $i);
 
-    $numShortlist = mt_rand(20, 50);
+    $numShortlist = mt_rand(30, 60);
 
     for ($j = $numShortlist; $j >= 20; $j--) {
         $listingId = $j; 
