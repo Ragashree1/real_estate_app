@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/propertyListing.php";
 
-class BuyerViewSoldListingController
+class sellerTrackNumViewsController
 {
     private PropertyListing $propertyListing;
 
@@ -10,12 +10,13 @@ class BuyerViewSoldListingController
         $this->propertyListing = new PropertyListing();
     }
 
-    public function getSoldListing(): array
+    public function getNumViews(int $listing_id): int
     {
-        $allListings = $this->propertyListing->getSoldListing();
+        $numViews = $this->propertyListing->getNumViews($listing_id);
 
-        return $allListings;
+        return $numViews;
     }
+
 }
 
 ?>

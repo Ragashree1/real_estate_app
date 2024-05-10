@@ -1,6 +1,6 @@
 <?php 
 
-class BuyerSearchSoldListingController
+class SellerSearchListedPropertyController
 {
     private PropertyListing $propertyListing;
 
@@ -9,9 +9,9 @@ class BuyerSearchSoldListingController
         $this->propertyListing = new PropertyListing();
     }
 
-    public function searchSoldListings(array $searchInfo): array
+    public function searchListedProperty(array $searchInfo): array
     {
-        $searchResults = $this->propertyListing->searchSoldListings($searchInfo);
+        $searchResults = $this->propertyListing->sellerSearchListedProperties($searchInfo);
 
         return $searchResults;
     }

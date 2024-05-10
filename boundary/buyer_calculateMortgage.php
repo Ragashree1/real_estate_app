@@ -1,9 +1,3 @@
-<?php 
-require_once "partials/header.php"; 
-require_once "partials/hero.php"; 
-?>
-
-
 <div class="modal fade" id="modalCalculator" tabindex="-1" role="dialog" aria-labelledby="modalCalculator" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

@@ -1,7 +1,7 @@
 <?php
 require_once "../entity/userAccount.php";
 
-class ViewUserAccountController
+class AdminViewUserAccountController
 {
     private UserAccount $userAccount; 
 

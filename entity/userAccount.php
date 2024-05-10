@@ -21,33 +21,25 @@ class UserAccount
         }
     }
 
-    public function validateLogin(array $loginInfo): bool
+    public function login(array $loginInfo): bool
     {
-        // check for spacing values
-        foreach ($loginInfo as $value) {
-            if (trim($value) === '') {
-                return false;
-            }
-        }
-
         $username = $loginInfo['username'];
         $password = $loginInfo['password'];
         $profile = $loginInfo['profile'];
 
-        // Example SQL query to validate login
+        //SQL query to validate login
         $query = "SELECT * FROM UserAccount WHERE (username = '$username' OR email = '$username') 
                                                 AND profile = '$profile'";
         $result = $this->conn->query($query);
 
+        // return false when no records found
         if ($result->num_rows <= 0) {
-            return false; // No matching user found
+            return false;
         }
 
         // Retrieve the user's hashed password from the database
         $row = $result->fetch_assoc();
         $hashedPassword = $row['passwordHash'];
-
-        // Verify the provided password against the hashed password
         if (!password_verify($password, $hashedPassword)) {
             return false;
         }
@@ -72,7 +64,7 @@ class UserAccount
         return $allUsers;
     }
 
-    public function searchUsers(string $username)
+    public function searchUsers(string $username): array
     {
         $allUsers = [];
 
@@ -92,7 +84,7 @@ class UserAccount
         return $allUsers;
     }
 
-    public function deleteUser(string $username)
+    public function deleteUser(string $username): bool
     {
 
         $query = "DELETE FROM UserAccount WHERE username = '$username'";
@@ -104,7 +96,7 @@ class UserAccount
     }
 
 
-    public function suspendUser(string $username)
+    public function suspendUser(string $username): bool
     {
 
         $query = "UPDATE UserAccount SET status = 'suspended' WHERE username = '$username'";
@@ -114,8 +106,17 @@ class UserAccount
         return $result;
     }
 
-    public function createUser(array $userDetails)
+    public function createUser(array $userDetails): bool
     {
+        //check if username or email is already used
+        $username = $userDetails['username'];
+        $email = $userDetails['email'];
+        $query = "SELECT * FROM UserAccount WHERE email = '$email' OR username = '$username'";
+
+        $result = $this->conn->query($query);
+        if ($result && $result->num_rows > 0) {
+            return false;
+        }
 
         $username = isset($userDetails["username"]) ?  $userDetails['username'] : null;
         $passwordHash =  isset($userDetails["password"]) ? password_hash($userDetails['password'], PASSWORD_DEFAULT) : 'password123';
@@ -130,6 +131,46 @@ class UserAccount
                 VALUES ('$username', '$passwordHash', '$dob', '$fullname', '$email', '$contact', '$profile', '$status')";
 
         $result = $this->conn->query($query);
+
+        return $result;
+    }
+
+
+    public function updateUser(array $userDetails): bool
+    {
+        //check if username or email is already used by another account
+        $username = $userDetails['username'];
+        $email = $userDetails['email'];
+        $account_id = $userDetails['account_id'];
+        $query = "SELECT * FROM UserAccount WHERE (email = '$email' OR username = '$username') AND account_id != '$account_id'";
+
+        $result = $this->conn->query($query);
+        if ($result && $result->num_rows > 0) {
+            return false;
+        }
+
+
+        $username = isset($userDetails["username"]) ?  $userDetails['username'] : null;
+        $dob =  isset($userDetails["dob"]) ? $userDetails['dob'] : null;
+        $fullname = isset($userDetails["fullname"]) ? $userDetails['fullname'] : null;
+        $email = isset($userDetails["email"]) ? $userDetails['email'] : null;
+        $contact = isset($userDetails["contact"]) ?  $userDetails['contact'] : null;
+        $profile =  isset($userDetails["profile"]) ? $userDetails['profile'] : null;
+        $status =  isset($userDetails["status"]) ? $userDetails['status'] : null;
+
+        $query = "UPDATE UserAccount 
+        SET username='$username', dob='$dob', fullname='$fullname', email='$email', contact='$contact', profile='$profile', status='$status'
+        WHERE account_id='$account_id'";
+        $result = $this->conn->query($query);
+
+        if (!empty($userDetails["password"])) {
+            $passwordHash = password_hash($userDetails['password'], PASSWORD_DEFAULT);
+            $query = "UPDATE UserAccount SET passwordHash=? WHERE account_id=?";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("si", $passwordHash, $account_id);
+            $result = $stmt->execute();
+            $stmt->close();
+        }
 
         return $result;
     }
