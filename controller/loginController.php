@@ -1,5 +1,5 @@
 <?php
-require_once "../entity/userAccount.php";
+require_once  __DIR__ . "\..\\entity\userAccount.php";
 
 class LoginController
 {
