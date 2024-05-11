@@ -1,80 +1,99 @@
 <?php
-session_start();
 require_once __DIR__ . "\..\controller\loginController.php";
 
-class LoginTest
-{
-    
-    public function testAdminCanLogin()
+class LoginTest extends \PHPUnit\Framework\TestCase {
+
+    public function testAdminCanLoginWithCorrectCredentials()
     {
-        $userAccount = new LoginController();
+        $loginController = new LoginController();
         $loginInfo = [
             'username' => 'admin001',
             'password' => 'password123',
             'profile' => 'admin'
         ];
-        try{
-            assert($userAccount->login($loginInfo) == true) ;
-            echo "admin can login\n";
-        }catch (Error $e){
-            echo "admin login falied\n";
-        }
+
+        $this->assertEquals($loginController->login($loginInfo), true);
     }
 
-    public function testAgentCanLogin()
+    public function testAdminCannotLoginWithWrongCredentials()
     {
-        $userAccount = new LoginController();
+        $loginController = new LoginController();
+        $loginInfo = [
+            'username' => 'admin001',
+            'password' => 'pass',
+            'profile' => 'admin'
+        ];
+
+        $this->assertEquals($loginController->login($loginInfo), false);
+    }
+
+    public function testAgentCanLoginWithCorrectCredentials()
+    {
+        $loginController = new LoginController();
         $loginInfo = [
             'username' => 'agent001',
             'password' => 'password123',
             'profile' => 'agent'
         ];
-        try{
-            assert($userAccount->login($loginInfo) == true);
-            echo "agent can login\n";
-        }catch (Error $e){
-            echo "agent login falied\n";
-        }
+
+        $this->assertEquals($loginController->login($loginInfo), true);
     }
 
-    public function testSellerCanLogin()
+    public function testAgentCannotLoginWithWrongCredentials()
     {
-        $userAccount = new LoginController();
+        $loginController = new LoginController();
+        $loginInfo = [
+            'username' => 'agent001',
+            'password' => 'pass',
+            'profile' => 'agent'
+        ];
+
+        $this->assertEquals($loginController->login($loginInfo), false);
+    }
+
+    public function testSellerCanLoginWithCorrectCredentials()
+    {
+        $loginController = new LoginController();
         $loginInfo = [
             'username' => 'seller001',
             'password' => 'password123',
             'profile' => 'seller'
         ];
-        try{
-            assert($userAccount->login($loginInfo) == true) ;
-            echo "seller can login\n";
-        }catch (Error $e){
-            echo "seller login falied\n";
-        }
+        $this->assertEquals($loginController->login($loginInfo), true);
     }
 
-    public function testBuyerCanLogin()
+    public function testSellerCannotLoginWithWrongCredentials()
     {
-        $userAccount = new LoginController();
+        $loginController = new LoginController();
+        $loginInfo = [
+            'username' => 'seller001',
+            'password' => 'pass',
+            'profile' => 'seller'
+        ];
+
+        $this->assertEquals($loginController->login($loginInfo), false);
+    }
+
+    public function testBuyerCanLoginWithCorrectCredentials()
+    {
+        $loginController = new LoginController();
         $loginInfo = [
             'username' => 'buyer001',
             'password' => 'password123',
             'profile' => 'buyer'
         ];
-        try{
-            assert($userAccount->login($loginInfo) == true) ;
-            echo "buyer can login\n";
-        }catch (Error $e){
-            echo "buyer login falied\n";
-        }
+        $this->assertEquals($loginController->login($loginInfo), true);
+    }
+
+    public function testBuyerCannotLoginWithWrongCredentials()
+    {
+        $loginController = new LoginController();
+        $loginInfo = [
+            'username' => 'buyer001',
+            'password' => 'pass',
+            'profile' => 'buyer'
+        ];
+
+        $this->assertEquals($loginController->login($loginInfo), false);
     }
 }
-
-// Run the tests
-$test = new LoginTest();
-$test->testAdminCanLogin();
-$test->testAgentCanLogin();
-$test->testSellerCanLogin();
-$test->testBuyerCanLogin();
-
-?>
