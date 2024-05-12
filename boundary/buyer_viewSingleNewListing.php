@@ -33,7 +33,7 @@ function shortlist()
     $shortlistSuccess = $buyerShortlistController->shortlist($loggedInUsername, $listing_id);
 
     if ($shortlistSuccess){
-        // Redirect 
+        // Refresh 
         echo '<script>window.location.href = "buyer_viewSingleNewListing.php?listing_id='. $listing_id . '";</script>';
     }
     else
