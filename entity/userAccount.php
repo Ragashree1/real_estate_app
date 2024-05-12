@@ -50,11 +50,11 @@ class UserAccount
     {
         $allUsers = [];
 
-        // Perform a database query to fetch all listings
+        // Perform a database query to fetch all accounts
         $query = "SELECT * FROM UserAccount";
         $result = $this->conn->query($query);
 
-        // Check if there are any listings
+        // Check if there are any accounts
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $allUsers[] = $row;
@@ -69,12 +69,12 @@ class UserAccount
         $allUsers = [];
 
 
-        // Perform a database query to fetch all listings
+        // Perform a database query to fetch all accounts
         $query = "SELECT * FROM UserAccount WHERE username LIKE '%" . $username . "%'";
 
         $result = $this->conn->query($query);
 
-        // Check if there are any listings
+        // Check if there are any accounts
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $allUsers[] = $row;

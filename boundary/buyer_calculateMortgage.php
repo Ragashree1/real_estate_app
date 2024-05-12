@@ -63,6 +63,7 @@
 
         // Round the result to two decimal places
         monthlyPayment = Math.round(monthlyPayment * 100) / 100;
+        
         // Update the result
         document.getElementById('monthlyPayment').innerText = 'Amount: $' + monthlyPayment.toFixed(2);
         document.getElementById('resultContainer').style.display = 'block';

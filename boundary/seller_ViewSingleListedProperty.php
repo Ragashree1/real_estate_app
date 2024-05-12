@@ -101,7 +101,7 @@ if (empty($singleListing)) {
                 <?php endif; ?>
                 <div class="single-listing-details">
                     <?php if (isset($singleListing['title'])) : ?>
-                        <h2 class="single-listing-title"><a href="singleListing.php?listing_id=<?= $singleListing['listing_id'] ?>"><?= $singleListing['title'] ?></a></h2>
+                        <h2 class="single-listing-title"><?= $singleListing['title'] ?></h2>
                     <?php endif; ?>
                     <div class="single-listing-meta">
                         <?php if (isset($singleListing['type'])) : ?>
