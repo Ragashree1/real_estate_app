@@ -57,7 +57,7 @@ require_once "partials/header.php";
         var percentage = parseFloat(document.getElementById('percentage').value);
 
         if (isNaN(price) || isNaN(years) ||isNaN(percentage) ) {
-            alert('Please fill out all fields.');
+            alert('Please fill out all fields with numbers only.');
             return;
         }
 
