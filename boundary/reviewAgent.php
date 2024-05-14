@@ -53,7 +53,7 @@ if(isset($_POST['submit']))
 
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
     <form id="reviewAgentForm" action="" method="post" style="background-color: #f0f0f0; padding: 20px; border-radius: 10px; width: 50%;">
-        <h2>Review agent: <?php echo $_POST['agent_fullname']?></h2>
+        <h2>Review agent: <?php if (isset($_POST['agent_fullname'])): echo $_POST['agent_fullname'];  endif; ?></h2>
         <br>
         <input type="hidden" name="agent_username" value="<?= $_POST['agent_username'] ?>">
         <input type="hidden" name="reviewer_username" value="<?= $loggedInUsername ?>">

@@ -34,11 +34,11 @@ function generateRandomListingData() {
         'price' => mt_rand(100000, 1000000),
         'area' => $area,
         'bhk' => $bhk, 
-        'listed_by' => 'agent'.sprintf('%03d',mt_rand(2, 100)), 
-        'sold_by' => 'seller'.sprintf('%03d',mt_rand(2, 100)), 
+        'listed_by' => 'agent'.sprintf('%03d',mt_rand(2, 25)), 
+        'sold_by' => 'seller'.sprintf('%03d',mt_rand(2, 25)), 
         'status' => $status[array_rand($status)],
-        'num_views' => mt_rand(0, 1000), 
-        'num_shortlist' => mt_rand(0, 100)
+        'num_views' => mt_rand(0, 100), 
+        'num_shortlist' => 0
     );
 
     return $listing;
@@ -89,7 +89,7 @@ $profileNames = ['admin', 'agent', 'buyer', 'seller'];
 foreach ($profileNames as $profileName) {
     $isInserted = true; 
 
-    for ($i = 1; $i <= 100; $i++) {
+    for ($i = 1; $i <= 25; $i++) {
         $username = $profileName . sprintf('%03d', $i); 
         $password = 'password123'; 
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
@@ -120,7 +120,7 @@ $isInserted = true;
 /*********  Listings  *********/
 for ($i = 0; $i < 10; $i++) {
     $listing = generateRandomListingData();
-    $soldBy = 'seller'.sprintf('%03d',mt_rand(2, 100));
+    $soldBy = 'seller'.sprintf('%03d',mt_rand(2, 25));
 
     $listingInsert = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
                       VALUES ('{$listing['title']}', '{$listing['description']}', '{$listing['image']}', '{$listing['type']}', '{$listing['location']}', '{$listing['price']}', '{$listing['area']}', '{$listing['bhk']}', 'agent001', '$soldBy', '{$listing['status']}', '{$listing['num_views']}', '{$listing['num_shortlist']}')";
@@ -133,7 +133,7 @@ for ($i = 0; $i < 10; $i++) {
 
 for ($i = 0; $i < 10; $i++) {
     $listing = generateRandomListingData();
-    $listBy = 'agent'.sprintf('%03d',mt_rand(2, 100));
+    $listBy = 'agent'.sprintf('%03d',mt_rand(2, 25));
 
     $listingInsert = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
                       VALUES ('{$listing['title']}', '{$listing['description']}', '{$listing['image']}', '{$listing['type']}', '{$listing['location']}', '{$listing['price']}', '{$listing['area']}', '{$listing['bhk']}', '$listBy', 'seller001', '{$listing['status']}', '{$listing['num_views']}', '{$listing['num_shortlist']}')";
@@ -146,8 +146,8 @@ for ($i = 0; $i < 10; $i++) {
 
 for ($i = 0; $i < 80; $i++) {
     $listing = generateRandomListingData();
-    $listBy = 'agent'.sprintf('%03d',mt_rand(2, 100));
-    $soldBy = 'seller'.sprintf('%03d',mt_rand(2, 100));
+    $listBy = 'agent'.sprintf('%03d',mt_rand(2, 25));
+    $soldBy = 'seller'.sprintf('%03d',mt_rand(2, 25));
 
     $listingInsert = "INSERT INTO PropertyListing (title, description, image, type, location, price, area, bhk, listed_by, sold_by, status, num_views, num_shortlist) 
                       VALUES ('{$listing['title']}', '{$listing['description']}', '{$listing['image']}', '{$listing['type']}', '{$listing['location']}', '{$listing['price']}', '{$listing['area']}', '{$listing['bhk']}', '$listBy', '$soldBy', '{$listing['status']}', '{$listing['num_views']}', '{$listing['num_shortlist']}')";
@@ -167,7 +167,7 @@ if ($isInserted){
 
 /*********  Shortlist  *********/
 
-for ($i = 1; $i <= 100; $i++) {
+for ($i = 1; $i <= 25; $i++) {
     $buyerUsername = 'buyer' . sprintf('%03d', $i);
 
     $numShortlist = mt_rand(30, 60);
@@ -213,13 +213,49 @@ $reviewMessages = [
     'I cannot thank the agent enough for their exceptional service and professionalism. From our initial consultation to the final closing, they were with me every step of the way, providing valuable guidance and support. They took the time to understand my unique needs and preferences, and their proactive approach ensured that I found the perfect home in no time. Their attention to detail and excellent communication skills made the entire process seamless and stress-free. I am thrilled with my new home, and I owe it all to the agent expertise and hard work.',
 ];
 
+for ($j = 24; $j >= 6; $j -= 2) { 
+    $buyerUsername = 'buyer' . sprintf('%03d', $j); 
+    $sellerUsername = 'seller' . sprintf('%03d', $j);
+    $ratingBuyerCommunication = mt_rand(1, 5);
+    $ratingBuyerProfessionalism = mt_rand(1, 5);
+    $ratingBuyerMarketKnowledge = mt_rand(1, 5);
+    $ratingSellerCommunication = mt_rand(1, 5);
+    $ratingSellerProfessionalism = mt_rand(1, 5);
+    $ratingSellerMarketKnowledge = mt_rand(1, 5);
+
+    $sqlInsertRating = "INSERT INTO Rating (rater_username, agent_username, profile, rating_communication, rating_professionalism, rating_marketKnowledge)
+                        VALUES ('$buyerUsername', 'agent001', 'buyer', $ratingBuyerCommunication, $ratingBuyerProfessionalism, $ratingBuyerMarketKnowledge),
+                               ('$sellerUsername', 'agent001', 'seller', $ratingSellerCommunication, $ratingSellerProfessionalism, $ratingSellerMarketKnowledge)";
+
+    if ($conn->query($sqlInsertRating) !== TRUE) {
+        $isInserted = false;
+        break ; 
+    }
+}
+
+for ($k = 24; $k >= 6; $k -= 2) { 
+    $buyerUsername = 'buyer' . sprintf('%03d', $k);
+    $sellerUsername = 'seller' . sprintf('%03d', $k);
+    $buyerReviewMessage = $reviewMessages[array_rand($reviewMessages)];
+    $sellerReviewMessage = $reviewMessages[array_rand($reviewMessages)];    
+
+    $sqlInsertReview = "INSERT INTO Review (reviewer_username, agent_username, profile, review_text)
+                        VALUES ('$buyerUsername', 'agent001', 'buyer', '$buyerReviewMessage'),
+                            ('$sellerUsername', 'agent001', 'seller', '$sellerReviewMessage')";
+
+    if ($conn->query($sqlInsertReview) !== TRUE) {
+        $isInserted = false;
+        break ; 
+    }
+}
+
 
 // Insert ratings and reviews
-for ($i = 1; $i <= 100; $i++) {
-    $agentUsername = 'agent' . sprintf('%03d', $i);
+for ($i = 6; $i <= 25; $i++) {
+    $agentUsername = 'agent' . sprintf('%03d',$i);
     
-    for ($j = 80; $j >= 4; $j -= 2) { 
-        $buyerUsername = 'buyer' . sprintf('%03d', $j); 
+    for ($j = 25; $j >= 24; $j--) { 
+        $buyerUsername = 'buyer' . sprintf('%03d',$j); 
         $sellerUsername = 'seller' . sprintf('%03d', $j);
         $ratingBuyerCommunication = mt_rand(1, 5);
         $ratingBuyerProfessionalism = mt_rand(1, 5);
@@ -238,9 +274,9 @@ for ($i = 1; $i <= 100; $i++) {
         }
     }
 
-    for ($k = 80; $k >= 4; $k -= 2) { 
-        $buyerUsername = 'buyer' . sprintf('%03d', $k);
-        $sellerUsername = 'seller' . sprintf('%03d', $k);
+    for ($k = 25; $k >= 24; $k--) { 
+        $buyerUsername = 'buyer' . sprintf('%03d',$k);
+        $sellerUsername = 'seller' . sprintf('%03d',$k);
         $buyerReviewMessage = $reviewMessages[array_rand($reviewMessages)];
         $sellerReviewMessage = $reviewMessages[array_rand($reviewMessages)];    
 
