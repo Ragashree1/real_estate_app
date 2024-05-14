@@ -26,7 +26,7 @@ if (isset($_POST["createProfile"])) {
     $status = $createProfileController->createProfile($createProfile);
     $message = $status == true ? 'Profile created successfully' : 'Error creating profile';
 
-    echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
+    echo '<script>setTimeout(function() { window.location.href = "admin_manageProfiles.php"; }, 1000);</script>';
 }
 
 if (isset($_POST["updateProfile"])) {
@@ -120,7 +120,7 @@ if (!isset($allProfiles)) {
 
             </div>
             <div class="col-xs-6 col-md-4 d-flex justify-content-end">
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#createProfile">Create</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createProfile"><i i class="fas fa-plus"></i> Create Profile</button>
             </div>
         </div>
 
@@ -181,7 +181,7 @@ if (!isset($allProfiles)) {
                     <svg xmlns="http://www.w3.org/2000/svg" data-toggle="modal" data-target="#updateProfile" width="1em" height="1em" viewBox="0 0 24 24" style="cursor:pointer;" onclick="setProfile('<?php echo htmlspecialchars(json_encode($profile), ENT_QUOTES, 'UTF-8'); ?>')">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0zM15 6l3 3m-5 11h8" />
                     </svg>
-                    <a href="admin_manageProfiles.php?delete_profile=<?php echo $profile['profile_name']; ?>" style="text-decoration: none; color: inherit;">
+                    <a href="admin_manageProfiles.php?delete_profile=<?php echo $profile['profile_name']; ?>" onclick="return confirm('confirm delete profile?')" style="text-decoration: none; color: inherit;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256" style="cursor:pointer;">
                             <path fill="currentColor" d="M216 48h-40v-8a24 24 0 0 0-24-24h-48a24 24 0 0 0-24 24v8H40a8 8 0 0 0 0 16h8v144a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16V64h8a8 8 0 0 0 0-16M96 40a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v8H96Zm96 168H64V64h128Zm-80-104v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0m48 0v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0" />
                         </svg>

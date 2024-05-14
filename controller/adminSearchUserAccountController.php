@@ -10,9 +10,9 @@ class AdminSearchUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function searchUsers(string $username): array
+    public function searchUsers(string $searchInfo): array
     {
-        $allUsers = $this->userAccount->searchUsers($username);
+        $allUsers = $this->userAccount->searchUsers($searchInfo);
 
         return $allUsers;
     }
