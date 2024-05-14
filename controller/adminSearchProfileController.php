@@ -10,9 +10,9 @@ class AdminSearchProfileController
         $this->profile = new Profile();
     }
 
-    public function searchProfiles(string $name): array
+    public function searchProfiles(string $searchInfo): array
     {
-        $allProfiles = $this->profile->searchProfiles($name);
+        $allProfiles = $this->profile->searchProfiles($searchInfo);
 
         return $allProfiles;
     }

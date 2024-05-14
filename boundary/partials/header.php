@@ -46,7 +46,7 @@ if($loggedIn)
 </head>
 <body>
 
-<?php require_once "buyer_calculateMortgage.php"; ?>
+<?php require_once "buyer_calculateMortgage.php";?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <img src="images/logo.png" alt="To Dashboard" height="30">

@@ -71,7 +71,8 @@ if (isset($_POST["login"]))
 			<input type="text" placeholder="username or email" id="username" name="username" required>
 			<input type="password" placeholder="password" id="password" name="password" required>
 			<select id="profile" name="profile" required>
-				<option selected>Admin</option>
+				<option value="" selected disabled>-- Select Profile --</option>
+				<option>Admin</option>
 				<option>Agent</option>
 				<option>Buyer</option>
 				<option>Seller</option>

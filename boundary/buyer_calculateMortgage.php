@@ -24,7 +24,7 @@
 
                     <label for="percentage">Percentage :</label>
                     <div class="input-group">
-                        <input type="number" class="form-control" id="percentage" name="percentage" required min="1">
+                        <input type="number" class="form-control" id="percentage" name="percentage" required min="0">
                         <div class="input-group-append">
                             <span class="input-group-text">%</span>
                         </div>
@@ -54,6 +54,11 @@
         var years = parseFloat(document.getElementById('years').value);
         var percentage = parseFloat(document.getElementById('percentage').value);
 
+        if (price < 1 || years < 1 || percetange < 0) {
+            alert("Price, years and percentage must be a positive number.");
+            return;
+        }
+
         // Convert percentage to decimal and monthly interest rate
         var interest = (percentage / 100) / 12;
         var numPayments = years * 12;
@@ -63,7 +68,7 @@
 
         // Round the result to two decimal places
         monthlyPayment = Math.round(monthlyPayment * 100) / 100;
-        
+
         // Update the result
         document.getElementById('monthlyPayment').innerText = 'Amount: $' + monthlyPayment.toFixed(2);
         document.getElementById('resultContainer').style.display = 'block';

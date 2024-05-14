@@ -33,7 +33,7 @@ function shortlist()
     $shortlistSuccess = $buyerShortlistController->shortlist($loggedInUsername, $listing_id);
 
     if ($shortlistSuccess){
-        // Redirect 
+        // Refresh 
         echo '<script>window.location.href = "buyer_viewSingleNewListing.php?listing_id='. $listing_id . '";</script>';
     }
     else
@@ -234,7 +234,7 @@ if (empty($singleListing)) {
                         <?php isReviewed(); if($reviewed):?>
                             <button type="button" class="btn btn-success"> <i class="fas fa-check"></i> You've reviewed this agent</button>
                         <?php else: ?>
-                            <button type="submit" class="btn btn-success"> <i class="far fa-star"></i> Leave a Review</button>
+                            <button type="submit" class="btn btn-success"> <i class="fas fa-pencil"></i> Leave a Review</button>
                         <?php endif; ?>
                     </form>
                 </div>

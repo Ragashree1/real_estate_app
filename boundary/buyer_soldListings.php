@@ -51,6 +51,9 @@ else
 
 ?>
 
+<br>
+<h2> &nbsp; Sold Listings</h2>
+
 <!-- search bar -->
 <div class="container-fluid mt-3">
     <form class="form-inline" method="GET" action=""
