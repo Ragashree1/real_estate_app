@@ -10,6 +10,6 @@
   password: password123
   
 ## Running test cases
-  After setup is dont and run following commands
+  After setup is done and run following commands
   1) composer install
   2) ./vendor/bin/phpunit --testdox
