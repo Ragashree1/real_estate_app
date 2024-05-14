@@ -160,7 +160,7 @@ if (empty($singleListing)) {
                         <?php isReviewed(); if($reviewed):?>
                             <button type="button" class="btn btn-success"> <i class="fas fa-check"></i> You've reviewed this agent</button>
                         <?php else: ?>
-                            <button type="submit" class="btn btn-success"> <i class="far fa-star"></i> Leave a Review</button>
+                            <button type="submit" class="btn btn-success"> <i class="fas fa-pencil"></i> Leave a Review</button>
                         <?php endif; ?>
                     </form>
                 </div>
