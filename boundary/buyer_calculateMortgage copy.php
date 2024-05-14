@@ -1,6 +1,8 @@
 <?php 
 require_once "partials/header.php"; 
 ?>
+
+
 <div class="modal fade" id="modalCalculator" tabindex="-1" role="dialog" aria-labelledby="modalCalculator" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -44,39 +46,32 @@ require_once "partials/header.php";
                 <div id="result" class="mt-3"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="validateInputs()">Calculate Installment</button> <!-- Call JavaScript function -->
+                <button type="button" class="btn btn-primary" onclick="calculateMortgage()">Calculate Installment</button> <!-- Call JavaScript function -->
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function validateInputs() {
+    function calculateMortgage() {
+        // Get input values
         var price = parseFloat(document.getElementById('price').value);
         var years = parseFloat(document.getElementById('years').value);
         var percentage = parseFloat(document.getElementById('percentage').value);
 
-        if (isNaN(price) || isNaN(years) ||isNaN(percentage) ) {
-            alert('Please fill out all fields.');
-            return;
-        }
-
-        if (price <= 0 || years <= 0 || percentage <= 0) {
-            alert('Price, Years & Percentage must be greater than 1.');
-            return;
-        }
-
-
-        calculateMortgage(price, years, percentage);
-    }
-
-    function calculateMortgage(price, years, percentage) {
+        // Convert percentage to decimal and monthly interest rate
         var interest = (percentage / 100) / 12;
         var numPayments = years * 12;
-        var monthlyPayment = (price * interest) / (1 - Math.pow(1 + interest, -numPayments));
-        monthlyPayment = Math.round(monthlyPayment * 100) / 100;
 
+        // Calculate monthly payment using the formula
+        var monthlyPayment = (price * interest) / (1 - Math.pow(1 + interest, -numPayments));
+
+        // Round the result to two decimal places
+        monthlyPayment = Math.round(monthlyPayment * 100) / 100;
+        // Update the result
+        // Update the result
         document.getElementById('monthlyPayment').innerText = 'Amount: $' + monthlyPayment.toFixed(2);
         document.getElementById('resultContainer').style.display = 'block';
     }
+
 </script>
