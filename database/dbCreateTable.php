@@ -26,7 +26,7 @@ $sqlUser = "CREATE TABLE IF NOT EXISTS UserAccount (
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile VARCHAR(100), 
     status VARCHAR(50) DEFAULT 'active',
-    FOREIGN KEY (profile) REFERENCES UserProfile(profile_name) ON DELETE SET NULL ON UPDATE SET NULL
+    FOREIGN KEY (profile) REFERENCES UserProfile(profile_name) ON DELETE SET NULL ON UPDATE CASCADE
     )";
 
 

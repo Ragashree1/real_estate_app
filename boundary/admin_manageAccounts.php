@@ -16,8 +16,16 @@ $allUsers = [];
 $userProfiles = [];
 
 
+function searchUser(){
+    global $allUsers;
+    $searchUserAccountController = new AdminSearchUserAccountController();
+    $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
+}
 
-if (isset($_POST["createUser"])) {
+
+function createUser()
+{
+    global $message, $status;
     $createUser = array();
 
     // store each field data in array
@@ -32,7 +40,9 @@ if (isset($_POST["createUser"])) {
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
-if (isset($_POST["updateUser"])) {
+function updateUser()
+{
+    global $message, $status;
     $updateUser = array();
 
     // store each field data in array
@@ -47,27 +57,11 @@ if (isset($_POST["updateUser"])) {
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
-if (isset($_GET['search'])) {
-    $searchUserAccountController = new AdminSearchUserAccountController();
-    $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
-} else {
-    $viewUserAccountController = new AdminViewUserAccountController();
-    $allUsers = $viewUserAccountController->getUsers();
-}
 
-if (isset($_GET['delete_user'])) {
-    deleteUser($_GET['delete_user']);
-    $_GET = array();
-}
-
-if (isset($_GET['suspend_user'])) {
-    suspendUser($_GET['suspend_user']);
-    $_GET = array();
-}
-
-function deleteUser($username)
+function deleteUser()
 {
     global $status, $message;
+    $username = $_GET['delete_user'];
     $deleteUserController = new AdminDeleteUserAccountController();
     $status = $deleteUserController->deleteUser($username);
     $message = $status ? 'User deleted successfully' : 'Error deleting user';
@@ -75,14 +69,43 @@ function deleteUser($username)
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
-function suspendUser($username)
+function suspendUser()
 {
     global $status, $message;
+    $username = $_GET['suspend_user'];
     $suspendUser = new AdminSuspendUserAccountController();
     $status = $suspendUser->suspendUser($username);
     $message = $status ? 'User suspended successfully' : 'Error suspending user';
 
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
+}
+
+
+
+if (isset($_POST["createUser"])) {
+    createUser();
+}
+
+
+if (isset($_POST["updateUser"])) {
+    updateUser();
+}
+
+
+if (isset($_GET['search'])) {
+    searchUser();
+} else {
+    $viewUserAccountController = new AdminViewUserAccountController();
+    $allUsers = $viewUserAccountController->getUsers();
+}
+
+
+if (isset($_GET['delete_user'])) {
+    deleteUser();
+}
+
+if (isset($_GET['suspend_user'])) {
+    suspendUser();
 }
 
 ?>
@@ -91,7 +114,7 @@ function suspendUser($username)
 
 <!-- DISPLAY Users -->
 <?php
-// Check if $allListing is empty
+// Check if $allUsers is empty
 if (!isset($allUsers)) {
     echo "Users are not set";
 } else {
