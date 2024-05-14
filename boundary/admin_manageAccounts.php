@@ -50,11 +50,9 @@ if (isset($_POST["updateUser"])) {
 if (isset($_GET['search'])) {
     $searchUserAccountController = new AdminSearchUserAccountController();
     $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
-    $allProfiles = (new AdminViewProfileController())->getProfiles();
 } else {
     $viewUserAccountController = new AdminViewUserAccountController();
     $allUsers = $viewUserAccountController->getUsers();
-    $allProfiles = (new AdminViewProfileController())->getProfiles();
 }
 
 if (isset($_GET['delete_user'])) {
@@ -128,7 +126,7 @@ if (!isset($allUsers)) {
             <div class="col-xs-6 col-md-8">
                 <form action="admin_manageAccounts.php" method="get">
                     <div class="input-group rounded">
-                        <input type="search" name="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                        <input type="search" name="search" class="form-control rounded" placeholder="Search username/profile/contact/status" aria-label="Search" aria-describedby="search-addon" />
                         <button type="submit" class="input-group-text border-0" id="search-addon">
                             <i class="fas fa-search"></i>
                         </button>
@@ -137,7 +135,7 @@ if (!isset($allUsers)) {
 
             </div>
             <div class="col-xs-6 col-md-4 d-flex justify-content-end">
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#createUser">Create</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createUser"><i i class="fas fa-plus"></i> Create Account</button>
             </div>
         </div>
 
@@ -172,6 +170,8 @@ if (!isset($allUsers)) {
                                 <label for="profile">Select profile</label>
                                 <select class="form-control" id="profile" name="profile" required>
                                     <?php
+                                    $viewProfileController = new AdminViewProfileController();
+                                    $allProfiles = $viewProfileController->getProfiles();
                                     foreach ($allProfiles as $profile) {
                                     ?>
                                         <tr>
@@ -242,7 +242,7 @@ if (!isset($allUsers)) {
                         </svg>
                     </a>
                     </form>
-                    <a href="admin_manageAccounts.php?delete_user=<?php echo $user['username']; ?>" style="text-decoration: none; color: inherit;">
+                    <a href="admin_manageAccounts.php?delete_user=<?php echo $user['username']; ?>" onclick="return confirm('confirm delete profile?')" style="text-decoration: none; color: inherit;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256" style="cursor:pointer;">
                             <path fill="currentColor" d="M216 48h-40v-8a24 24 0 0 0-24-24h-48a24 24 0 0 0-24 24v8H40a8 8 0 0 0 0 16h8v144a16 16 0 0 0 16 16h128a16 16 0 0 0 16-16V64h8a8 8 0 0 0 0-16M96 40a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v8H96Zm96 168H64V64h128Zm-80-104v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0m48 0v64a8 8 0 0 1-16 0v-64a8 8 0 0 1 16 0" />
                         </svg>

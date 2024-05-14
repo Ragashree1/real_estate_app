@@ -44,9 +44,10 @@ else
     displayNewListings();
 }
 
-
-
 ?>
+
+<br>
+<h2> &nbsp; New Listings</h2>
 
 <!-- search bar -->
 <div class="container-fluid mt-3">

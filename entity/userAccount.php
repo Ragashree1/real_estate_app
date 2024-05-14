@@ -50,11 +50,11 @@ class UserAccount
     {
         $allUsers = [];
 
-        // Perform a database query to fetch all listings
-        $query = "SELECT * FROM UserAccount";
+        // Perform a database query to fetch all accounts
+        $query = "SELECT * FROM UserAccount order by created_on desc";
         $result = $this->conn->query($query);
 
-        // Check if there are any listings
+        // Check if there are any accounts
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $allUsers[] = $row;
@@ -64,17 +64,23 @@ class UserAccount
         return $allUsers;
     }
 
-    public function searchUsers(string $username): array
+    public function searchUsers(string $searchInfo): array
     {
         $allUsers = [];
 
 
-        // Perform a database query to fetch all listings
-        $query = "SELECT * FROM UserAccount WHERE username LIKE '%" . $username . "%'";
+        // Perform a database query to fetch all accounts
+        // Perform a database query to fetch all data
+        $query = "SELECT * FROM UserAccount WHERE 
+        username LIKE '%" . $searchInfo . "%' 
+        OR profile LIKE '%" . $searchInfo . "%' 
+        OR contact LIKE '%" . $searchInfo . "%' 
+        OR status LIKE '%" . $searchInfo . "%' 
+        ORDER BY created_on DESC";
 
         $result = $this->conn->query($query);
 
-        // Check if there are any listings
+        // Check if there are any accounts
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $allUsers[] = $row;

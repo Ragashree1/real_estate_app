@@ -46,7 +46,7 @@ if($loggedIn)
 </head>
 <body>
 
-<?php require_once "buyer_calculateMortgage.php"; ?>
+<?php require_once "buyer_calculateMortgage.php";?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <img src="images/logo.png" alt="To Dashboard" height="30">
@@ -68,14 +68,14 @@ if($loggedIn)
                     echo '<form action="viewAgentRatings.php" method="post">
                                 <input type="hidden" name="agent_username" value="' . $loggedInUsername . '">
                                 <button type="submit" class="nav-link" style="border: none; background: none; color: white;">
-                                    <i class="fas fa-star"></i> My Ratings
+                                    <i class="fas fa-star"></i> View Rating
                                 </button>
                             </form>
                             ';
                     echo '<form action="viewAgentReviews.php" method="post">
                                 <input type="hidden" name="agent_username" value="' . $loggedInUsername . '">
                                 <button type="submit" class="nav-link" style="border: none; background: none; color: white;">
-                                    <i class="fas fa-pen"></i> My Reviews
+                                    <i class="fas fa-pen"></i> View Review
                                 </button>
                             </form>
                             ';

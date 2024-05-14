@@ -27,7 +27,7 @@ class Review
         $reviews = [];
 
         // Prepare the query
-        $query = "SELECT * FROM Review WHERE agent_username = ?";
+        $query = "SELECT * FROM Review WHERE agent_username = ? ORDER BY date_reviewed DESC";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("s", $agent_username);
 

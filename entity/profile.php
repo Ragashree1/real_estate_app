@@ -26,7 +26,7 @@ class Profile
         $allProfiles = [];
 
         // Perform a database query to fetch all data
-        $query = "SELECT * FROM UserProfile";
+        $query = "SELECT * FROM UserProfile order by created_on desc ";
         $result = $this->conn->query($query);
 
         // Check if there are any data
@@ -39,13 +39,13 @@ class Profile
         return $allProfiles;
     }
 
-    public function searchProfiles(string $profileName): array
+    public function searchProfiles(string $searchInfo): array
     {
         $allProfiles = [];
 
 
         // Perform a database query to fetch all data
-        $query = "SELECT * FROM UserProfile WHERE profile_name LIKE '%" . $profileName . "%'";
+        $query = "SELECT * FROM UserProfile WHERE profile_name LIKE '%" . $searchInfo . "%' order by created_on desc";
 
         $result = $this->conn->query($query);
 

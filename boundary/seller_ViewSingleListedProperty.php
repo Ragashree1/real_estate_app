@@ -101,7 +101,7 @@ if (empty($singleListing)) {
                 <?php endif; ?>
                 <div class="single-listing-details">
                     <?php if (isset($singleListing['title'])) : ?>
-                        <h2 class="single-listing-title"><a href="singleListing.php?listing_id=<?= $singleListing['listing_id'] ?>"><?= $singleListing['title'] ?></a></h2>
+                        <h2 class="single-listing-title"><?= $singleListing['title'] ?></h2>
                     <?php endif; ?>
                     <div class="single-listing-meta">
                         <?php if (isset($singleListing['type'])) : ?>
@@ -196,7 +196,7 @@ if (empty($singleListing)) {
                         <?php isReviewed(); if($reviewed):?>
                             <button type="button" class="btn btn-success"> <i class="fas fa-check"></i> You've reviewed this agent</button>
                         <?php else: ?>
-                            <button type="submit" class="btn btn-success"> <i class="far fa-star"></i> Leave a Review</button>
+                            <button type="submit" class="btn btn-success"> <i class="fas fa-pencil"></i> Leave a Review</button>
                         <?php endif; ?>
                     </form>
                 </div>
