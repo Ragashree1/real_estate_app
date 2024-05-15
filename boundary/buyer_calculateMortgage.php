@@ -1,6 +1,3 @@
-<?php 
-require_once "partials/header.php"; 
-?>
 <div class="modal fade" id="modalCalculator" tabindex="-1" role="dialog" aria-labelledby="modalCalculator" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -61,7 +58,7 @@ require_once "partials/header.php";
             return;
         }
 
-        if (price <= 0 || years <= 0 || percentage <= 0) {
+        if (price <= 0 || years <= 0 || percentage < 0) {
             alert('Price, Years & Percentage must be greater than 1.');
             return;
         }
@@ -71,11 +68,16 @@ require_once "partials/header.php";
     }
 
     function calculateMortgage(price, years, percentage) {
-        var interest = (percentage / 100) / 12;
         var numPayments = years * 12;
-        var monthlyPayment = (price * interest) / (1 - Math.pow(1 + interest, -numPayments));
-        monthlyPayment = Math.round(monthlyPayment * 100) / 100;
+        var interest = 0 ;
 
+        if (percentage > 0)
+        {
+            interest = (price / years) * (percentage / 100 ); 
+        }
+
+        var monthlyPayment = (price / years) + interest;
+        
         document.getElementById('monthlyPayment').innerText = 'Amount: $' + monthlyPayment.toFixed(2);
         document.getElementById('resultContainer').style.display = 'block';
     }
