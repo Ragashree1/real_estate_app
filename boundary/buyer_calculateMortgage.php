@@ -54,11 +54,6 @@
         var years = parseFloat(document.getElementById('years').value);
         var percentage = parseFloat(document.getElementById('percentage').value);
 
-        if (price < 1 || years < 1 || percetange < 0) {
-            alert("Price, years and percentage must be a positive number.");
-            return;
-        }
-
         // Convert percentage to decimal and monthly interest rate
         var interest = (percentage / 100) / 12;
         var numPayments = years * 12;
@@ -68,6 +63,12 @@
 
         // Round the result to two decimal places
         monthlyPayment = Math.round(monthlyPayment * 100) / 100;
+
+        if(monthlyPayment < 0)
+        {
+            monthlyPayment = 0;
+            alert("price or years or percentage cannot be less than 0");
+        }
 
         // Update the result
         document.getElementById('monthlyPayment').innerText = 'Amount: $' + monthlyPayment.toFixed(2);

@@ -15,6 +15,13 @@ $userAccount = null;
 $allUsers = [];
 $userProfiles = [];
 
+function viewUser()
+{
+    global $allUsers;
+
+    $viewUserAccountController = new AdminViewUserAccountController();
+    $allUsers = $viewUserAccountController->getUsers();
+}
 
 function searchUser(){
     global $allUsers;
@@ -36,6 +43,7 @@ function createUser()
     // create controller object
     $createUserController = new AdminCreateUserAccountController();
     $status = $createUserController->createUser($createUser);
+    
     $message = $status === true ? 'User created successfully' : 'Error creating user';
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
@@ -95,8 +103,7 @@ if (isset($_POST["updateUser"])) {
 if (isset($_GET['search'])) {
     searchUser();
 } else {
-    $viewUserAccountController = new AdminViewUserAccountController();
-    $allUsers = $viewUserAccountController->getUsers();
+    viewUser();
 }
 
 

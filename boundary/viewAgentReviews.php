@@ -29,7 +29,32 @@ if (isset($_POST['agent_username']))
 ?>
 
 <br>
-<h2> &nbsp;Reviews</h2>
+<h2 style='padding-left:20px;'> &nbsp;Reviews</h2>
+<br>
+
+<!-- display agent info !-->
+<?php if($loggedInProfile != 'agent'): ?>
+<a href="#" onclick="window.history.back();" style='padding-left:20px;'><i class="fas fa-arrow-left"></i> Back</a>
+<div style="padding-left:20px; padding-right:20px;">
+        <div class="agent-card" style="display: flex; flex-direction: column; margin-top: 10px; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
+            <h2 class="agent-name" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Agent Information</h2>
+            <div class="agent-details" style="display: flex; align-items: center;">
+                <img src="images/agent.png" alt="Agent Image" class="agent-image" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc; margin-right: 20px;">
+                <div class="agent-info">
+                    <?php if (isset($_POST['fullname'])) : ?>
+                        <p class="agent-name" style="font-size: 20px; font-weight: bold; color: #333;"><i class="fas fa-user"></i> <?= $_POST['fullname'] ?></p>
+                    <?php endif; ?>
+                    <?php if (isset($_POST['email'])) : ?>
+                        <p class="agent-email" style="font-size: 18px; color: #666;"><i class="fas fa-envelope"></i> <?= $_POST['email'] ?></p>
+                    <?php endif; ?>
+                    <?php if (isset($_POST['contact'])) : ?>
+                        <p class="agent-phone" style="font-size: 18px; color: #666;"><i class="fas fa-phone"></i> <?= $_POST['contact'] ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+</div>
+<?php endif; ?>
 <br>
 
 <!-- Navigation Bar -->

@@ -31,9 +31,11 @@ if (isset($_POST['agent_username']))
 
 <br>
 <h2 style='padding-left:20px;'> Ratings</h2>
+<br>
 
 <!-- display agent info !-->
-<?php if(!$loggedInProfile == 'agent'): ?>
+<?php if($loggedInProfile != 'agent'): ?>
+<a href="#" onclick="window.history.back();" style='padding-left:20px;'><i class="fas fa-arrow-left"></i> Back</a>
 <div style="padding-left:20px; padding-right:20px;">
         <div class="agent-card" style="display: flex; flex-direction: column; margin-top: 10px; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
             <h2 class="agent-name" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">Agent Information</h2>

@@ -11,6 +11,15 @@ $message = null;
 $allProfiles = [];
 
 
+function viewProfile()
+{
+    global $allProfiles;
+
+    $viewProfileController = new AdminViewProfileController();
+    $allProfiles = $viewProfileController->getProfiles();
+
+}
+
 //to get profileprofile from profile controller 
 function createProfile() {
     global $status, $message;
@@ -76,8 +85,7 @@ if (isset($_POST["updateProfile"])) {
 if (isset($_GET['search'])) {
     searchProfile();
 } else {
-    $viewProfileController = new AdminViewProfileController();
-    $allProfiles = $viewProfileController->getProfiles();
+    viewProfile();
 }
 
 if (isset($_GET['delete_profile'])) {

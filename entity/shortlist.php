@@ -77,7 +77,7 @@ class Shortlist
         $query = "SELECT pl.* 
                 FROM PropertyListing pl
                 JOIN Shortlist s ON pl.listing_id = s.listing_id
-                WHERE s.buyer_username = ? AND pl.status = 'new' ";
+                WHERE s.buyer_username = ? AND pl.status = 'new' order by s.date_shortlisted desc";
 
         // Prepare the statement
         $stmt = $this->conn->prepare($query);
@@ -109,7 +109,7 @@ class Shortlist
         $query = "SELECT pl.* 
                 FROM PropertyListing pl
                 JOIN Shortlist s ON pl.listing_id = s.listing_id
-                WHERE s.buyer_username = ? AND pl.status = 'sold' ";
+                WHERE s.buyer_username = ? AND pl.status = 'sold' order by s.date_shortlisted desc";
 
         // Prepare the statement
         $stmt = $this->conn->prepare($query);

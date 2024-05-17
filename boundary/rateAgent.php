@@ -22,13 +22,13 @@ function rateAgent()
     
     // check if creation success
     if ($rated) {
-        createSuccess();
+        rateSuccess();
     }
     else
-        createFail();
+        rateFail();
 }
 
-function createSuccess()
+function rateSuccess()
 {
     echo '<div class="alert alert-success" role="alert">
             Rated successfully, redirecting...
@@ -38,7 +38,7 @@ function createSuccess()
     echo '<script>setTimeout(function() { history.go(-2); }, 2000);</script>';
 }
 
-function createFail()
+function rateFail()
 {
     echo '<div class="alert alert-danger" role="alert">
             Fail to rate, try again!
