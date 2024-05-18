@@ -16,14 +16,14 @@ $allUsers = [];
 $userProfiles = [];
 
 
-function searchUser(){
+function searchAccount(){
     global $allUsers;
     $searchUserAccountController = new AdminSearchUserAccountController();
     $allUsers = $searchUserAccountController->searchAccounts($_GET['search']);
 }
 
 
-function createUser()
+function createAccount()
 {
     global $message, $status;
     $createUser = array();
@@ -40,7 +40,7 @@ function createUser()
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
-function updateUser()
+function updateAccount()
 {
     global $message, $status;
     $updateUser = array();
@@ -58,7 +58,7 @@ function updateUser()
 }
 
 
-function deleteUser()
+function deleteAccount()
 {
     global $status, $message;
     $username = $_GET['delete_user'];
@@ -69,7 +69,7 @@ function deleteUser()
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
-function suspendUser()
+function suspendAccount()
 {
     global $status, $message;
     $username = $_GET['suspend_user'];
@@ -83,17 +83,17 @@ function suspendUser()
 
 
 if (isset($_POST["createUser"])) {
-    createUser();
+    createAccount();
 }
 
 
 if (isset($_POST["updateUser"])) {
-    updateUser();
+    updateAccount();
 }
 
 
 if (isset($_GET['search'])) {
-    searchUser();
+    searchAccount();
 } else {
     $viewUserAccountController = new AdminViewUserAccountController();
     $allUsers = $viewUserAccountController->getAccounts();
@@ -101,11 +101,11 @@ if (isset($_GET['search'])) {
 
 
 if (isset($_GET['delete_user'])) {
-    deleteUser();
+    deleteAccount();
 }
 
 if (isset($_GET['suspend_user'])) {
-    suspendUser();
+    suspendAccount();
 }
 
 ?>
