@@ -19,7 +19,7 @@ $userProfiles = [];
 function searchUser(){
     global $allUsers;
     $searchUserAccountController = new AdminSearchUserAccountController();
-    $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
+    $allUsers = $searchUserAccountController->searchAccounts($_GET['search']);
 }
 
 
@@ -35,7 +35,7 @@ function createUser()
 
     // create controller object
     $createUserController = new AdminCreateUserAccountController();
-    $status = $createUserController->createUser($createUser);
+    $status = $createUserController->createAccount($createUser);
     $message = $status === true ? 'User created successfully' : 'Error creating user';
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
@@ -52,7 +52,7 @@ function updateUser()
 
     // create controller object
     $updateUserController = new AdminUpdateUserAccountController();
-    $status = $updateUserController->updateUser($updateUser);
+    $status = $updateUserController->updateAccount($updateUser);
     $message = $status == true ? 'User updated successfully' : 'Error updating user';
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
@@ -63,7 +63,7 @@ function deleteUser()
     global $status, $message;
     $username = $_GET['delete_user'];
     $deleteUserController = new AdminDeleteUserAccountController();
-    $status = $deleteUserController->deleteUser($username);
+    $status = $deleteUserController->deleteAccount($username);
     $message = $status ? 'User deleted successfully' : 'Error deleting user';
 
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
@@ -74,7 +74,7 @@ function suspendUser()
     global $status, $message;
     $username = $_GET['suspend_user'];
     $suspendUser = new AdminSuspendUserAccountController();
-    $status = $suspendUser->suspendUser($username);
+    $status = $suspendUser->suspendAccount($username);
     $message = $status ? 'User suspended successfully' : 'Error suspending user';
 
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
@@ -96,7 +96,7 @@ if (isset($_GET['search'])) {
     searchUser();
 } else {
     $viewUserAccountController = new AdminViewUserAccountController();
-    $allUsers = $viewUserAccountController->getUsers();
+    $allUsers = $viewUserAccountController->getAccounts();
 }
 
 

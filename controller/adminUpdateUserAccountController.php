@@ -10,9 +10,9 @@ class AdminUpdateUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function updateUser(array $userDetails) : bool
+    public function updateAccount(array $userDetails) : bool
     {
-        $status = $this->userAccount->updateUser($userDetails);
+        $status = $this->userAccount->updateAccount($userDetails);
         return $status != null && $status != false;
     }
 }

@@ -10,9 +10,9 @@ class AdminCreateUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function createUser(array $userDetails) : bool
+    public function createAccount(array $userDetails) : bool
     {
-        $status = $this->userAccount->createUser($userDetails);
+        $status = $this->userAccount->createAccount($userDetails);
         return $status;
     }
 }
