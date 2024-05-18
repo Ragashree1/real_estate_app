@@ -46,7 +46,7 @@ class UserAccount
         return true; // Login credentials are valid
     }
 
-    public function getUsers(): array
+    public function getAccounts(): array
     {
         $allUsers = [];
 
@@ -64,7 +64,7 @@ class UserAccount
         return $allUsers;
     }
 
-    public function searchUsers(string $searchInfo): array
+    public function searchAccounts(string $searchInfo): array
     {
         $allUsers = [];
 
@@ -89,7 +89,7 @@ class UserAccount
         return $allUsers;
     }
 
-    public function deleteUser(string $username): bool
+    public function deleteAccount(string $username): bool
     {
 
         $query = "DELETE FROM UserAccount WHERE username = '$username'";
@@ -101,7 +101,7 @@ class UserAccount
     }
 
 
-    public function suspendUser(string $username): bool
+    public function suspendAccount(string $username): bool
     {
 
         $query = "UPDATE UserAccount SET status = 'suspended' WHERE username = '$username'";
@@ -111,7 +111,7 @@ class UserAccount
         return $result;
     }
 
-    public function createUser(array $userDetails): bool
+    public function createAccount(array $userDetails): bool
     {
         //check if username or email is already used
         $username = $userDetails['username'];
@@ -141,7 +141,7 @@ class UserAccount
     }
 
 
-    public function updateUser(array $userDetails): bool
+    public function updateAccount(array $userDetails): bool
     {
         //check if username or email is already used by another account
         $username = $userDetails['username'];
