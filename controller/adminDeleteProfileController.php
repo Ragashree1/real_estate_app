@@ -10,9 +10,9 @@ class AdminDeleteProfileController
         $this->profile = new Profile();
     }
 
-    public function deleteProfile(string $profile) : bool
+    public function deleteProfile(string $profileName) : bool
     {
-        $status = $this->profile->deleteProfile($profile);
+        $status = $this->profile->deleteProfile($profileName);
 
         return $status;
     }
