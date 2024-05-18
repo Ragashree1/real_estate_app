@@ -10,9 +10,9 @@ class AdminDeleteUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function deleteUser(string $username) :bool
+    public function deleteAccount(string $username) :bool
     {
-        $flag = $this->userAccount->deleteUser($username);
+        $flag = $this->userAccount->deleteAccount($username);
 
         return $flag;
     }

@@ -10,9 +10,9 @@ class AdminViewUserAccountController
         $this->userAccount = new UserAccount();
     }
 
-    public function getUsers(): array
+    public function getAccounts(): array
     {
-        $allUsers = $this->userAccount->getUsers();
+        $allUsers = $this->userAccount->getAccounts();
 
         return $allUsers;
     }
