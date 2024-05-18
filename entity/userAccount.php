@@ -70,7 +70,6 @@ class UserAccount
 
 
         // Perform a database query to fetch all accounts
-        // Perform a database query to fetch all data
         $query = "SELECT * FROM UserAccount WHERE 
         username LIKE '%" . $searchInfo . "%' 
         OR profile LIKE '%" . $searchInfo . "%' 
