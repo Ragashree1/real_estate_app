@@ -27,9 +27,9 @@ class UserAccount
         $password = $loginInfo['password'];
         $profile = $loginInfo['profile'];
 
-        //SQL query to validate login
+        //SQL query to check if account exists and status is active 
         $query = "SELECT * FROM UserAccount WHERE (username = '$username' OR email = '$username') 
-                                                AND profile = '$profile'";
+                                                AND profile = '$profile' AND status = 'active' ";
         $result = $this->conn->query($query);
 
         // return false when no records found
