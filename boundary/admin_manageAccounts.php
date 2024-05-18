@@ -15,6 +15,13 @@ $userAccount = null;
 $allUsers = [];
 $userProfiles = [];
 
+function viewAccount()
+{
+    global $allUsers;
+
+    $viewUserAccountController = new AdminViewUserAccountController();
+    $allUsers = $viewUserAccountController->getAccounts();
+}
 
 function searchAccount(){
     global $allUsers;
@@ -95,8 +102,7 @@ if (isset($_POST["updateUser"])) {
 if (isset($_GET['search'])) {
     searchAccount();
 } else {
-    $viewUserAccountController = new AdminViewUserAccountController();
-    $allUsers = $viewUserAccountController->getAccounts();
+    viewAccount();
 }
 
 
