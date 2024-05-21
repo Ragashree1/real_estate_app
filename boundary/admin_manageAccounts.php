@@ -15,9 +15,24 @@ $userAccount = null;
 $allUsers = [];
 $userProfiles = [];
 
+function viewAccount()
+{
+    global $allUsers;
+
+    $viewUserAccountController = new AdminViewUserAccountController();
+    $allUsers = $viewUserAccountController->getAccounts();
+}
+
+function searchAccount(){
+    global $allUsers;
+    $searchUserAccountController = new AdminSearchUserAccountController();
+    $allUsers = $searchUserAccountController->searchAccounts($_GET['search']);
+}
 
 
-if (isset($_POST["createUser"])) {
+function createAccount()
+{
+    global $message, $status;
     $createUser = array();
 
     // store each field data in array
@@ -27,12 +42,14 @@ if (isset($_POST["createUser"])) {
 
     // create controller object
     $createUserController = new AdminCreateUserAccountController();
-    $status = $createUserController->createUser($createUser);
+    $status = $createUserController->createAccount($createUser);
     $message = $status === true ? 'User created successfully' : 'Error creating user';
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
-if (isset($_POST["updateUser"])) {
+function updateAccount()
+{
+    global $message, $status;
     $updateUser = array();
 
     // store each field data in array
@@ -42,47 +59,59 @@ if (isset($_POST["updateUser"])) {
 
     // create controller object
     $updateUserController = new AdminUpdateUserAccountController();
-    $status = $updateUserController->updateUser($updateUser);
+    $status = $updateUserController->updateAccount($updateUser);
     $message = $status == true ? 'User updated successfully' : 'Error updating user';
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
-if (isset($_GET['search'])) {
-    $searchUserAccountController = new AdminSearchUserAccountController();
-    $allUsers = $searchUserAccountController->searchUsers($_GET['search']);
-} else {
-    $viewUserAccountController = new AdminViewUserAccountController();
-    $allUsers = $viewUserAccountController->getUsers();
-}
 
-if (isset($_GET['delete_user'])) {
-    deleteUser($_GET['delete_user']);
-    $_GET = array();
-}
-
-if (isset($_GET['suspend_user'])) {
-    suspendUser($_GET['suspend_user']);
-    $_GET = array();
-}
-
-function deleteUser($username)
+function deleteAccount()
 {
     global $status, $message;
+    $username = $_GET['delete_user'];
     $deleteUserController = new AdminDeleteUserAccountController();
-    $status = $deleteUserController->deleteUser($username);
+    $status = $deleteUserController->deleteAccount($username);
     $message = $status ? 'User deleted successfully' : 'Error deleting user';
 
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
 }
 
-function suspendUser($username)
+function suspendAccount()
 {
     global $status, $message;
+    $username = $_GET['suspend_user'];
     $suspendUser = new AdminSuspendUserAccountController();
-    $status = $suspendUser->suspendUser($username);
+    $status = $suspendUser->suspendAccount($username);
     $message = $status ? 'User suspended successfully' : 'Error suspending user';
 
     echo '<script>setTimeout(function() { window.location.href = "admin_manageAccounts.php"; }, 1000);</script>';
+}
+
+
+
+if (isset($_POST["createUser"])) {
+    createAccount();
+}
+
+
+if (isset($_POST["updateUser"])) {
+    updateAccount();
+}
+
+
+if (isset($_GET['search'])) {
+    searchAccount();
+} else {
+    viewAccount();
+}
+
+
+if (isset($_GET['delete_user'])) {
+    deleteAccount();
+}
+
+if (isset($_GET['suspend_user'])) {
+    suspendAccount();
 }
 
 ?>
@@ -91,7 +120,7 @@ function suspendUser($username)
 
 <!-- DISPLAY Users -->
 <?php
-// Check if $allListing is empty
+// Check if $allUsers is empty
 if (!isset($allUsers)) {
     echo "Users are not set";
 } else {

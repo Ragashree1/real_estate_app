@@ -35,7 +35,7 @@ function searchListedProperties()
     $searchInfo['sold_by'] = $loggedInUsername;
 
     $searchListedPropertyr = new SellerSearchListedPropertyController();
-    $allListing = $searchListedPropertyr->searchListedProperty($searchInfo);
+    $allListing = $searchListedPropertyr->searchListedProperties($searchInfo);
 }
 
 function getNumViews()

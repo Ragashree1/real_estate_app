@@ -9,7 +9,7 @@ class SellerSearchListedPropertyController
         $this->propertyListing = new PropertyListing();
     }
 
-    public function searchListedProperty(array $searchInfo): array
+    public function searchListedProperties(array $searchInfo): array
     {
         $searchResults = $this->propertyListing->sellerSearchListedProperties($searchInfo);
 

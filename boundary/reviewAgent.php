@@ -22,13 +22,13 @@ function reviewAgent()
     
     // check if creation success
     if ($reviewed) {
-        createSuccess();
+        reviewSuccess();
     }
     else
-        createFail();
+        reviewFail();
 }
 
-function createSuccess()
+function reviewSuccess()
 {
     echo '<div class="alert alert-success" role="alert">
             Reviewed successfully, redirecting...
@@ -38,7 +38,7 @@ function createSuccess()
     echo '<script>setTimeout(function() { history.go(-2); }, 2000);</script>';
 }
 
-function createFail()
+function reviewFail()
 {
     echo '<div class="alert alert-danger" role="alert">
             Fail to review, try again!

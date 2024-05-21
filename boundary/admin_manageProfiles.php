@@ -11,9 +11,19 @@ $message = null;
 $allProfiles = [];
 
 
-//to get profileprofile from profile controller 
+function viewProfile()
+{
+    global $allProfiles;
 
-if (isset($_POST["createProfile"])) {
+    $viewProfileController = new AdminViewProfileController();
+    $allProfiles = $viewProfileController->getProfiles();
+
+}
+
+//to get profileprofile from profile controller 
+function createProfile() {
+    global $status, $message;
+
     $createProfile = array();
 
     // store each field data in array
@@ -29,7 +39,8 @@ if (isset($_POST["createProfile"])) {
     echo '<script>setTimeout(function() { window.location.href = "admin_manageProfiles.php"; }, 1000);</script>';
 }
 
-if (isset($_POST["updateProfile"])) {
+function updateProfile(){
+    global $status, $message;
     $updateProfile = array();
 
     // store each field data in array
@@ -45,29 +56,40 @@ if (isset($_POST["updateProfile"])) {
     echo '<script>setTimeout(function() { window.location.href = "admin_manageProfiles.php"; }, 1000);</script>';
 }
 
-if (isset($_GET['search'])) {
+function searchProfile(){
+    global $allProfiles;
+    $profileName = $_GET['search'];
     $searchProfileController = new AdminSearchProfileController();
-    $allProfiles = $searchProfileController->searchProfiles($_GET['search']);
-} else {
-    $viewProfileController = new AdminViewProfileController();
-    $allProfiles = $viewProfileController->getProfiles();
-}
+    $allProfiles = $searchProfileController->searchProfiles($profileName);
+} 
 
-if (isset($_GET['delete_profile'])) {
-    deleteProfile($_GET['delete_profile']);
-    $_GET = array();
-
-}
-
-function deleteProfile($profilename)
+function deleteProfile()
 {
     global $status, $message;
+    $profileName = $_GET['delete_profile'];
     $deleteProfileController = new AdminDeleteProfileController();
-    $status = $deleteProfileController->deleteProfile($profilename);
+    $status = $deleteProfileController->deleteProfile($profileName);
     $message = $status ? 'Profile deleted successfully' : 'Error deleting profile';
 
     echo '<script>setTimeout(function() { window.location.href = "admin_manageProfiles.php"; }, 1000);</script>';
+}
 
+if (isset($_POST["createProfile"])) {
+    createProfile();
+}
+
+if (isset($_POST["updateProfile"])) {
+    updateProfile();
+}
+
+if (isset($_GET['search'])) {
+    searchProfile();
+} else {
+    viewProfile();
+}
+
+if (isset($_GET['delete_profile'])) {
+    deleteProfile();
 }
 
 ?>
@@ -237,7 +259,6 @@ if (!isset($allProfiles)) {
 
         function setProfile(profile) {
             profileData = JSON.parse(profile);
-            console.log(profileData.profile_id)
             document.getElementById('edit_profile_name').value = profileData.profile_name;
             document.getElementById('edit_description').value = profileData.description;
             document.getElementById('profile_id').value = profileData.profile_id;

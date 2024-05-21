@@ -53,13 +53,8 @@
         var years = parseFloat(document.getElementById('years').value);
         var percentage = parseFloat(document.getElementById('percentage').value);
 
-        if (isNaN(price) || isNaN(years) ||isNaN(percentage) ) {
-            alert('Please fill out all fields with numbers only.');
-            return;
-        }
-
-        if (price <= 0 || years <= 0 || percentage < 0) {
-            alert('Price, Years & Percentage must be greater than 1.');
+        if (price < 1 || years < 1 || percetange < 0) {
+            alert("Price, years and percentage must be a positive number.");
             return;
         }
 
@@ -69,15 +64,14 @@
 
     function calculateMortgage(price, years, percentage) {
         var numPayments = years * 12;
-        var interest = 0 ;
 
-        if (percentage > 0)
-        {
-            interest = (price / years) * (percentage / 100 ); 
-        }
+        // Calculate monthly payment using the formula
+        var monthlyPayment = (price * interest) / (1 - Math.pow(1 + interest, -numPayments));
 
-        var monthlyPayment = (price / years) + interest;
-        
+        // Round the result to two decimal places
+        monthlyPayment = Math.round(monthlyPayment * 100) / 100;
+
+        // Update the result
         document.getElementById('monthlyPayment').innerText = 'Amount: $' + monthlyPayment.toFixed(2);
         document.getElementById('resultContainer').style.display = 'block';
     }
